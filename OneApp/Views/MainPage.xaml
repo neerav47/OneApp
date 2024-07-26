@@ -1,21 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="OneApp.MainPage">
+             x:Class="OneApp.Views.MainPage">
 
-    <ScrollView>
+    <ScrollView
+        Margin="20"
+        VerticalOptions="Start">
         <VerticalStackLayout
             Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
+            
+            VerticalOptions="Start">
 
-            <Image
+            <HorizontalStackLayout
+                Spacing="20">
+
+                <Frame
+                    CornerRadius="15"
+                    BackgroundColor="#007ff6"
+                    HeightRequest="130"
+                    WidthRequest="165">
+                </Frame>
+
+                <Frame
+                    CornerRadius="15"
+                    BackgroundColor="#00b0eb"
+                    HeightRequest="130"
+                    WidthRequest="165">
+
+
+                </Frame>
+
+            </HorizontalStackLayout>
+
+            <!--<Image
                 Source="dotnet_bot.png"
                 SemanticProperties.Description="Cute dot net bot waving hi to you!"
                 HeightRequest="200"
-                HorizontalOptions="Center" />
+                HorizontalOptions="Center" />-->
 
-            <Label
+            <!--<Label
                 Text="Hello, World!"
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="32"
@@ -33,7 +56,8 @@
                 Text="Click me"
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
+                HorizontalOptions="Center"
+                BackgroundColor="#044682"/>-->
 
         </VerticalStackLayout>
     </ScrollView>
