@@ -21,6 +21,11 @@ jobs:
         dotnet-version: 7.0.x
     - name: Install MAUI workload
       run: dotnet workload install maui
+    - uses: JavaToolInstaller@0
+      with:
+        versionSpec: '11'
+        jdkArchitectureOption: 'x64'
+        jdkSourceOption: 'PreInstalled'
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
