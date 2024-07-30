@@ -16,48 +16,17 @@
 
                 <Frame
                     CornerRadius="15"
-                    BackgroundColor="#007ff6"
                     HeightRequest="130"
                     WidthRequest="165">
                 </Frame>
 
                 <Frame
                     CornerRadius="15"
-                    BackgroundColor="#00b0eb"
                     HeightRequest="130"
                     WidthRequest="165">
-
-
                 </Frame>
 
             </HorizontalStackLayout>
-
-            <!--<Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />-->
-
-            <!--<Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center"
-                BackgroundColor="#044682"/>-->
 
         </VerticalStackLayout>
     </ScrollView>
