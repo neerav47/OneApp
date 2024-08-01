@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="OneApp.Views.MainPage">
-
+             x:Class="OneApp.Views.MainPage"
+             xmlns:local="clr-namespace:OneApp"
+             BackgroundColor="#e0e0e0"
+             Title="Dashboard">
     <ScrollView
         Margin="20"
         VerticalOptions="Start">
@@ -18,17 +20,100 @@
                     CornerRadius="15"
                     HeightRequest="130"
                     WidthRequest="165">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSalesTap" NumberOfTapsRequired="1" />
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout Spacing="30">
+                        <Image Source="sale.png" HorizontalOptions="Start"/>
+                        <Label Text="Sales" FontSize="Subtitle" FontAttributes="Bold" />
+                    </VerticalStackLayout>
                 </Frame>
 
                 <Frame
                     CornerRadius="15"
                     HeightRequest="130"
                     WidthRequest="165">
+                    <VerticalStackLayout Spacing="30" >
+                        <Image Source="purchase.png" HorizontalOptions="Start" />
+                        <Label Text="Purchases" FontSize="Subtitle" FontAttributes="Bold" />
+                    </VerticalStackLayout>
                 </Frame>
 
             </HorizontalStackLayout>
 
+            <HorizontalStackLayout
+                Spacing="20">
+
+                <Frame
+                    CornerRadius="15"
+                    HeightRequest="130"
+                    WidthRequest="165">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnInventoryTap" NumberOfTapsRequired="1" />
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout Spacing="30">
+                        <Image Source="inventory.png" HorizontalOptions="Start" />
+                        <Label Text="Inventory" FontSize="Subtitle" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame
+                    CornerRadius="15"
+                    HeightRequest="130"
+                    WidthRequest="165">
+                    <VerticalStackLayout Spacing="30">
+                        <Image Source="user.png" HorizontalOptions="Start"/>
+                        <Label Text="Users" FontSize="Subtitle" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout
+                Spacing="20">
+
+                <Frame
+                    CornerRadius="15"
+                    HeightRequest="130"
+                    WidthRequest="165">
+                    <VerticalStackLayout Spacing="30">
+                        <Image Source="payment.png" HorizontalOptions="Start" />
+                        <Label Text="Payments" FontSize="Subtitle" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame
+                    CornerRadius="15"
+                    HeightRequest="130"
+                    WidthRequest="165">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnReportTap" NumberOfTapsRequired="1" />
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout Spacing="30">
+                        <Image Source="report.png" HorizontalOptions="Start" />
+                        <Label Text="Reports" FontSize="Subtitle" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout
+                Spacing="20">
+
+                <Frame
+                    CornerRadius="15"
+                    HeightRequest="130"
+                    WidthRequest="165">
+                    <VerticalStackLayout Spacing="30">
+                        <Image Source="personadd.png" HorizontalOptions="Start" />
+                        <Label Text="Walk-ins" FontSize="Subtitle" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </HorizontalStackLayout>
+            
+
+
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

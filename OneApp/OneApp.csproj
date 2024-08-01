@@ -38,7 +38,7 @@
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#3b4ba5" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -56,17 +56,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Views\" />
-	  <None Remove="Resources\Images\Home.svg" />
-	  <None Remove="Resources\Images\Products.svg" />
-	  <None Remove="Resources\Images\Settings.txt" />
-	</ItemGroup>
-	<ItemGroup>
 	  <Folder Include="Views\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <BundleResource Include="Resources\Images\home.svg" />
 	  <BundleResource Include="Resources\Images\products.svg" />
 	  <BundleResource Include="Resources\Images\settings.svg" />
+	  <BundleResource Include="Resources\Images\sale.svg" />
+	  <BundleResource Include="Resources\Images\purchase.svg" />
+	  <BundleResource Include="Resources\Images\inventory.svg" />
+	  <BundleResource Include="Resources\Images\user.svg" />
+	  <BundleResource Include="Resources\Images\payment.svg" />
+	  <BundleResource Include="Resources\Images\report.svg" />
+	  <BundleResource Include="Resources\Images\personadd.svg" />
 	</ItemGroup>
 </Project>
