@@ -1,6 +1,6 @@
 # This workflow will build the project
 
-name: Build MAUI App
+name: Build App
 
 on:
   push:
@@ -10,9 +10,7 @@ on:
 
 jobs:
   build:
-  
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Install .NET
@@ -20,16 +18,20 @@ jobs:
       with:
         dotnet-version: 7.0.x
     - name: Install MAUI workload
-      run: |
-        dotnet workload install maui
-        dotnet workload install android
+      run:  dotnet workload install android
     - uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
         java-version: '17'
     - name: Restore dependencies
-      run: dotnet restore
+      run:  dotnet restore
     - name: Build
-      run: dotnet build OneApp/OneApp.csproj --no-restore -c debug -f:net7.0-android
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run:  dotnet build OneApp/OneApp.csproj --no-restore -c release -f:net7.0-android
+    - name: Tests
+      run:  dotnet test --no-build --verbosity normal
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4.3.4
+      with: 
+        path: |
+          ./**/*.aab
+          ./**/*.apk
