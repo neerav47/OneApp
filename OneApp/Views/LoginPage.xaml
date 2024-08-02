@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OneApp.Views.LoginPage"
+             Title="LoginPage"
+             Shell.NavBarIsVisible="False">
+    <VerticalStackLayout VerticalOptions="Center" Margin="30" Spacing="30">
+        <Label 
+            Text="Sign in"
+            HorizontalOptions="Start"
+            FontSize="Title"
+            FontAttributes="Bold"/>
+        <Entry Placeholder="Username" />
+
+        <Entry Placeholder="Password" />
+
+        <Button Text="Sign in" CornerRadius="20" WidthRequest="220" FontSize="Subtitle" HorizontalOptions="Center" />
+
+        <Label Text="Forgot password?" HorizontalOptions="Center" TextColor="#3b4ba5">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnForgotPasswordTap" NumberOfTapsRequired="1" />
+            </Label.GestureRecognizers>
+        </Label>
+    </VerticalStackLayout>
+</ContentPage>
