@@ -22,6 +22,12 @@ public partial class MainPage : ContentPage
         Navigate(new ReportsPage());
     }
 
+    void OnSignOutTap(object sender, EventArgs eventArgs)
+    {
+        SecureStorage.Default.RemoveAll();
+        App.Current.MainPage = new LoginPage();
+    }
+
     private async void Navigate(ContentPage page)
     {
         await Navigation.PushAsync(page);

@@ -108,6 +108,18 @@
                     </VerticalStackLayout>
                 </Frame>
 
+                <Frame
+                    CornerRadius="15"
+                    HeightRequest="130"
+                    WidthRequest="165">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSignOutTap" NumberOfTapsRequired="1" />
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout Spacing="30">
+                        <Label Text="SignOut" FontSize="Subtitle" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Frame>
+
             </HorizontalStackLayout>
 
 

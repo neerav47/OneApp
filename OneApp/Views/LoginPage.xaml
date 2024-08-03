@@ -14,8 +14,8 @@
 
         <Entry Placeholder="Password" />
 
-        <Button Text="Sign in" CornerRadius="20" WidthRequest="220" FontSize="Subtitle" HorizontalOptions="Center" />
-
+        <Button Text="Sign in" CornerRadius="20" WidthRequest="220" FontSize="Subtitle" HorizontalOptions="Center" Clicked="Button_Clicked"/>
+            
         <Label Text="Forgot password?" HorizontalOptions="Center" TextColor="#3b4ba5">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnForgotPasswordTap" NumberOfTapsRequired="1" />
