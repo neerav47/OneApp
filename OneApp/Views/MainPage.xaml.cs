@@ -24,7 +24,8 @@ public partial class MainPage : ContentPage
 
     void OnSignOutTap(object sender, EventArgs eventArgs)
     {
-        SecureStorage.Default.RemoveAll();
+        //SecureStorage.Default.RemoveAll();
+        Preferences.Remove("UserInfo");
         App.Current.MainPage = new LoginPage();
     }
 

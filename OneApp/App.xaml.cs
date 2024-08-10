@@ -12,7 +12,8 @@ namespace OneApp
 
         object CheckStatus()
         {
-            var userInfo = SecureStorage.Default.GetAsync("UserInfo").GetAwaiter().GetResult();
+            //var userInfo = SecureStorage.Default.GetAsync("UserInfo").GetAwaiter().GetResult();
+            var userInfo = Preferences.Default.Get<string>("UserInfo", null);
             if (userInfo == null)
             {
                 return new LoginPage();
