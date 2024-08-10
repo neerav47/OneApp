@@ -28,7 +28,7 @@ jobs:
     - name: Restore dependencies
       run:  dotnet restore
     - name: Build
-      run:  dotnet build OneApp/OneApp.csproj --no-restore -c release -f:net8.0-android
+      run:  dotnet build OneApp/OneApp.csproj --no-restore -c release -f:net8.0-android -v normal
     - name: Tests
       run:  dotnet test --no-build --verbosity normal
     - name: Upload Artifacts
@@ -52,6 +52,6 @@ jobs:
     - name: Restore dependencies
       run:  dotnet restore
     - name: Build
-      run:  dotnet build OneApp/OneApp.csproj --no-restore -c release -f:net8.0-ios
+      run:  dotnet build OneApp/OneApp.csproj --no-restore -c release -f:net8.0-ios -v normal
     - name: Tests
       run:  dotnet test --no-build --verbosity normal
