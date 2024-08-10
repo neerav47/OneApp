@@ -10,7 +10,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  andriod-build:
+    name: Andriod Build
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
@@ -36,3 +37,21 @@ jobs:
         path: |
           ./**/*.aab
           ./**/*.apk
+
+  ios-build:
+    name: IOS Build
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Install MAUI workload
+      run:  dotnet workload install ios
+    - name: Restore dependencies
+      run:  dotnet restore
+    - name: Build
+      run:  dotnet build OneApp/OneApp.csproj --no-restore -c release -f:net8.0-ios
+    - name: Tests
+      run:  dotnet test --no-build --verbosity normal
