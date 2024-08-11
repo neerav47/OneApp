@@ -10,15 +10,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  android-build:
+    name: Android Build
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
     - name: Install .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 7.0.x
-    - name: Install MAUI workload
+        dotnet-version: 8.0.x
+    - name: Install MAUI android workload
       run:  dotnet workload install android
     - uses: actions/setup-java@v3
       with:
@@ -27,7 +28,7 @@ jobs:
     - name: Restore dependencies
       run:  dotnet restore
     - name: Build
-      run:  dotnet build OneApp/OneApp.csproj --no-restore -c release -f:net7.0-android
+      run:  dotnet build OneApp/OneApp.csproj --no-restore -c release -f:net8.0-android -v normal
     - name: Tests
       run:  dotnet test --no-build --verbosity normal
     - name: Upload Artifacts
@@ -36,3 +37,21 @@ jobs:
         path: |
           ./**/*.aab
           ./**/*.apk
+
+  ios-build:
+    name: IOS Build
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Install MAUI ios workload
+      run:  dotnet workload install ios
+    - name: Restore dependencies
+      run:  dotnet restore
+    - name: Build
+      run:  dotnet build OneApp/OneApp.csproj --no-restore -c release -f:net8.0-ios -v normal
+    - name: Tests
+      run:  dotnet test --no-build --verbosity normal

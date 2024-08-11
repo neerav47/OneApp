@@ -17,9 +17,10 @@ public partial class LoginPage : ContentPage
         UserSignIn();
     }
 
-	private async void UserSignIn()
+	private void UserSignIn()
 	{
-		await SecureStorage.Default.SetAsync("UserInfo", "test");
+		Preferences.Default.Set<string>("UserInfo", "test");
+		//SecureStorage.Default.SetAsync("UserInfo", "test").GetAwaiter().GetResult();
 		App.Current.MainPage = new AppShell();
 	}
 }

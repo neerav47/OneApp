@@ -10,18 +10,18 @@
         <ShellContent
             Title="Home"
             ContentTemplate="{DataTemplate view:MainPage}"
-            Icon="home.svg"/>
+            Icon="home.png"/>
 
         <ShellContent
             Title="Products"
             ContentTemplate="{DataTemplate view:Products}"
-            Icon="products.svg"
+            Icon="products.png"
             />
 
         <ShellContent
             Title="Settings"
             ContentTemplate="{DataTemplate view:Settings}"
-            Icon="settings.svg"/>
+            Icon="settings.png"/>
 
     </TabBar>
 

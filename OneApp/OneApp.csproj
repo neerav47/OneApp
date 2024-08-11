@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
 		<OutputType>Exe</OutputType>
@@ -30,59 +30,56 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+<!--	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+	  <CreatePackage>false</CreatePackage>
+	</PropertyGroup>-->
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
+	  <CreatePackage>false</CreatePackage>
+	  <CodesignKey>iPhone Developer</CodesignKey>
+	  <CodesignEntitlements></CodesignEntitlements>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
 	  <CreatePackage>false</CreatePackage>
 	</PropertyGroup>
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="ResourcesNet\AppIcon\appicon.svg" ForegroundFile="ResourcesNet\AppIcon\appiconfg.svg" Color="#512BD4" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\logo.svg" Color="#3b4ba5" BaseSize="128,128" />
+		<MauiSplashScreen Include="ResourcesNet\Splash\logo.svg" Color="#3b4ba5" BaseSize="128,128" />
 
 		<!-- Images -->
-		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+		<MauiImage Include="ResourcesNet\Images\*" />
+		<MauiImage Update="ResourcesNet\Images\dotnet_bot.svg" BaseSize="168,208" />
 
 		<!-- Custom Fonts -->
-		<MauiFont Include="Resources\Fonts\*" />
+		<MauiFont Include="ResourcesNet\Fonts\*" />
 
-		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		<!-- Raw Assets (also remove the "ResourcesNet\Raw" prefix) -->
+		<MauiAsset Include="ResourcesNet\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.71" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Remove="Views\" />
-	  <None Remove="Resources\Images\Home.svg" />
-	  <None Remove="Resources\Images\Products.svg" />
-	  <None Remove="Resources\Images\Settings.txt" />
-	  <None Remove="Resources\Images\user.svg" />
-	  <None Remove="Resources\Images\sale.svg" />
-	  <None Remove="Resources\Images\report.svg" />
-	  <None Remove="Resources\Images\purchase.svg" />
-	  <None Remove="Resources\Images\personadd.svg" />
-	  <None Remove="Resources\Images\payment.svg" />
-	  <None Remove="Resources\Images\inventory.svg" />
-	  <None Remove="Resources\Splash\logo.svg" />
-	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Views\" />
 	</ItemGroup>
 	<ItemGroup>
-	  <BundleResource Include="Resources\Images\home.svg" />
-	  <BundleResource Include="Resources\Images\products.svg" />
-	  <BundleResource Include="Resources\Images\settings.svg" />
-	  <BundleResource Include="Resources\Images\user.svg" />
-	  <BundleResource Include="Resources\Images\sale.svg" />
-	  <BundleResource Include="Resources\Images\report.svg" />
-	  <BundleResource Include="Resources\Images\purchase.svg" />
-	  <BundleResource Include="Resources\Images\personadd.svg" />
-	  <BundleResource Include="Resources\Images\payment.svg" />
-	  <BundleResource Include="Resources\Images\inventory.svg" />
-	  <BundleResource Include="Resources\Splash\logo.svg" />
+	  <BundleResource Include="ResourcesNet\Images\home.svg">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </BundleResource>
+	  <BundleResource Include="ResourcesNet\Images\products.svg" />
+	  <BundleResource Include="ResourcesNet\Images\settings.svg" />
+	  <BundleResource Include="ResourcesNet\Images\user.svg" />
+	  <BundleResource Include="ResourcesNet\Images\sale.svg" />
+	  <BundleResource Include="ResourcesNet\Images\report.svg" />
+	  <BundleResource Include="ResourcesNet\Images\purchase.svg" />
+	  <BundleResource Include="ResourcesNet\Images\personadd.svg" />
+	  <BundleResource Include="ResourcesNet\Images\payment.svg" />
+	  <BundleResource Include="ResourcesNet\Images\inventory.svg" />
+	  <BundleResource Include="ResourcesNet\Splash\logo.svg" />
 	</ItemGroup>
 </Project>

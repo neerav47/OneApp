@@ -10,9 +10,9 @@
             HorizontalOptions="Start"
             FontSize="Title"
             FontAttributes="Bold"/>
-        <Entry Placeholder="Username" />
+        <Entry Placeholder="Username" Keyboard="Chat" />
 
-        <Entry Placeholder="Password" />
+        <Entry Placeholder="Password" IsPassword="True"/>
 
         <Button Text="Sign in" CornerRadius="20" WidthRequest="220" FontSize="Subtitle" HorizontalOptions="Center" Clicked="Button_Clicked"/>
             
