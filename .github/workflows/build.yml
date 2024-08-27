@@ -27,7 +27,7 @@ jobs:
         dotnet-version: ${{ env.NETCORE_VERSION }}
 
     - name: Install MAUI workloads
-      run:  dotnet workload install android, ios
+      run:  dotnet workload install android ios
 
     - uses: actions/setup-java@v3
       with:
