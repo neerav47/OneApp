@@ -20,23 +20,30 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Install .NET
+  
+    - name: Install .NET Core SDK ${{ env.NETCORE_VERSION }}
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{ env.NETCORE_VERSION }}
+
     - name: Install MAUI android workload
       run:  dotnet workload install android
+
     - uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
         java-version: '17'
+
     - name: Restore dependencies
-      run:  dotnet restore
+      run:  dotnet restore OneApp/OneApp.csproj
+
     - name: Build
       run:  dotnet build OneApp/OneApp.csproj --no-restore -c ${{ env.BUILD_CONFIGURATION }} -f:net8.0-android -v normal
+
     - name: Tests
       run:  dotnet test --no-build --verbosity normal
-    - name: Upload Artifacts
+
+    - name: Publish artifacts
       uses: actions/upload-artifact@v4.3.4
       with: 
         path: |
@@ -58,7 +65,7 @@ jobs:
       run:  dotnet workload install ios
 
     - name: Restore dependencies
-      run:  dotnet restore
+      run:  dotnet restore OneApp/OneApp.csproj
 
     - name: Build
       run:  dotnet build OneApp/OneApp.csproj --no-restore -c ${{ env.BUILD_CONFIGURATION }} -f:net8.0-ios -v normal
@@ -78,18 +85,18 @@ jobs:
         dotnet-version: ${{ env.NETCORE_VERSION }}
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore OneApp.API/OneApp.API.csproj
 
     - name: Build 
-      run: dotnet build OneApp/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
+      run: dotnet build OneApp/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore -v normal
 
     - name: Tests
       run: dotnet test --no-build
 
     - name: Publish web app
-      run: dotnet publish --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --output ${{ env.WEBAPP_PACKAGE_PATH }}
+      run: dotnet publish --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --output ${{ env.WEBAPP_PACKAGE_PATH }} -v normal
 
-    - name: Publish Artifacts
+    - name: Publish artifacts
       uses: actions/upload-artifact@v4.3.4
       with:
         name: webapp
