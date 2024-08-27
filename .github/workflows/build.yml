@@ -26,8 +26,8 @@ jobs:
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
 
-    - name: Install MAUI android workload
-      run:  dotnet workload install android
+    - name: Install MAUI workloads
+      run:  dotnet workload install android, ios
 
     - uses: actions/setup-java@v3
       with:
@@ -88,13 +88,13 @@ jobs:
       run: dotnet restore OneApp.API/OneApp.API.csproj
 
     - name: Build 
-      run: dotnet build OneApp/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore -v normal
+      run: dotnet build OneApp.API/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore -v normal
 
     - name: Tests
       run: dotnet test --no-build
 
     - name: Publish web app
-      run: dotnet publish --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --output ${{ env.WEBAPP_PACKAGE_PATH }} -v normal
+      run: dotnet publish OneApp.API/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --output ${{ env.WEBAPP_PACKAGE_PATH }} -v normal
 
     - name: Publish artifacts
       uses: actions/upload-artifact@v4.3.4
