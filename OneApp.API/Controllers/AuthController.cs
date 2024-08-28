@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace OneApp.API.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class AuthController : Controller
     {
         [HttpPost("login")]

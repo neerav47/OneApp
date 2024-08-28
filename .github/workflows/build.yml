@@ -9,16 +9,22 @@ on:
     branches: [ "master" ]
   workflow_dispatch:
 
+env:
+  NETCORE_VERSION: '8.0.x'
+  WEBAPP_PACKAGE_PATH: './published'
+  BUILD_CONFIGURATION: 'release'
+
 jobs:
   android-build:
     name: Android Build
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Install .NET
+  
+    - name: Install .NET Core SDK ${{ env.NETCORE_VERSION }}
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{ env.NETCORE_VERSION }}
         
     - name: Install MAUI workload
       run:  dotnet workload install android ios maui-android maui-ios maui-windows maccatalyst
@@ -27,13 +33,17 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
+
     - name: Restore dependencies
-      run:  dotnet restore
+      run:  dotnet restore OneApp/OneApp.csproj
+
     - name: Build
-      run:  dotnet build OneApp/OneApp.csproj --no-restore -c release -f:net8.0-android -v normal
+      run:  dotnet build OneApp/OneApp.csproj --no-restore -c ${{ env.BUILD_CONFIGURATION }} -f:net8.0-android -v normal
+
     - name: Tests
       run:  dotnet test --no-build --verbosity normal
-    - name: Upload Artifacts
+
+    - name: Publish artifacts
       uses: actions/upload-artifact@v4.3.4
       with: 
         path: |
@@ -45,17 +55,50 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Install .NET
+  
+    - name: Install .NET Core SDK ${{ env.NETCORE_VERSION }}
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{ env.NETCORE_VERSION }}
         
     - name: Install MAUI workload
       run:  dotnet workload install android ios maui-android maui-ios maui-windows maccatalyst
       
     - name: Restore dependencies
-      run:  dotnet restore
+      run:  dotnet restore OneApp/OneApp.csproj
+
     - name: Build
-      run:  dotnet build OneApp/OneApp.csproj --no-restore -c release -f:net8.0-ios -v normal
+      run:  dotnet build OneApp/OneApp.csproj --no-restore -c ${{ env.BUILD_CONFIGURATION }} -f:net8.0-ios -v normal
+
     - name: Tests
       run:  dotnet test --no-build --verbosity normal
+
+  webapp-build:
+    name: Web app build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install .NET Core SDK ${{ env.NETCORE_VERSION }}
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.NETCORE_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore OneApp.API/OneApp.API.csproj
+
+    - name: Build 
+      run: dotnet build OneApp.API/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore -v normal
+
+    - name: Tests
+      run: dotnet test --no-build
+
+    - name: Publish web app
+      run: dotnet publish OneApp.API/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --output ${{ env.WEBAPP_PACKAGE_PATH }} -v normal
+
+    - name: Publish artifacts
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: webapp
+        path: ${{ env.WEBAPP_PACKAGE_PATH }}
+
