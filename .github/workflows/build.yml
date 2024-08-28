@@ -25,10 +25,10 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
-
-    - name: Install MAUI workloads
-      run:  dotnet workload install android ios
-
+        
+    - name: Install MAUI workload
+      run:  dotnet workload install android ios maui-android maui-ios maui-windows maccatalyst
+      
     - uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
@@ -60,10 +60,10 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
-
-    - name: Install MAUI ios workload
-      run:  dotnet workload install ios
-
+        
+    - name: Install MAUI workload
+      run:  dotnet workload install android ios maui-android maui-ios maui-windows maccatalyst
+      
     - name: Restore dependencies
       run:  dotnet restore OneApp/OneApp.csproj
 
