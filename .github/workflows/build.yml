@@ -19,8 +19,10 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: Install MAUI android workload
-      run:  dotnet workload install android
+        
+    - name: Install MAUI workload
+      run:  dotnet workload install android ios maui-android maui-ios maui-windows maccatalyst
+      
     - uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
@@ -47,8 +49,10 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: Install MAUI ios workload
-      run:  dotnet workload install ios
+        
+    - name: Install MAUI workload
+      run:  dotnet workload install android ios maui-android maui-ios maui-windows maccatalyst
+      
     - name: Restore dependencies
       run:  dotnet restore
     - name: Build
