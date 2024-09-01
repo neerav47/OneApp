@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OneApp.Business.Interfaces;
+using OneApp.Business.Services;
 using OneApp.Data.Context;
-using OneApp.Data.Interfaces;
-using OneApp.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +15,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Services
 builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 

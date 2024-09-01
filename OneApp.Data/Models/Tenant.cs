@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace OneApp.Data.Models;
-public class Tenant
+
+[Index(nameof(Name), IsUnique = true)]
+public sealed class Tenant
 {
     [Key]
     public Guid Id { get; set; }

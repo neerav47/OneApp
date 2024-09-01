@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OneApp.Data.Context;
 
@@ -10,9 +11,11 @@ using OneApp.Data.Context;
 namespace OneApp.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240901001230_Setup Products and Inventory")]
+    partial class SetupProductsandInventory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -178,11 +181,7 @@ namespace OneApp.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex(new[] { "Id", "ProductId" }, "IX_Id_ProductId_Unique")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "TransactionId" }, "IX_TransactionId_Unique")
-                        .IsUnique();
+                    b.HasIndex("TransactionId");
 
                     b.ToTable("Inventory");
                 });
@@ -258,12 +257,9 @@ namespace OneApp.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Tenant");
                 });

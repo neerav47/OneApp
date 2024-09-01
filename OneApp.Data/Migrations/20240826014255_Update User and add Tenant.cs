@@ -42,7 +42,7 @@ namespace OneApp.Data.Migrations
                 column: "TenantId",
                 principalTable: "Tenant",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
