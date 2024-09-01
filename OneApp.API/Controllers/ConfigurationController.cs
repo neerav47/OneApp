@@ -1,20 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OneApp.Data.Interfaces;
+using OneApp.Business.Interfaces;
 using System.Net;
 
 namespace OneApp.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ConfigurationController : ControllerBase
+public class ConfigurationController(IConfigurationService _configurationService) : ControllerBase
 {
-    private readonly IConfigurationService _configurationService;
-
-    public ConfigurationController(IConfigurationService configurationService)
-    {
-        this._configurationService = configurationService;
-    }
-
     [HttpGet("tenants")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetAllTenants()
