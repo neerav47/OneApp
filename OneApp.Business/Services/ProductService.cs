@@ -13,6 +13,11 @@ public class ProductService(DataContext _context, IMapper _mapper) : IProductSer
         throw new NotImplementedException();
     }
 
+    public Task CreateProductType()
+    {
+        throw new NotImplementedException();
+    }
+
     public Task DeleteProductById(string id)
     {
         throw new NotImplementedException();
@@ -22,6 +27,12 @@ public class ProductService(DataContext _context, IMapper _mapper) : IProductSer
     {
         var products = await _context.Product.ToListAsync();
         return _mapper.Map<List<ProductDto>>(products);
+    }
+
+    public async Task<IEnumerable<ProductTypeDto>> GetAllProductTypes()
+    {
+        var productTypes = await _context.ProductType.ToListAsync();
+        return _mapper.Map<List<ProductTypeDto>>(productTypes);
     }
 
     public async Task<ProductDto?> GetProductById(string id)
