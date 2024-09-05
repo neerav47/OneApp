@@ -5,11 +5,11 @@ using System.Net;
 
 namespace OneApp.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api")]
 [ApiController]
 public class ProductController(IProductService _productService, IMapper _mapper) : ControllerBase
 {
-    [HttpGet("v1/all")]
+    [HttpGet("v1/getProducts")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetAllProducts()
@@ -18,7 +18,7 @@ public class ProductController(IProductService _productService, IMapper _mapper)
         return Ok(products);
     }
 
-    [HttpGet("v1/{id}")]
+    [HttpGet("v1/product/{id}")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
@@ -28,7 +28,7 @@ public class ProductController(IProductService _productService, IMapper _mapper)
         return product != null ? Ok(product) : NotFound();
     }
 
-    [HttpDelete("v1/{id}")]
+    [HttpDelete("v1/product/{id}")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> DeleteProductById(string id)
@@ -37,7 +37,7 @@ public class ProductController(IProductService _productService, IMapper _mapper)
         return Ok();
     }
 
-    [HttpPost("v1")]
+    [HttpPost("v1/product")]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
@@ -46,6 +46,25 @@ public class ProductController(IProductService _productService, IMapper _mapper)
     {
         await _productService.CreateProduct();
         return CreatedAtRoute(nameof(GetProductById), "");
+    }
+
+    [HttpGet("v1/getProductTypes")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+    public async Task<IActionResult> GetAllProductTypes()
+    {
+        var productTypes = await _productService.GetAllProductTypes();
+        return Ok(productTypes);
+    }
+
+    [HttpPost("v1/productType")]
+    [ProducesResponseType((int)HttpStatusCode.Created)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    public async Task<IActionResult> CreateProductType([FromBody] dynamic request)
+    {
+        await _productService.CreateProductType();
+        return Created();
     }
 }
 

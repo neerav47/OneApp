@@ -10,4 +10,8 @@ public interface IProductService
     Task<IEnumerable<ProductDto>> GetAllProducts();
 
     Task DeleteProductById(string id);
+
+    Task<IEnumerable<ProductTypeDto>> GetAllProductTypes();
+
+    Task CreateProductType();
 }
