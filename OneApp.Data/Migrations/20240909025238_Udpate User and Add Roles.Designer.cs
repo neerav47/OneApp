@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OneApp.Data.Context;
 
@@ -10,9 +11,11 @@ using OneApp.Data.Context;
 namespace OneApp.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240909025238_Udpate User and Add Roles")]
+    partial class UdpateUserandAddRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,7 +207,7 @@ namespace OneApp.Data.Migrations
                     b.HasIndex(new[] { "TransactionId" }, "IX_TransactionId_Unique")
                         .IsUnique();
 
-                    b.ToTable("Inventory", (string)null);
+                    b.ToTable("Inventory");
                 });
 
             modelBuilder.Entity("OneApp.Data.Models.Product", b =>
@@ -240,7 +243,7 @@ namespace OneApp.Data.Migrations
 
                     b.HasIndex("ProductTypeId");
 
-                    b.ToTable("Product", (string)null);
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("OneApp.Data.Models.ProductType", b =>
@@ -267,7 +270,7 @@ namespace OneApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductType", (string)null);
+                    b.ToTable("ProductType");
                 });
 
             modelBuilder.Entity("OneApp.Data.Models.Tenant", b =>
@@ -285,7 +288,7 @@ namespace OneApp.Data.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Tenant", (string)null);
+                    b.ToTable("Tenant");
                 });
 
             modelBuilder.Entity("OneApp.Data.Models.Transaction", b =>
@@ -311,7 +314,7 @@ namespace OneApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Transaction", (string)null);
+                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("OneApp.Data.Models.User", b =>

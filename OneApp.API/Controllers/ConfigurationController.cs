@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OneApp.Business.Interfaces;
+using OneApp.Contracts.v1;
 using System.Net;
 
 namespace OneApp.API.Controllers;
@@ -28,10 +29,10 @@ public class ConfigurationController(IConfigurationService _configurationService
     [HttpPost("tenant")]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> CreateTenant([FromBody] dynamic request)
+    public async Task<IActionResult> CreateTenant([FromBody] CreateTenantRequest request)
     {
-        await _configurationService.CreateTenant();
-        return Created();
+        var tenantId = await _configurationService.CreateTenant(request);
+        return CreatedAtAction(nameof(GetTenantById),new { id = tenantId }, null);
     }
 }
 

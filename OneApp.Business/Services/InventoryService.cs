@@ -4,6 +4,7 @@ using OneApp.Data.Context;
 namespace OneApp.Business.Services;
 public class InventoryService(DataContext _context) : IInventoryService
 {
+    #region Public methods
     public Task CreateInventory()
     {
         throw new NotImplementedException();
@@ -18,4 +19,6 @@ public class InventoryService(DataContext _context) : IInventoryService
     {
         throw new NotImplementedException();
     }
+
+    #endregion
 }

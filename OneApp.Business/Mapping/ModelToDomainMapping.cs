@@ -12,5 +12,6 @@ public class ModelToDomainMapping : Profile
         CreateMap<Inventory, InventoryDto>();
         CreateMap<Tenant, TenantDto>();
         CreateMap<ProductType, ProductTypeDto>();
+        CreateMap<User, UserDto>();
     }
 }

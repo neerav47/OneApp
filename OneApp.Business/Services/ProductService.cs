@@ -8,6 +8,8 @@ namespace OneApp.Business.Services;
 
 public class ProductService(DataContext _context, IMapper _mapper) : IProductService
 {
+    #region Public methods
+
     public Task CreateProduct()
     {
         throw new NotImplementedException();
@@ -40,6 +42,8 @@ public class ProductService(DataContext _context, IMapper _mapper) : IProductSer
         var product = await _context.Product.Where(p => p.Id.Equals(Guid.Parse(id))).FirstOrDefaultAsync();
         return _mapper.Map<ProductDto?>(product);
     }
+
+    #endregion
 }
 
 
