@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneApp.Business.Interfaces;
 using System.Net;
@@ -7,11 +9,13 @@ namespace OneApp.API.Controllers;
 
 [Route("api")]
 [ApiController]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class ProductController(IProductService _productService, IMapper _mapper) : ControllerBase
 {
     [HttpGet("v1/getProducts")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+    [Authorize(Roles = "Global admin")]
     public async Task<IActionResult> GetAllProducts()
     {
         var products = await _productService.GetAllProducts();

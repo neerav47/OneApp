@@ -1,25 +1,19 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using OneApp.Business.Interfaces;
+using OneApp.Contracts.v1;
 
 namespace OneApp.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AuthController : Controller
+public class AuthController(IAuthService _authService) : Controller
 {
     [HttpPost("login")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<bool> Login([FromBody] object loginRequest)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        await Task.Delay(1000);
-        return true;
-    }
-
-    [HttpPost("register")]
-    [ProducesResponseType((int)HttpStatusCode.Created)]
-    public async Task<bool> Register([FromBody] object registerRequest)
-    {
-        await Task.Delay(1000);
-        return true;
+        var response = await _authService.LogIn(request);
+        return Ok(response);
     }
 }
