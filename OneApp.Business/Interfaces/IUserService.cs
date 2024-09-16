@@ -16,6 +16,8 @@ public interface IUserService
     Task<bool> UpdateUserRoles(UserRolesRequest request);
 
     Task<UserDetailDto?> GetUserByEmail(string email);
+
+    Task UpdateUserById(string id, IDictionary<string, object> payload);
 }
 
 

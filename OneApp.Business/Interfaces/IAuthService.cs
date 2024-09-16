@@ -6,6 +6,7 @@ namespace OneApp.Business.Interfaces;
 
 public interface IAuthService
 {
-    Task<string> LogIn(LoginRequest request);
-    Task RefreshToken();
+    Task<TokenResponse> LogIn(LoginRequest request);
+    
+    Task<TokenResponse> RefreshToken(TokenRequest request);
 }

@@ -139,9 +139,43 @@ public class UserService(
         return new UserDetailDto
         {
             Id = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email= user.Email,
             Tenant = _mapper.Map<TenantDto>(user.Tenant),
             Roles = roles
         };
+    }
+
+    public async Task UpdateUserById(string id, IDictionary<string, object> payload)
+    {
+        _logger.LogInformation($"{nameof(UpdateUserById)} started.");
+        using var transaction = _context.Database.BeginTransaction(IsolationLevel.ReadCommitted).GetDbTransaction();
+        try
+        {
+            _logger.LogInformation($"{nameof(UpdateUserById)} transaction scope started.");
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
+
+            if (user == null)
+            {
+                _logger.LogInformation($"{nameof(UpdateUserById)} user not found.");
+            }
+
+            foreach(var pair in payload.ToArray())
+            {
+                user.GetType().GetProperty(pair.Key)?.SetValue(user, pair.Value);
+            }
+
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+            _logger.LogInformation($"{nameof(UpdateUserById)} transaction scope completed.");
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, "Failed to update user");
+            await transaction.RollbackAsync();
+            throw new Exception(ex.Message);
+        }
     }
 
     #endregion
