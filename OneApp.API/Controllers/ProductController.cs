@@ -15,7 +15,6 @@ public class ProductController(IProductService _productService, IMapper _mapper)
     [HttpGet("v1/getProducts")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-    [Authorize(Roles = "Global admin")]
     public async Task<IActionResult> GetAllProducts()
     {
         var products = await _productService.GetAllProducts();

@@ -16,4 +16,8 @@ public class User: IdentityUser
     [Required]
     public Guid TenantId { get; set; }
     public Tenant Tenant { get; set; } = default!;
+
+    public string? RefreshToken { get; set; }
+
+    public DateTime? RefreshTokenExpiry { get; set; }
 }

@@ -1,21 +1,28 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using OneApp.Business.DTOs;
 using OneApp.Business.Interfaces;
 using OneApp.Contracts.v1;
+using OneApp.Data.Context;
 using OneApp.Data.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
+
 namespace OneApp.Business.Services;
 
 public class AuthService(
-    UserManager<User> _userManager,
+    DataContext _context,
     ILogger<AuthService> _logger,
     IPasswordHasher _passwordHasher,
-    IConfiguration _configuration) : IAuthService
+    IConfiguration _configuration,
+    IUserService _userService) : IAuthService
 {
+    private const short REFRESH_TOKEN_SIZE = 64;
+
     #region Public methods
     public Task RefreshToken()
     {
@@ -23,11 +30,11 @@ public class AuthService(
     }
 
 
-    public async Task<string> LogIn(LoginRequest request)
+    public async Task<TokenResponse> LogIn(LoginRequest request)
     {
         _logger.LogInformation($"{nameof(LogIn)} started.");
 
-        var user = await _userManager.FindByEmailAsync(request.UserName);
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Email.Equals(request.UserName, StringComparison.OrdinalIgnoreCase));
 
         if (user == null)
         {
@@ -39,13 +46,38 @@ public class AuthService(
             throw new Exception("Invalid username or password");
         }
 
-        var userRoles = await _userManager.GetRolesAsync(user);
-        return GenerateJwtToken(user, [.. userRoles]);
+        var userDetails = await _userService.GetUserByEmail(user.Email);
+
+        return await GetTokenResponse(user, userDetails?.RoleNames ?? []);
+    }
+
+    public async Task<TokenResponse> RefreshToken(TokenRequest request)
+    {
+        _logger.LogInformation($"{nameof(RefreshToken)} started.");
+
+        // Validate and extract userId
+        var userId = ValidateJwt(request.AccessToken!);
+
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Id.Equals(userId, StringComparison.OrdinalIgnoreCase));
+
+        if (user == null || 
+            user.RefreshToken == null ||
+            user.RefreshTokenExpiry < DateTime.UtcNow ||
+            !user.RefreshToken.Equals(request.RefreshToken))
+        {
+            _logger.LogInformation($"{nameof(RefreshToken)} invalid.");
+            throw new Exception("Failed to validate refresh token.");
+        }
+
+        var userDetails = await _userService.GetUserByEmail(user.Email);
+
+        return await GetTokenResponse(user, userDetails?.RoleNames ?? []);
     }
 
     #endregion
 
     #region Private methods
+
     private string GenerateJwtToken(User user, string[] roles)
     {
         var claims = new List<Claim>()
@@ -54,6 +86,8 @@ public class AuthService(
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.GivenName, user.FirstName),
             new(JwtRegisteredClaimNames.FamilyName, user.LastName),
+            new(JwtRegisteredClaimNames.Sub, user.Id),
+            new("tenant", user.TenantId.ToString())
         };
 
         foreach (var role in roles)
@@ -74,6 +108,60 @@ public class AuthService(
 
         var tokenResponse = new JwtSecurityTokenHandler().WriteToken(token);
         return tokenResponse;
-        #endregion
     }
+
+    private async Task<string> GenerateRefrestToken(User user)
+    {
+        string token = RandomNumberGenerator.GetHexString(REFRESH_TOKEN_SIZE);
+
+        await _userService.UpdateUserById(user.Id, new Dictionary<string, object>()
+        {
+            { nameof(user.RefreshToken), token },
+            { nameof(user.RefreshTokenExpiry), DateTime.UtcNow.AddHours(12) }
+        });
+
+        return token;
+    }
+
+    private string ValidateJwt(string token)
+    {
+        _logger.LogInformation($"{nameof(ValidateJwt)} started.");
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]!));
+        try
+        {
+            tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = key,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidIssuer = _configuration["JWT:Issuer"],
+                ValidAudience = "One",
+                ClockSkew = TimeSpan.Zero
+            }, out SecurityToken validatedToken);
+
+            var jwtToken = (JwtSecurityToken)validatedToken;
+            var userId = jwtToken.Claims.First(x => x.Type == JwtRegisteredClaimNames.Sub).Value;
+
+            // return user id from JWT token if validation successful
+            return userId;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"{nameof(ValidateJwt)} error validating token.");
+            throw new Exception("Error validating token.", ex);
+        }
+    }
+
+    private async Task<TokenResponse> GetTokenResponse(User user, string[] roles)
+    {
+        var response = new TokenResponse();
+        response.AccessToken = GenerateJwtToken(user, roles);
+        response.RefreshToken = await GenerateRefrestToken(user);
+        return response;
+    }
+
+    #endregion
 }
