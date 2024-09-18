@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneApp.Business.Constants;
-using OneApp.Business.DTOs;
 using OneApp.Business.Interfaces;
 using OneApp.Contracts.v1.Request;
-using OneApp.Data.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -26,7 +24,8 @@ public class ProductController(
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetAllProducts()
     {
-        var products = await _productService.GetAllProducts();
+        var context = GetContext();
+        var products = await _productService.GetAllProducts(context);
         return Ok(products);
     }
 
@@ -46,8 +45,9 @@ public class ProductController(
     [Authorize(Roles = Role.SystemAdmin)]
     public async Task<IActionResult> DeleteProductById(string id)
     {
-        await _productService.DeleteProductById(id);
-        return Ok();
+        var context = GetContext();
+        var result = await _productService.DeleteProductById(id, context);
+        return Ok(result);
     }
 
     [HttpPost("v1/product")]
@@ -56,10 +56,11 @@ public class ProductController(
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     [Authorize(Roles = Role.SystemAdmin)]
-    public async Task<IActionResult> CreateProduct([FromBody] dynamic request)
+    public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequest request)
     {
-        await _productService.CreateProduct();
-        return CreatedAtRoute(nameof(GetProductById), "");
+        var context = GetContext();
+        var product = await _productService.CreateProduct(request, context);
+        return CreatedAtAction(nameof(GetProductById), new { id = product.Id }, null);
     }
 
     [HttpGet("v1/getProductTypes")]
@@ -67,7 +68,8 @@ public class ProductController(
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetAllProductTypes()
     {
-        var productTypes = await _productService.GetAllProductTypes();
+        var context = GetContext();
+        var productTypes = await _productService.GetAllProductTypes(context);
         return Ok(productTypes);
     }
 
@@ -100,7 +102,7 @@ public class ProductController(
 
         var tenantId = _httpContextAccessor.HttpContext?.User.FindFirstValue("tenant")!;
 
-        return new Context { UserId = userId, TenantId = tenantId };
+        return new Context { UserId = Guid.Parse(userId), TenantId = Guid.Parse(tenantId) };
     }
     #endregion
 }

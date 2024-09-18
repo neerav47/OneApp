@@ -5,15 +5,15 @@ using OneApp.Contracts.v1.Request;
 namespace OneApp.Business.Interfaces;
 public interface IProductService
 {
-    Task CreateProduct();
+    Task<ProductDto> CreateProduct(CreateProductRequest request, Context context);
 
     Task<ProductDto?> GetProductById(string id);
 
-    Task<IEnumerable<ProductDto>> GetAllProducts();
+    Task<IEnumerable<ProductDto>> GetAllProducts(Context context);
 
-    Task DeleteProductById(string id);
+    Task<bool> DeleteProductById(string id, Context context);
 
-    Task<IEnumerable<ProductTypeDto>> GetAllProductTypes();
+    Task<IEnumerable<ProductTypeDto>> GetAllProductTypes(Context context);
 
     Task<ProductTypeDto> CreateProductType(CreateProductTypeRequest request, Context context);
 

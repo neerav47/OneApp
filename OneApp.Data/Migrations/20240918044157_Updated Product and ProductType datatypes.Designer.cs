@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OneApp.Data.Context;
 
@@ -10,9 +11,11 @@ using OneApp.Data.Context;
 namespace OneApp.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240918044157_Updated Product and ProductType datatypes")]
+    partial class UpdatedProductandProductTypedatatypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,9 +225,6 @@ namespace OneApp.Data.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<Guid>("LastUpdatedBy")
                         .HasColumnType("char(36)");
