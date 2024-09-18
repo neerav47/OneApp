@@ -16,7 +16,7 @@ public class Product
     public Guid ProductTypeId { get; set; } = default!;
 
     [Required]
-    public string TenantId { get; set; } = default!;
+    public Guid TenantId { get; set; } = default!;
 
     public ProductType ProductType { get; set; } = default!;
 
@@ -24,13 +24,16 @@ public class Product
     public DateTime CreatedDate { get; set; }
 
     [Required]
-    public DateTime CreatedBy { get; set; }
+    public Guid CreatedBy { get; set; }
 
     [Required]
     public DateTime LastUpdatedDate { get; set; }
 
     [Required]
-    public DateTime LastUpdatedBy { get; set; }
+    public Guid LastUpdatedBy { get; set; }
+
+    [Required]
+    public bool IsDeleted { get; set; }
 }
 
 

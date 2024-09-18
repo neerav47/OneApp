@@ -8,7 +8,7 @@ namespace OneApp.Business.Constants;
 
 public class Context
 {
-    public string UserId { get; init; } = default!;
+    public Guid UserId { get; init; } = default!;
 
-    public string TenantId { get; init; } = default!;
+    public Guid TenantId { get; init; } = default!;
 }

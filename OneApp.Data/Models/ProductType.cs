@@ -10,19 +10,19 @@ public class ProductType
     public string Name { get; set; } = default!;
 
     [Required]
-    public string TenantId { get; set; } = default!;
+    public Guid TenantId { get; set; } = default!;
 
     [Required]
     public DateTime CreatedDate { get; set; }
 
     [Required]
-    public string CreatedBy { get; set; } = default!;
+    public Guid CreatedBy { get; set; } = default!;
 
     [Required]
     public DateTime LastUpdatedDate { get; set; }
 
     [Required]
-    public string LastUpdatedBy { get; set; } = default!;
+    public Guid LastUpdatedBy { get; set; } = default!;
 
     public ICollection<Product> Products { get; set; } = default!;
 }
