@@ -8,9 +8,9 @@ public class ProductTypeDto
 
     public DateTime CreatedDate { get; set; }
 
-    public DateTime CreatedBy { get; set; }
+    public string CreatedBy { get; set; } = default!;
 
     public DateTime LastUpdatedDate { get; set; }
 
-    public DateTime LastUpdatedBy { get; set; }
+    public string LastUpdatedBy { get; set; } = default!;
 }

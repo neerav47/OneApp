@@ -39,7 +39,11 @@ builder.Services.AddAuthentication(options =>
             Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("JWT:Key")!)),
     };
     options.SaveToken = builder.Configuration.GetValue<bool>("JWT:SaveToken");
+    options.MapInboundClaims = false;
 });
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 // Add services to the container.
 builder.Services.AddControllers();
 // Fluent validations.

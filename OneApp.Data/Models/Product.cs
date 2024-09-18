@@ -15,6 +15,9 @@ public class Product
     [Required]
     public Guid ProductTypeId { get; set; } = default!;
 
+    [Required]
+    public string TenantId { get; set; } = default!;
+
     public ProductType ProductType { get; set; } = default!;
 
     [Required]

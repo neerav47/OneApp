@@ -23,7 +23,7 @@ public class UserService(
     public async Task<Guid> RegisterUser(UserRegisterRequest request)
     {
         _logger.LogInformation($"{nameof(RegisterUser)} started.");
-        using var transaction = _context.Database.BeginTransaction                (IsolationLevel.ReadCommitted).GetDbTransaction();
+        using var transaction = _context.Database.BeginTransaction(IsolationLevel.ReadCommitted).GetDbTransaction();
         try
         {
             _logger.LogInformation($"{nameof(RegisterUser)} transaction scope started.");
