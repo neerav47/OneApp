@@ -220,14 +220,14 @@ namespace OneApp.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("char(36)");
+                    b.Property<DateTime>("CreatedBy")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("LastUpdatedBy")
-                        .HasColumnType("char(36)");
+                    b.Property<DateTime>("LastUpdatedBy")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime(6)");
@@ -238,11 +238,8 @@ namespace OneApp.Data.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TenantId")
+                    b.Property<Guid>("TransactionId")
                         .HasColumnType("char(36)");
-
-                    b.Property<long>("TransactionId")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -256,44 +253,6 @@ namespace OneApp.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Inventory");
-                });
-
-            modelBuilder.Entity("OneApp.Data.Models.InventoryHistory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("InvetoryId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("LastUpdatedBy")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("LastUpdatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<long>("TransactionId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("InventoryHistory");
                 });
 
             modelBuilder.Entity("OneApp.Data.Models.Product", b =>
@@ -476,21 +435,24 @@ namespace OneApp.Data.Migrations
 
             modelBuilder.Entity("OneApp.Data.Models.Transaction", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedBy")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("LastUpdatedBy")
-                        .HasColumnType("char(36)");
+                    b.Property<DateTime>("LastUpdatedBy")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<long>("Number")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
