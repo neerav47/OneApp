@@ -1,24 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OneApp.Data.Models;
 public class Transaction
 {
     [Required]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
-    public Guid Id { get; set; }
-
-    [Required]
-    public long Number { get; set; }
+    public long Id { get; set; }
 
     [Required]
     public DateTime CreatedDate { get; set; }
 
     [Required]
-    public DateTime CreatedBy { get; set; }
+    public Guid CreatedBy { get; set; }
 
     [Required]
     public DateTime LastUpdatedDate { get; set; }
 
     [Required]
-    public DateTime LastUpdatedBy { get; set; }
+    public Guid LastUpdatedBy { get; set; }
 }

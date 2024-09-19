@@ -29,21 +29,15 @@ public class ProductService(
         try
         {
             _logger.LogInformation($"{nameof(CreateProduct)} transaction scope started.");
-            var product = new Product
-            {
-                Id = Guid.NewGuid(),
-                Name = request.Name,
-                Description = request.Description,
-                ProductTypeId = Guid.Parse(request.ProductTypeId),
-                CreatedBy = context.UserId,
-                CreatedDate = DateTime.UtcNow,
-                LastUpdatedBy = context.UserId,
-                LastUpdatedDate = DateTime.UtcNow,
-                TenantId = context.TenantId
-            };
-            var entity = await _context.Product.AddAsync(product);
+            // Add transaction
+            var trans = await _context.Transaction.AddAsync(AddTransaction(context));
             await _context.SaveChangesAsync();
-            productDto = _mapper.Map<ProductDto>(entity.Entity);
+            // Add product
+            var product = await _context.Product.AddAsync(AddProduct(request, context));
+            // Add inventory
+            var inventory = await _context.Inventory.AddAsync(AddInventory(product.Entity, trans.Entity, context));
+            await _context.SaveChangesAsync();
+            productDto = _mapper.Map<ProductDto>(product.Entity);
             await transaction.CommitAsync();
             _logger.LogInformation($"{nameof(CreateProduct)} transaction scope completed.");
         }
@@ -78,13 +72,20 @@ public class ProductService(
 
     public async Task<IEnumerable<ProductDto>> GetAllProducts(Context context)
     {
-        var products = await _context.Product.Include(p => p.ProductType).Where(p => p.TenantId == context.TenantId && !p.IsDeleted).ToListAsync();
+        var products = await _context.Product
+                                     .Include(p => p.ProductType)
+                                     .Where(p => p.TenantId == context.TenantId && !p.IsDeleted)
+                                     .ToListAsync();
         return _mapper.Map<List<ProductDto>>(products);
     }
 
     public async Task<ProductDto?> GetProductById(string id)
     {
-        var product = await _context.Product.Include(p => p.ProductType).SingleOrDefaultAsync(p => p.Id == Guid.Parse(id) && !p.IsDeleted);
+        var product = await _context.Product
+                                    .Include(p => p.ProductType)
+                                    .Include(p => p.Inventory)
+                                    .AsSplitQuery()
+                                    .SingleOrDefaultAsync(p => p.Id == Guid.Parse(id) && !p.IsDeleted);
         return _mapper.Map<ProductDto?>(product);
     }
 
@@ -138,6 +139,51 @@ public class ProductService(
 
     #endregion
 
+    #endregion
+
+    #region Private methods
+    private Product AddProduct(CreateProductRequest request, Context context)
+    {
+        return new Product
+        {
+            Id = Guid.NewGuid(),
+            Name = request.Name,
+            Description = request.Description,
+            ProductTypeId = Guid.Parse(request.ProductTypeId),
+            CreatedBy = context.UserId,
+            CreatedDate = DateTime.UtcNow,
+            LastUpdatedBy = context.UserId,
+            LastUpdatedDate = DateTime.UtcNow,
+            TenantId = context.TenantId
+        };
+    }
+
+    private Inventory AddInventory(Product product, Transaction transaction, Context context)
+    {
+        return new Inventory
+        {
+            Id = Guid.NewGuid(),
+            ProductId = product.Id,
+            Quantity = 0,
+            TransactionId = transaction.Id,
+            TenantId = context.TenantId,
+            CreatedBy = context.UserId,
+            CreatedDate = DateTime.UtcNow,
+            LastUpdatedBy = context.UserId,
+            LastUpdatedDate = DateTime.UtcNow
+        };
+    }
+
+    private Transaction AddTransaction(Context context)
+    {
+        return new Transaction
+        {
+            CreatedBy = context.UserId,
+            CreatedDate = DateTime.UtcNow,
+            LastUpdatedBy = context.UserId,
+            LastUpdatedDate = DateTime.UtcNow
+        };
+    }
     #endregion
 }
 
