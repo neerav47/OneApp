@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OneApp.Data.Context;
 
@@ -10,9 +11,11 @@ using OneApp.Data.Context;
 namespace OneApp.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240919023743_Add Inventory History")]
+    partial class AddInventoryHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,8 +197,8 @@ namespace OneApp.Data.Migrations
                     b.Property<Guid>("TenantId")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("TransactionId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -240,8 +243,8 @@ namespace OneApp.Data.Migrations
                     b.Property<Guid>("TenantId")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("TransactionId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -340,21 +343,24 @@ namespace OneApp.Data.Migrations
 
             modelBuilder.Entity("OneApp.Data.Models.Transaction", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedBy")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("LastUpdatedBy")
-                        .HasColumnType("char(36)");
+                    b.Property<DateTime>("LastUpdatedBy")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<long>("Number")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 

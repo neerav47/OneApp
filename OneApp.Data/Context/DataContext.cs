@@ -12,6 +12,7 @@ public class DataContext: IdentityDbContext<User>
     public DbSet<ProductType> ProductType { get; set; }
     public DbSet<Inventory> Inventory { get; set; }
     public DbSet<Transaction> Transaction { get; set; }
+    public DbSet<InventoryHistory> InventoryHistory { get; set; }
 
     public DataContext(DbContextOptions<DataContext> options): base(options)
     {
