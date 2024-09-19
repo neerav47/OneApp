@@ -34,8 +34,6 @@ public class Product
 
     [Required]
     public bool IsDeleted { get; set; }
-
-    public Inventory Inventory { get; set; } = default!;
 }
 
 
