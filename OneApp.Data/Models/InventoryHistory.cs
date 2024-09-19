@@ -2,23 +2,23 @@
 
 namespace OneApp.Data.Models;
 
-public class Product
+public class InventoryHistory
 {
+    [Required]
     [Key]
     public Guid Id { get; set; }
 
     [Required]
-    public string Name { get; set; } = default!;
-
-    public string Description { get; set; } = default!;
+    public Guid InvetoryId { get; set; }
 
     [Required]
-    public Guid ProductTypeId { get; set; } = default!;
+    public Guid ProductId { get; set; }
 
     [Required]
-    public Guid TenantId { get; set; } = default!;
+    public int Quantity { get; set; }
 
-    public ProductType ProductType { get; set; } = default!;
+    [Required]
+    public long TransactionId { get; set; }
 
     [Required]
     public DateTime CreatedDate { get; set; }
@@ -33,9 +33,5 @@ public class Product
     public Guid LastUpdatedBy { get; set; }
 
     [Required]
-    public bool IsDeleted { get; set; }
-
-    public Inventory Inventory { get; set; } = default!;
+    public Guid TenantId { get; set; }
 }
-
-

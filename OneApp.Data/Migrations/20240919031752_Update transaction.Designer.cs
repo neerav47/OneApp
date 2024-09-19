@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OneApp.Data.Context;
 
@@ -10,9 +11,11 @@ using OneApp.Data.Context;
 namespace OneApp.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240919031752_Update transaction")]
+    partial class Updatetransaction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -344,14 +347,14 @@ namespace OneApp.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("char(36)");
+                    b.Property<DateTime>("CreatedBy")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("LastUpdatedBy")
-                        .HasColumnType("char(36)");
+                    b.Property<DateTime>("LastUpdatedBy")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime(6)");
