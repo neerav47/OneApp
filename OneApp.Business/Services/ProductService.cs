@@ -48,12 +48,12 @@ public class ProductService: IProductService
         {
             _logger.LogInformation($"{nameof(CreateProduct)} transaction scope started.");
             // Add transaction
-            var trans = await _context.Transaction.AddAsync(AddTransaction());
+            var trans = await _context.Transaction.AddAsync(AddTransaction(context));
             await _context.SaveChangesAsync();
             // Add product
-            var product = await _context.Product.AddAsync(AddProduct(request));
+            var product = await _context.Product.AddAsync(AddProduct(request, context));
             // Add inventory
-            var inventory = await _context.Inventory.AddAsync(AddInventory(product.Entity, trans.Entity));
+            var inventory = await _context.Inventory.AddAsync(AddInventory(product.Entity, trans.Entity, context));
             await _context.SaveChangesAsync();
             productDto = _mapper.Map<ProductDto>(product.Entity);
             await transaction.CommitAsync();
