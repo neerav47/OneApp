@@ -20,7 +20,7 @@ public class Inventory
     public int Quantity { get; set; }
 
     [Required]
-    public Guid TransactionId { get;set; }
+    public long TransactionId { get;set; }
 
     public Transaction Transaction { get; set; } = default!;
 
@@ -28,11 +28,14 @@ public class Inventory
     public DateTime CreatedDate { get; set; }
 
     [Required]
-    public DateTime CreatedBy { get; set; }
+    public Guid CreatedBy { get; set; }
 
     [Required]
     public DateTime LastUpdatedDate { get; set; }
 
     [Required]
-    public DateTime LastUpdatedBy { get; set; }
+    public Guid LastUpdatedBy { get; set; }
+
+    [Required]
+    public Guid TenantId { get; set; }
 }

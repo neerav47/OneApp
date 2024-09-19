@@ -5,17 +5,17 @@ namespace OneApp.Business.DTOs;
 
 public sealed class InventoryDto
 {
-    public Product Product { get; set; } = default!;
-
     public int Quantity { get; set; }
+
+    public long TransactionId { get; set; }
 
     public DateTime CreatedDate { get; set; }
 
-    public DateTime CreatedBy { get; set; }
+    public Guid CreatedBy { get; set; }
 
     public DateTime LastUpdatedDate { get; set; }
 
-    public DateTime LastUpdatedBy { get; set; }
+    public Guid LastUpdatedBy { get; set; }
 }
 
 
