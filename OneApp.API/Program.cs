@@ -9,6 +9,7 @@ using OneApp.Business.Interfaces;
 using OneApp.Business.Services;
 using OneApp.Data.Context;
 using OneApp.Data.Models;
+using OneApp.Data.Services;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Text;
 
@@ -42,7 +43,8 @@ builder.Services.AddAuthentication(options =>
     options.MapInboundClaims = false;
 });
 
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ITenantService, TenantService>();
 
 // Add services to the container.
 builder.Services.AddControllers();

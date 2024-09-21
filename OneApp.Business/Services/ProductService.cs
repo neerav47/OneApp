@@ -74,7 +74,7 @@ public class ProductService(
     {
         var products = await _context.Product
                                      .Include(p => p.ProductType)
-                                     .Where(p => p.TenantId == context.TenantId && !p.IsDeleted)
+                                     .Where(p => !p.IsDeleted)
                                      .ToListAsync();
         return _mapper.Map<List<ProductDto>>(products);
     }
@@ -127,7 +127,7 @@ public class ProductService(
 
     public async Task<IEnumerable<ProductTypeDto>> GetAllProductTypes(Context context)
     {
-        var productTypes = await _context.ProductType.Where(p => p.TenantId == context.TenantId).ToListAsync();
+        var productTypes = await _context.ProductType.ToListAsync();
         return _mapper.Map<List<ProductTypeDto>>(productTypes);
     }
 
