@@ -2,11 +2,21 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OneApp.Data.Models;
+using OneApp.Data.Services;
 
 namespace OneApp.Data.Context;
 
 public class DataContext: IdentityDbContext<User>
 {
+    private readonly ITenantService _tenantService;
+    private readonly Guid? _tenantId;
+
+    public DataContext(DbContextOptions<DataContext> options, ITenantService tenantService) :base(options)
+    {
+        this._tenantService = tenantService;
+        this._tenantId = tenantService.GetTenantId();
+    }
+
     public DbSet<Tenant> Tenant { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<ProductType> ProductType { get; set; }
@@ -14,13 +24,15 @@ public class DataContext: IdentityDbContext<User>
     public DbSet<Transaction> Transaction { get; set; }
     public DbSet<InventoryHistory> InventoryHistory { get; set; }
 
-    public DataContext(DbContextOptions<DataContext> options): base(options)
-    {
-    }
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        builder.Entity<ProductType>().HasQueryFilter(p => p.TenantId == this._tenantId);
+        builder.Entity<Product>().HasQueryFilter(p => p.TenantId == this._tenantId);
+        builder.Entity<Inventory>().HasQueryFilter(i => i.TenantId == this._tenantId);
+        builder.Entity<InventoryHistory>().HasQueryFilter(i => i.TenantId == this._tenantId);
+
         builder.Entity<IdentityRole>().HasData(new List<IdentityRole>()
         {
             new()
