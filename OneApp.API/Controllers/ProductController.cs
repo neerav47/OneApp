@@ -16,16 +16,14 @@ namespace OneApp.API.Controllers;
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class ProductController(
     IProductService _productService,
-    IMapper _mapper,
-    IHttpContextAccessor _httpContextAccessor) : ControllerBase
+    IMapper _mapper) : ControllerBase
 {
     [HttpGet("v1/getProducts")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetAllProducts()
     {
-        var context = GetContext();
-        var products = await _productService.GetAllProducts(context);
+        var products = await _productService.GetAllProducts();
         return Ok(products);
     }
 
@@ -45,8 +43,7 @@ public class ProductController(
     [Authorize(Roles = Role.SystemAdmin)]
     public async Task<IActionResult> DeleteProductById(string id)
     {
-        var context = GetContext();
-        var result = await _productService.DeleteProductById(id, context);
+        var result = await _productService.DeleteProductById(id);
         return Ok(result);
     }
 
@@ -58,8 +55,7 @@ public class ProductController(
     [Authorize(Roles = Role.SystemAdmin)]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequest request)
     {
-        var context = GetContext();
-        var product = await _productService.CreateProduct(request, context);
+        var product = await _productService.CreateProduct(request);
         return CreatedAtAction(nameof(GetProductById), new { id = product.Id }, null);
     }
 
@@ -68,8 +64,7 @@ public class ProductController(
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetAllProductTypes()
     {
-        var context = GetContext();
-        var productTypes = await _productService.GetAllProductTypes(context);
+        var productTypes = await _productService.GetAllProductTypes();
         return Ok(productTypes);
     }
 
@@ -90,20 +85,8 @@ public class ProductController(
     [Authorize (Roles = Role.SystemAdmin)]
     public async Task<IActionResult> CreateProductType([FromBody] CreateProductTypeRequest request)
     {
-        var context = GetContext();
-        var productType = await _productService.CreateProductType(request, context);
+        var productType = await _productService.CreateProductType(request);
         return CreatedAtAction(nameof(GetProductTypeById), new { id = productType.Id }, null);
     }
-
-    #region Private method
-    private Context GetContext()
-    {
-        var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(JwtRegisteredClaimNames.Sub)!;
-
-        var tenantId = _httpContextAccessor.HttpContext?.User.FindFirstValue("tenant")!;
-
-        return new Context { UserId = Guid.Parse(userId), TenantId = Guid.Parse(tenantId) };
-    }
-    #endregion
 }
 

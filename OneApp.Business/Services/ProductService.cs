@@ -9,19 +9,37 @@ using OneApp.Business.Interfaces;
 using OneApp.Contracts.v1.Request;
 using OneApp.Data.Context;
 using OneApp.Data.Models;
+using OneApp.Data.Services;
 using System.Data;
 
 namespace OneApp.Business.Services;
 
-public class ProductService(
-    DataContext _context,
-    IMapper _mapper,
-    ILogger<ProductService> _logger) : IProductService
+public class ProductService: IProductService
 {
+    private readonly ILogger<ProductService> _logger;
+    private readonly IMapper _mapper;
+    private readonly DataContext _context;
+    private readonly ITenantService _tenantService;
+
+    private readonly Guid _tenantId;
+    private readonly Guid _userId;
+    public ProductService(DataContext context,
+                        IMapper mapper,
+                        ILogger<ProductService> logger,
+                        ITenantService tenantService)
+    {
+        this._context = context;
+        this._mapper = mapper;
+        this._logger = logger;
+        this._tenantService = tenantService;
+        this._tenantId = (Guid)tenantService.GetTenantId();
+        this._userId = (Guid)tenantService.GetUserId();
+    }
+
     #region Public methods
 
     #region Product
-    public async Task<ProductDto> CreateProduct(CreateProductRequest request, Context context)
+    public async Task<ProductDto> CreateProduct(CreateProductRequest request)
     {
         _logger.LogInformation($"{nameof(CreateProduct)} started.");
         using var transaction = _context.Database.BeginTransaction(IsolationLevel.ReadCommitted).GetDbTransaction();
@@ -30,12 +48,12 @@ public class ProductService(
         {
             _logger.LogInformation($"{nameof(CreateProduct)} transaction scope started.");
             // Add transaction
-            var trans = await _context.Transaction.AddAsync(AddTransaction(context));
+            var trans = await _context.Transaction.AddAsync(AddTransaction());
             await _context.SaveChangesAsync();
             // Add product
-            var product = await _context.Product.AddAsync(AddProduct(request, context));
+            var product = await _context.Product.AddAsync(AddProduct(request));
             // Add inventory
-            var inventory = await _context.Inventory.AddAsync(AddInventory(product.Entity, trans.Entity, context));
+            var inventory = await _context.Inventory.AddAsync(AddInventory(product.Entity, trans.Entity));
             await _context.SaveChangesAsync();
             productDto = _mapper.Map<ProductDto>(product.Entity);
             await transaction.CommitAsync();
@@ -51,14 +69,16 @@ public class ProductService(
         return productDto;
     }
 
-    public async Task<bool> DeleteProductById(string id, Context context)
+    public async Task<bool> DeleteProductById(string id)
     {
         _logger.LogInformation($"{nameof(DeleteProductById)} started.");
         using var transaction = _context.Database.BeginTransaction(IsolationLevel.ReadCommitted).GetDbTransaction();
         try
         {
             _logger.LogInformation($"{nameof(DeleteProductById)} transaction scope started.");
-            await _context.Product.ExecuteUpdateAsync(p => p.SetProperty(pt => pt.IsDeleted, true));
+            await _context.Product.ExecuteUpdateAsync(p => p.SetProperty(pt => pt.IsDeleted, true)
+                                                            .SetProperty(pt => pt.LastUpdatedBy, _userId)
+                                                            .SetProperty(pt => pt.LastUpdatedDate, DateTime.UtcNow));
             await transaction.CommitAsync();
             _logger.LogInformation($"{nameof(DeleteProductById)} transaction scope completed.");
         }
@@ -70,7 +90,7 @@ public class ProductService(
         return true;
     }
 
-    public async Task<IEnumerable<ProductDto>> GetAllProducts(Context context)
+    public async Task<IEnumerable<ProductDto>> GetAllProducts()
     {
         var products = await _context.Product
                                      .Include(p => p.ProductType)
@@ -93,7 +113,7 @@ public class ProductService(
 
     #region ProductType
 
-    public async Task<ProductTypeDto> CreateProductType(CreateProductTypeRequest request, Context context)
+    public async Task<ProductTypeDto> CreateProductType(CreateProductTypeRequest request)
     {
         _logger.LogInformation($"{nameof(CreateProductType)} started.");
         using var transaction = _context.Database.BeginTransaction(IsolationLevel.ReadCommitted).GetDbTransaction();
@@ -105,10 +125,10 @@ public class ProductService(
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,
-                TenantId = context.TenantId,
-                CreatedBy = context.UserId,
+                TenantId = _tenantId,
+                CreatedBy = _userId,
                 CreatedDate = DateTime.UtcNow,
-                LastUpdatedBy = context.UserId,
+                LastUpdatedBy = _userId,
                 LastUpdatedDate = DateTime.UtcNow
             };
             entity = await _context.ProductType.AddAsync(productType);
@@ -125,7 +145,7 @@ public class ProductService(
         return _mapper.Map<ProductTypeDto>(entity.Entity);
     }
 
-    public async Task<IEnumerable<ProductTypeDto>> GetAllProductTypes(Context context)
+    public async Task<IEnumerable<ProductTypeDto>> GetAllProductTypes()
     {
         var productTypes = await _context.ProductType.ToListAsync();
         return _mapper.Map<List<ProductTypeDto>>(productTypes);
@@ -142,7 +162,7 @@ public class ProductService(
     #endregion
 
     #region Private methods
-    private Product AddProduct(CreateProductRequest request, Context context)
+    private Product AddProduct(CreateProductRequest request)
     {
         return new Product
         {
@@ -150,15 +170,15 @@ public class ProductService(
             Name = request.Name,
             Description = request.Description,
             ProductTypeId = Guid.Parse(request.ProductTypeId),
-            CreatedBy = context.UserId,
+            CreatedBy = _userId,
             CreatedDate = DateTime.UtcNow,
-            LastUpdatedBy = context.UserId,
+            LastUpdatedBy = _userId,
             LastUpdatedDate = DateTime.UtcNow,
-            TenantId = context.TenantId
+            TenantId = _tenantId
         };
     }
 
-    private Inventory AddInventory(Product product, Transaction transaction, Context context)
+    private Inventory AddInventory(Product product, Transaction transaction)
     {
         return new Inventory
         {
@@ -166,25 +186,26 @@ public class ProductService(
             ProductId = product.Id,
             Quantity = 0,
             TransactionId = transaction.Id,
-            TenantId = context.TenantId,
-            CreatedBy = context.UserId,
+            TenantId = _tenantId,
+            CreatedBy = _userId,
             CreatedDate = DateTime.UtcNow,
-            LastUpdatedBy = context.UserId,
+            LastUpdatedBy = _userId,
             LastUpdatedDate = DateTime.UtcNow
         };
     }
 
-    private Transaction AddTransaction(Context context)
+    private Transaction AddTransaction()
     {
         return new Transaction
         {
-            CreatedBy = context.UserId,
+            CreatedBy = _userId,
             CreatedDate = DateTime.UtcNow,
-            LastUpdatedBy = context.UserId,
+            LastUpdatedBy = _userId,
             LastUpdatedDate = DateTime.UtcNow
         };
     }
-    #endregion
+
+    #endregion 
 }
 
 

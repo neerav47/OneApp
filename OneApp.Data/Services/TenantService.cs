@@ -10,6 +10,7 @@ public class TenantService(
     ILogger<TenantService> _logger) : ITenantService
 {
     private Guid _tenantId;
+    private Guid _userId;
 
     public Guid? GetTenantId()
     {
@@ -22,5 +23,17 @@ public class TenantService(
         }
 
         return this._tenantId;
+    }
+    public Guid? GetUserId()
+    {
+        var user = _httpContextAccessor.HttpContext?.User.FindFirstValue("sub");
+
+        if (user != null && Guid.TryParse(user, out var userId))
+        {
+            this._userId = userId;
+            _logger.LogInformation($"{nameof(GetUserId)} extraction successfull.");
+        }
+
+        return this._userId;
     }
 }
