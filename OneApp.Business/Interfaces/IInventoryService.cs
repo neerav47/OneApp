@@ -1,9 +1,7 @@
-﻿namespace OneApp.Business.Interfaces;
+﻿using OneApp.Contracts.v1.Request;
+
+namespace OneApp.Business.Interfaces;
 public interface IInventoryService
 {
-    Task CreateInventory();
-
-    Task UpdateInventory();
-
-    Task DeleteInventory();
+    Task<bool> UpdateInventory(UpdateInventoryRequest request);
 }
