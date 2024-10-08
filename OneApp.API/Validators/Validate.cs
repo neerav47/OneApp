@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using OneApp.Business.Interfaces;
 using OneApp.Contracts.v1;
+using OneApp.Contracts.v1.Request;
 
 namespace OneApp.API.Validators;
 
@@ -77,4 +78,30 @@ public class LoginRequestValidator : AbstractValidator<LoginRequest>
 			.NotNull()
 			.WithMessage("TenantId cannot be null or empty.");
     }
+}
+
+public class CreateCustomerRequestValidator : AbstractValidator<CreateCustomerRequest>
+{
+	public CreateCustomerRequestValidator()
+	{
+		RuleFor(c => c.FirstName)
+			.NotEmpty()
+			.NotNull()
+			.WithMessage("FirstName cannot be null or empty.");
+
+		RuleFor(c => c.LastName)
+			.NotEmpty()
+			.NotNull()
+			.WithMessage("LastName cannot be null or empty");
+
+		RuleFor(c => c.Phone)
+			.NotEmpty()
+			.NotNull()
+			.WithMessage("Phone cannot be null or empty.");
+
+		RuleFor(c => c.Address)
+			.NotNull()
+			.NotEmpty()
+			.WithMessage("Address cannot be null or empty.");
+	}
 }
