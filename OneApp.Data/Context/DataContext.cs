@@ -23,6 +23,9 @@ public class DataContext: IdentityDbContext<User>
     public DbSet<Inventory> Inventory { get; set; }
     public DbSet<Transaction> Transaction { get; set; }
     public DbSet<InventoryHistory> InventoryHistory { get; set; }
+    public DbSet<Customer> Customer { get; set; }
+    public DbSet<TReceipt> TReceipt { get; set; }
+    public DbSet<TSaleItem> TSaleItem { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -32,6 +35,8 @@ public class DataContext: IdentityDbContext<User>
         builder.Entity<Product>().HasQueryFilter(p => p.TenantId == this._tenantId);
         builder.Entity<Inventory>().HasQueryFilter(i => i.TenantId == this._tenantId);
         builder.Entity<InventoryHistory>().HasQueryFilter(i => i.TenantId == this._tenantId);
+        builder.Entity<TReceipt>().HasQueryFilter(tr => tr.TenantId == this._tenantId);
+        builder.Entity<TSaleItem>().HasQueryFilter(ts => ts.TenantId == this._tenantId);
 
         builder.Entity<IdentityRole>().HasData(new List<IdentityRole>()
         {
