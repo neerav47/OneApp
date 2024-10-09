@@ -9,13 +9,15 @@ public interface ITransactionalService
 
     Task<InvoiceDto?> GetInvoiceById(string id);
 
-    Task DeleteInvoice(string id);
+    Task<bool> DeleteInvoice(string id);
 
-    Task AddInvoiceItem();
+    Task<Guid> AddInvoiceItem(AddInvoiceItemRequest request);
 
-    Task EditInvoiceItem();
+    Task<IEnumerable<InvoiceItemDto>> GetInvoiceItemsByInvoiceId(string invoiceId);
 
-    Task DeleteInvoiceItem();
+    Task<bool> EditInvoiceItem(Guid invoiceId, Guid invoiceItemId, EditInvoiceItemRequest request);
+
+    Task<bool> DeleteInvoiceItem(Guid invoiceId, Guid invoiceItemId);
 
     Task CheckOut();
 }

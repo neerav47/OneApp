@@ -105,3 +105,33 @@ public class CreateCustomerRequestValidator : AbstractValidator<CreateCustomerRe
 			.WithMessage("Address cannot be null or empty.");
 	}
 }
+
+public class AddInvoiceItemRequestValidator : AbstractValidator<AddInvoiceItemRequest>
+{
+    public AddInvoiceItemRequestValidator()
+    {
+		RuleFor(a => a.ReceiptId)
+			.NotEmpty()
+			.NotNull()
+			.WithMessage("ReceiptId cannot be null or empty");
+
+		RuleFor(a => a.ProductId)
+			.NotEmpty()
+			.NotNull()
+			.WithMessage("ProductId cannot be null or empty");
+
+		RuleFor(a => a.UnitPrice)
+			.NotEmpty()
+			.NotNull()
+			.WithMessage("UnitPrice cannot be null or empty")
+			.GreaterThan(0)
+			.WithMessage("UnitPrice must be greater than zero");
+
+		RuleFor(a => a.Quantity)
+            .NotEmpty()
+            .NotNull()
+            .WithMessage("Quantity cannot be null or empty")
+            .GreaterThan(0)
+            .WithMessage("Quantity must be greater than zero");
+    }
+}
