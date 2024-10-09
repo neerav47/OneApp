@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using OneApp.Business.Constants;
 using OneApp.Business.Interfaces;
 using OneApp.Contracts.v1.Request;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Security.Claims;
 
 namespace OneApp.API.Controllers;
 

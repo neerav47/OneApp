@@ -34,6 +34,9 @@ public sealed class TReceipt
     [Required]
     public Guid LastUpdatedBy { get; set; }
 
+    [Required]
+    public bool IsDeleted { get; set; }
+
     public Customer Customer { get; set; } = default!;
 
     public ICollection<TSaleItem> SaleItems { get; set; } = default!;
