@@ -19,5 +19,5 @@ public interface ITransactionalService
 
     Task<bool> DeleteInvoiceItem(Guid invoiceId, Guid invoiceItemId);
 
-    Task CheckOut();
+    Task CheckOut(CheckOutRequest request);
 }

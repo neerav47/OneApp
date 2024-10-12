@@ -72,7 +72,7 @@ public class UserService(
 
     public async Task<bool> IsEmailUnique(string email)
     {
-        return !await _context.Users.AnyAsync(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+        return !await _context.Users.AnyAsync(u => u.Email!.Equals(email, StringComparison.OrdinalIgnoreCase));
     }
 
     public async Task<bool> UpdateUserRoles(UserRolesRequest request)
@@ -124,7 +124,7 @@ public class UserService(
         }
         var user = await _context.Users
             .Include(u => u.Tenant)
-            .SingleOrDefaultAsync(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+            .SingleOrDefaultAsync(u => u.Email!.Equals(email, StringComparison.OrdinalIgnoreCase));
 
         var roles = await (from ur in _context.UserRoles
                            join r in _context.Roles on ur.RoleId equals r.Id
@@ -141,7 +141,7 @@ public class UserService(
             Id = user.Id,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Email= user.Email,
+            Email= user.Email!,
             Tenant = _mapper.Map<TenantDto>(user.Tenant),
             Roles = roles
         };
@@ -163,7 +163,7 @@ public class UserService(
 
             foreach(var pair in payload.ToArray())
             {
-                user.GetType().GetProperty(pair.Key)?.SetValue(user, pair.Value);
+                user!.GetType().GetProperty(pair.Key)?.SetValue(user, pair.Value);
             }
 
             await _context.SaveChangesAsync();

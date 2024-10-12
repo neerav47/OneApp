@@ -72,10 +72,7 @@ public class InventoryService : IInventoryService
         return true;
     }
 
-    #endregion
-
-    #region Private methods
-    private async Task AddInventoryHistory(Inventory inventory)
+    public async Task AddInventoryHistory(Inventory inventory)
     {
         await _context.InventoryHistory.AddAsync(new InventoryHistory
         {
@@ -91,5 +88,6 @@ public class InventoryService : IInventoryService
             TenantId = inventory.TenantId
         });
     }
+
     #endregion
 }

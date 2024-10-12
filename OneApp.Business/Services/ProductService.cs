@@ -32,8 +32,8 @@ public class ProductService: IProductService
         this._mapper = mapper;
         this._logger = logger;
         this._tenantService = tenantService;
-        this._tenantId = (Guid)tenantService.GetTenantId();
-        this._userId = (Guid)tenantService.GetUserId();
+        this._tenantId = (Guid)tenantService.GetTenantId()!;
+        this._userId = (Guid)tenantService.GetUserId()!;
     }
 
     #region Public methods
