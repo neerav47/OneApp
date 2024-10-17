@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using OneApp.Contracts.v1.Response;
+using System.Runtime.Serialization;
 
 namespace OneApp.Contracts.v1.Request;
 
@@ -15,9 +16,9 @@ public class CheckOutRequest
     public required Guid CustomerId { get; set; }
 
     [DataMember(Name = "invoiceItems")]
-    public required IEnumerable<dynamic> InvoiceItems { get; set; }
+    public required IEnumerable<InvoiceItem> InvoiceItems { get; set; }
 
-    public List<Guid> InvoiceItemIds => InvoiceItems.Select(i => (Guid)i.Id).ToList();
+    public List<Guid> InvoiceItemIds => InvoiceItems?.Select(i => i.Id).ToList() ?? [];
 
-    public List<Guid> ProductIds => InvoiceItems.Select(i => (Guid)i.ProductId).ToList();
+    public List<Guid> ProductIds => InvoiceItems?.Select(i => i.ProductId).ToList() ?? [];
 }

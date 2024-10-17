@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
@@ -112,6 +113,32 @@ public sealed class TransactionalService : ITransactionalService
         return result;
     }
 
+    public async Task<IEnumerable<InvoiceDto>?> GetInvoices(Guid id, OneApp.Contracts.v1.Enums.Status? status, Guid? userId)
+    {
+        var predicateBuilder = PredicateBuilder.New<TReceipt>();
+
+        predicateBuilder.And(t => t.Id == id && t.TenantId == _tenantId && !t.IsDeleted);
+
+        if (status is not null)
+        {
+            predicateBuilder.And(t => t.Status == (Status)status);
+        }
+
+        if (userId is not null)
+        {
+            predicateBuilder.And(t => t.CreatedBy == userId);
+        }
+
+        var invoices = await _context.TReceipt
+                                     .Where(predicateBuilder)
+                                     .Include(t => t.Customer)
+                                     .Include(t => t.SaleItems.Where(s => !s.IsDeleted))
+                                     .AsSplitQuery()
+                                     .ToListAsync();
+
+        return _mapper.Map<List<InvoiceDto>?>(invoices);
+    }
+
     #endregion
 
     #region TSaleItem
@@ -220,8 +247,9 @@ public sealed class TransactionalService : ITransactionalService
 
     #endregion
 
-    public async Task CheckOut(CheckOutRequest request)
+    public async Task<bool> CheckOut(CheckOutRequest request)
     {
+        var result = false;
         _logger.LogInformation($"{nameof(CheckOut)} started.");
         using var transaction = _context.Database.BeginTransaction(IsolationLevel.ReadCommitted).GetDbTransaction();
         try
@@ -234,6 +262,7 @@ public sealed class TransactionalService : ITransactionalService
             // Commit trasaction
             transaction.Commit();
             _logger.LogInformation($"{nameof(CheckOut)} transaction scope completed.");
+            result = true;
         }
         catch (Exception ex)
         {
@@ -241,6 +270,7 @@ public sealed class TransactionalService : ITransactionalService
             transaction.Rollback();
             throw new Exception("Failed to checkout invoice");
         }
+        return result;
     }
 
     private async Task CompleteCheckout(CheckOutRequest request)
@@ -268,7 +298,7 @@ public sealed class TransactionalService : ITransactionalService
             await _inventoryService.AddInventoryHistory(inventory);
             // Update inventory
             inventory.TransactionId = trans.Entity.Id;
-            inventory.Quantity -= invoiceItem.Quantity;
+            inventory.Quantity -= (int)invoiceItem.Quantity;
             inventory.LastUpdatedBy = _userId;
             inventory.LastUpdatedDate = timeStamp;
             // SaleItem

@@ -98,6 +98,8 @@ public class ProductService: IProductService
     {
         var products = await _context.Product
                                      .Include(p => p.ProductType)
+                                     .Include(p => p.Inventory)
+                                     .AsSplitQuery()
                                      .Where(p => !p.IsDeleted)
                                      .ToListAsync();
         return _mapper.Map<List<ProductDto>>(products);
