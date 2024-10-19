@@ -39,4 +39,6 @@ public sealed class TSaleItem
 
     [Required]
     public Guid LastUpdatedBy { get; set; }
+
+    public TReceipt Receipt { get; set; } = default!;
 }

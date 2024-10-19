@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
@@ -18,6 +19,7 @@ public sealed class TransactionalService : ITransactionalService
     private readonly ILogger<CustomerService> _logger;
     private readonly DataContext _context;
     private readonly ITenantService _tenantService;
+    private readonly IInventoryService _inventoryService;
     private readonly IMapper _mapper;
     private readonly Guid _tenantId;
     private readonly Guid _userId;
@@ -26,7 +28,8 @@ public sealed class TransactionalService : ITransactionalService
         DataContext context,
         ITenantService tenantService,
         ILogger<CustomerService> logger,
-        IMapper mapper)
+        IMapper mapper,
+        IInventoryService inventoryService)
     {
         this._context = context;
         this._tenantService = tenantService;
@@ -34,6 +37,7 @@ public sealed class TransactionalService : ITransactionalService
         this._mapper = mapper;
         this._tenantId = (Guid)tenantService.GetTenantId()!;
         this._userId = (Guid)tenantService.GetUserId()!;
+        this._inventoryService = inventoryService;
     }
 
     #region TReceipt
@@ -76,7 +80,7 @@ public sealed class TransactionalService : ITransactionalService
     {
         var invoice = await _context.TReceipt
                                     .Include(t => t.Customer)
-                                    .Include(t => t.SaleItems)
+                                    .Include(t => t.SaleItems.Where(s => !s.IsDeleted))
                                     .AsSplitQuery()
                                     .SingleOrDefaultAsync(t => t.Id == Guid.Parse(id) && 
                                                           t.TenantId == _tenantId &&
@@ -107,6 +111,32 @@ public sealed class TransactionalService : ITransactionalService
             throw new Exception("Failed to delete product", ex);
         }
         return result;
+    }
+
+    public async Task<IEnumerable<InvoiceDto>?> GetInvoices(Guid id, OneApp.Contracts.v1.Enums.Status? status, Guid? userId)
+    {
+        var predicateBuilder = PredicateBuilder.New<TReceipt>();
+
+        predicateBuilder.And(t => t.Id == id && t.TenantId == _tenantId && !t.IsDeleted);
+
+        if (status is not null)
+        {
+            predicateBuilder.And(t => t.Status == (Status)status);
+        }
+
+        if (userId is not null)
+        {
+            predicateBuilder.And(t => t.CreatedBy == userId);
+        }
+
+        var invoices = await _context.TReceipt
+                                     .Where(predicateBuilder)
+                                     .Include(t => t.Customer)
+                                     .Include(t => t.SaleItems.Where(s => !s.IsDeleted))
+                                     .AsSplitQuery()
+                                     .ToListAsync();
+
+        return _mapper.Map<List<InvoiceDto>?>(invoices);
     }
 
     #endregion
@@ -217,8 +247,130 @@ public sealed class TransactionalService : ITransactionalService
 
     #endregion
 
-    public Task CheckOut()
+    public async Task<bool> CheckOut(CheckOutRequest request)
     {
-        throw new NotImplementedException();
+        var result = false;
+        _logger.LogInformation($"{nameof(CheckOut)} started.");
+        using var transaction = _context.Database.BeginTransaction(IsolationLevel.ReadCommitted).GetDbTransaction();
+        try
+        {
+            _logger.LogInformation($"{nameof(CheckOut)} transaction scope started.");
+            // Validate
+            await ValidateCheckoutRequest(request);
+            // Checkout
+            await CompleteCheckout(request);
+            // Commit trasaction
+            transaction.Commit();
+            _logger.LogInformation($"{nameof(CheckOut)} transaction scope completed.");
+            result = true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Failed to checkout invoice");
+            transaction.Rollback();
+            throw new Exception("Failed to checkout invoice");
+        }
+        return result;
+    }
+
+    private async Task CompleteCheckout(CheckOutRequest request)
+    {
+        _logger.LogInformation($"{nameof(CompleteCheckout)} started.");
+        var timeStamp = DateTime.UtcNow;
+        // Add transaction
+        var trans = await _context.Transaction.AddAsync(new Transaction
+        {
+            CreatedBy = _userId,
+            CreatedDate = DateTime.UtcNow,
+            LastUpdatedBy = _userId,
+            LastUpdatedDate = DateTime.UtcNow,
+        });
+        await _context.SaveChangesAsync();
+
+        var tSaleItems = await _context.TSaleItem.Where(ts => request.InvoiceItemIds.Contains(ts.Id)).ToListAsync();
+        var inventorys = await _context.Inventory.Where(i => request.ProductIds.Contains(i.ProductId)).ToListAsync();
+
+        // Invoice Items
+        foreach(var invoiceItem in request.InvoiceItems)
+        {
+            // Add inventory history
+            var inventory = inventorys.Single(i => i.ProductId == invoiceItem.ProductId);
+            await _inventoryService.AddInventoryHistory(inventory);
+            // Update inventory
+            inventory.TransactionId = trans.Entity.Id;
+            inventory.Quantity -= (int)invoiceItem.Quantity;
+            inventory.LastUpdatedBy = _userId;
+            inventory.LastUpdatedDate = timeStamp;
+            // SaleItem
+            var saleItem = tSaleItems.Single(ts => ts.Id == invoiceItem.Id);
+            saleItem.LastUpdatedBy = _userId;
+            saleItem.LastUpdatedDate = timeStamp;
+        }
+
+        // TReceipt
+        var receipt = await _context.TReceipt.SingleAsync(tr => tr.Id == request.ReceiptId);
+        receipt.TransactionId = trans.Entity.Id;
+        receipt.Status = Status.Completed;
+        receipt.LastUpdatedBy = _userId;
+        receipt.LastUpdatedDate = timeStamp;
+
+        // Save changes
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation($"{nameof(CompleteCheckout)} completed.");
+    }
+
+    private async Task ValidateCheckoutRequest(CheckOutRequest request)
+    {
+        _logger.LogInformation($"{nameof(ValidateCheckoutRequest)} started.");
+        // TenantId
+        if (request.TenantId != _tenantId)
+        {
+            _logger.LogError($"{nameof(ValidateCheckoutRequest)}: TenantId mismatch.");
+            throw new Exception("Invalid checkout request.");
+        }
+
+        var invoice = await GetInvoiceById(request.ReceiptId.ToString());
+
+        if (invoice is null || invoice.IsDeleted)
+        {
+            _logger.LogError($"{nameof(ValidateCheckoutRequest)}: Invoice not found or deleted.");
+            throw new Exception("Invoice not found.");
+        }
+
+        // Invoice status
+        if (invoice.Status != Status.Created)
+        {
+            _logger.LogError($"{nameof(ValidateCheckoutRequest)}: Invalid invoice status: {invoice.Status.ToString()}");
+            throw new Exception("Invalid invoice status");
+        }
+
+        // CustomerId
+        if (request.CustomerId != invoice.CustomerId)
+        {
+            throw new Exception("CustomerId mismatch.");
+        }
+
+        // Invoice items
+        if (request.InvoiceItems.Count() != invoice.InvoiceItems.Count())
+        {
+            _logger.LogError($"{nameof(ValidateCheckoutRequest)}: InvoiceItems count mismatch.");
+            throw new Exception("Invalid invoiceitems");
+        }
+
+        var inventorys = await _context.Inventory.Where(i => request.ProductIds.Contains(i.ProductId)).ToListAsync();
+
+        foreach(var invoiceItem in request.InvoiceItems)
+        {
+            var inventory = inventorys.Single(i => i.ProductId == invoiceItem.ProductId);
+            
+            if (invoiceItem.Quantity > inventory.Quantity)
+            {
+                _logger.LogError($"{nameof(ValidateCheckoutRequest)}: Insufficient quantity for product: {invoiceItem.ProductId}");
+                throw new Exception($"Insufficient quantity for product: {invoiceItem.ProductId}");
+            }
+        }
+
+        _logger.LogInformation($"{nameof(ValidateCheckoutRequest)} completed.");
     }
 }

@@ -1,4 +1,5 @@
 ﻿using OneApp.Business.DTOs;
+using OneApp.Contracts.v1.Enums;
 using OneApp.Contracts.v1.Request;
 
 namespace OneApp.Business.Interfaces;
@@ -8,6 +9,8 @@ public interface ITransactionalService
     Task<Guid> CreateInvoice(CreateInvoiceRequest request);
 
     Task<InvoiceDto?> GetInvoiceById(string id);
+
+    Task<IEnumerable<InvoiceDto>?> GetInvoices(Guid id, Status? statusId, Guid? userId);
 
     Task<bool> DeleteInvoice(string id);
 
@@ -19,5 +22,5 @@ public interface ITransactionalService
 
     Task<bool> DeleteInvoiceItem(Guid invoiceId, Guid invoiceItemId);
 
-    Task CheckOut();
+    Task<bool> CheckOut(CheckOutRequest request);
 }
