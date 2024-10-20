@@ -26,8 +26,8 @@ public class InventoryService : IInventoryService
         this._context = dataContext;
         this._tenantService = tenantService;
         this._logger = logger;
-        this._tenantId = (Guid)tenantService.GetTenantId();
-        this._userId = (Guid)tenantService.GetUserId();
+        this._tenantId = (Guid)tenantService.GetTenantId()!;
+        this._userId = (Guid)tenantService.GetUserId()!;
     }
 
     #region Public methods
@@ -72,10 +72,7 @@ public class InventoryService : IInventoryService
         return true;
     }
 
-    #endregion
-
-    #region Private methods
-    private async Task AddInventoryHistory(Inventory inventory)
+    public async Task AddInventoryHistory(Inventory inventory)
     {
         await _context.InventoryHistory.AddAsync(new InventoryHistory
         {
@@ -91,5 +88,6 @@ public class InventoryService : IInventoryService
             TenantId = inventory.TenantId
         });
     }
+
     #endregion
 }

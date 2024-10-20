@@ -32,8 +32,8 @@ public class ProductService: IProductService
         this._mapper = mapper;
         this._logger = logger;
         this._tenantService = tenantService;
-        this._tenantId = (Guid)tenantService.GetTenantId();
-        this._userId = (Guid)tenantService.GetUserId();
+        this._tenantId = (Guid)tenantService.GetTenantId()!;
+        this._userId = (Guid)tenantService.GetUserId()!;
     }
 
     #region Public methods
@@ -71,14 +71,18 @@ public class ProductService: IProductService
 
     public async Task<bool> DeleteProductById(string id)
     {
+        var result = false;
         _logger.LogInformation($"{nameof(DeleteProductById)} started.");
         using var transaction = _context.Database.BeginTransaction(IsolationLevel.ReadCommitted).GetDbTransaction();
         try
         {
             _logger.LogInformation($"{nameof(DeleteProductById)} transaction scope started.");
-            await _context.Product.ExecuteUpdateAsync(p => p.SetProperty(pt => pt.IsDeleted, true)
-                                                            .SetProperty(pt => pt.LastUpdatedBy, _userId)
-                                                            .SetProperty(pt => pt.LastUpdatedDate, DateTime.UtcNow));
+            var count = await _context.Product
+                          .Where(p => p.Id == Guid.Parse(id) && p.TenantId == this._tenantId)
+                          .ExecuteUpdateAsync(p => p.SetProperty(pt => pt.IsDeleted, true)
+                                                    .SetProperty(pt => pt.LastUpdatedBy, _userId)
+                                                    .SetProperty(pt => pt.LastUpdatedDate, DateTime.UtcNow));
+            result = count > 0;
             await transaction.CommitAsync();
             _logger.LogInformation($"{nameof(DeleteProductById)} transaction scope completed.");
         }
@@ -87,13 +91,15 @@ public class ProductService: IProductService
             _logger.LogError($"{nameof(DeleteProductById)} failed.");
             throw new Exception("Failed to delete product", ex);
         }
-        return true;
+        return result;
     }
 
     public async Task<IEnumerable<ProductDto>> GetAllProducts()
     {
         var products = await _context.Product
                                      .Include(p => p.ProductType)
+                                     .Include(p => p.Inventory)
+                                     .AsSplitQuery()
                                      .Where(p => !p.IsDeleted)
                                      .ToListAsync();
         return _mapper.Map<List<ProductDto>>(products);

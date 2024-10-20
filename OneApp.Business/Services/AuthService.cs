@@ -34,7 +34,7 @@ public class AuthService(
     {
         _logger.LogInformation($"{nameof(LogIn)} started.");
 
-        var user = await _context.Users.SingleOrDefaultAsync(u => u.Email.Equals(request.UserName, StringComparison.OrdinalIgnoreCase));
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Email!.Equals(request.UserName, StringComparison.OrdinalIgnoreCase));
 
         if (user == null)
         {
@@ -46,7 +46,7 @@ public class AuthService(
             throw new Exception("Invalid username or password");
         }
 
-        var userDetails = await _userService.GetUserByEmail(user.Email);
+        var userDetails = await _userService.GetUserByEmail(user.Email!);
 
         return await GetTokenResponse(user, userDetails?.RoleNames ?? []);
     }
