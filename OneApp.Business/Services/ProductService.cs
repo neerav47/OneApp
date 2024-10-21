@@ -47,15 +47,21 @@ public class ProductService: IProductService
         try
         {
             _logger.LogInformation($"{nameof(CreateProduct)} transaction scope started.");
-            // Add transaction
-            var trans = await _context.Transaction.AddAsync(AddTransaction());
+            var product = new Product
+            {
+                Id = Guid.NewGuid(),
+                Name = request.Name,
+                Description = request.Description,
+                ProductTypeId = Guid.Parse(request.ProductTypeId),
+                CreatedBy = context.UserId,
+                CreatedDate = DateTime.UtcNow,
+                LastUpdatedBy = context.UserId,
+                LastUpdatedDate = DateTime.UtcNow,
+                TenantId = context.TenantId
+            };
+            var entity = await _context.Product.AddAsync(product);
             await _context.SaveChangesAsync();
-            // Add product
-            var product = await _context.Product.AddAsync(AddProduct(request));
-            // Add inventory
-            var inventory = await _context.Inventory.AddAsync(AddInventory(product.Entity, trans.Entity));
-            await _context.SaveChangesAsync();
-            productDto = _mapper.Map<ProductDto>(product.Entity);
+            productDto = _mapper.Map<ProductDto>(entity.Entity);
             await transaction.CommitAsync();
             _logger.LogInformation($"{nameof(CreateProduct)} transaction scope completed.");
         }
@@ -107,11 +113,7 @@ public class ProductService: IProductService
 
     public async Task<ProductDto?> GetProductById(string id)
     {
-        var product = await _context.Product
-                                    .Include(p => p.ProductType)
-                                    .Include(p => p.Inventory)
-                                    .AsSplitQuery()
-                                    .SingleOrDefaultAsync(p => p.Id == Guid.Parse(id) && !p.IsDeleted);
+        var product = await _context.Product.Include(p => p.ProductType).SingleOrDefaultAsync(p => p.Id == Guid.Parse(id) && !p.IsDeleted);
         return _mapper.Map<ProductDto?>(product);
     }
 
@@ -162,8 +164,6 @@ public class ProductService: IProductService
         var productType = await _context.ProductType.SingleOrDefaultAsync(p => p.Id == Guid.Parse(id));
         return _mapper.Map<ProductTypeDto?>(productType);
     }
-
-    #endregion
 
     #endregion
 
