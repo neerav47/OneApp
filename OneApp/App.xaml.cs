@@ -1,27 +1,19 @@
-﻿using OneApp.Views;
+﻿using OneApp.Extentions;
+using OneApp.Services.Interfaces;
+using OneApp.Views;
 
 namespace OneApp
 {
     public partial class App : Application
     {
-        public App()
+        private readonly LoginPage _loginPage;
+        private readonly AppShell _appShell;
+        public App(IServiceProvider serviceProvider, IAuthenticationService authenticationService)
         {
             InitializeComponent();
-            MainPage = (Page)CheckStatus();
-        }
-
-        object CheckStatus()
-        {
-            //var userInfo = SecureStorage.Default.GetAsync("UserInfo").GetAwaiter().GetResult();
-            var userInfo = Preferences.Default.Get<string>("UserInfo", null);
-            if (userInfo == null)
-            {
-                return new LoginPage();
-            }
-            else
-            {
-                return new AppShell();
-            }
+            this._loginPage = serviceProvider.GetService<LoginPage>();
+            this._appShell = serviceProvider.GetService<AppShell>();
+            MainPage = authenticationService.GetUserContext().GetAwaiter().GetResult() != null ? _appShell : _loginPage;
         }
     }
 }

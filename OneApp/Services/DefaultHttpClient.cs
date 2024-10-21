@@ -54,5 +54,10 @@ public class DefaultHttpClient : IDefaultHttpClient
 
         return await this.InvokeRequest(httpRequestMessage);
     }
+
+    public string GetBaseAddress()
+    {
+        return DeviceInfo.Platform == DevicePlatform.Android ? "https://10.0.2.2:7106" : "http://localhost:5274";
+    }
 }
 

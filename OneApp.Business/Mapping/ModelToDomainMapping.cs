@@ -11,9 +11,9 @@ public class ModelToDomainMapping : Profile
     {
         CreateMap<Product, ProductDto>();
         CreateMap<Inventory, InventoryDto>();
-        CreateMap<Tenant, TenantDto>();
+        CreateMap<Data.Models.Tenant, TenantDto>();
         CreateMap<ProductType, ProductTypeDto>();
-        CreateMap<User, UserDto>();
+        CreateMap<Data.Models.User, UserDto>();
         CreateMap<Data.Models.Customer, CustomerDto>();
         CreateMap<TReceipt, InvoiceDto>().ForMember(dest => dest.InvoiceItems, opt => opt.MapFrom(src => src.SaleItems));
         CreateMap<TSaleItem, InvoiceItemDto>();

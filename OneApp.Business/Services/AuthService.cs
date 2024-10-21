@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -19,16 +20,12 @@ public class AuthService(
     ILogger<AuthService> _logger,
     IPasswordHasher _passwordHasher,
     IConfiguration _configuration,
-    IUserService _userService) : IAuthService
+    IUserService _userService,
+    IMapper _mapper) : IAuthService
 {
     private const short REFRESH_TOKEN_SIZE = 64;
 
     #region Public methods
-    public Task RefreshToken()
-    {
-        throw new NotImplementedException();
-    }
-
 
     public async Task<TokenResponse> LogIn(LoginRequest request)
     {
@@ -72,6 +69,16 @@ public class AuthService(
         var userDetails = await _userService.GetUserByEmail(user.Email);
 
         return await GetTokenResponse(user, userDetails?.RoleNames ?? []);
+    }
+
+    public async Task<IEnumerable<UserDto>> GetUser(string userName)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(userName, nameof(userName));
+        var result = await _context.Users.Where(u => userName.Equals(u.UserName, StringComparison.OrdinalIgnoreCase))
+                                         .Include(u => u.Tenant)
+                                         .AsSplitQuery()
+                                         .ToListAsync();
+        return _mapper.Map<List<UserDto>>(result);
     }
 
     #endregion

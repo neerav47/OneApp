@@ -9,4 +9,6 @@ public interface IAuthService
     Task<TokenResponse> LogIn(LoginRequest request);
     
     Task<TokenResponse> RefreshToken(TokenRequest request);
+
+    Task<IEnumerable<UserDto>> GetUser(string userName);
 }

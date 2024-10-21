@@ -58,8 +58,9 @@
 		<!-- Raw Assets (also remove the "ResourcesNet\Raw" prefix) -->
 		<MauiAsset Include="ResourcesNet\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
-
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.71" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
@@ -68,8 +69,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Views\" />
-	  <Folder Include="Extentions\" />
-	  <Folder Include="ViewModels\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <BundleResource Include="ResourcesNet\Images\home.svg">
@@ -85,5 +84,9 @@
 	  <BundleResource Include="ResourcesNet\Images\payment.svg" />
 	  <BundleResource Include="ResourcesNet\Images\inventory.svg" />
 	  <BundleResource Include="ResourcesNet\Splash\logo.svg" />
+	  <BundleResource Include="ResourcesNet\Images\profile.svg" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\OneApp.Contracts\OneApp.Contracts.csproj" />
 	</ItemGroup>
 </Project>
