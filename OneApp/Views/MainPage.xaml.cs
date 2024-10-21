@@ -2,9 +2,11 @@
 
 public partial class MainPage : ContentPage
 {
-    public MainPage()
+    private readonly LoginPage _loginPage;
+    public MainPage(IServiceProvider serviceProvider)
     {
         InitializeComponent();
+        this._loginPage = serviceProvider.GetService<LoginPage>();
     }
 
     void OnSalesTap(object sender, EventArgs eventArgs)
@@ -24,9 +26,8 @@ public partial class MainPage : ContentPage
 
     void OnSignOutTap(object sender, EventArgs eventArgs)
     {
-        //SecureStorage.Default.RemoveAll();
-        Preferences.Remove("UserInfo");
-        App.Current.MainPage = new LoginPage();
+        SecureStorage.Default.RemoveAll();
+        Application.Current.MainPage = _loginPage;
     }
 
     private async void Navigate(ContentPage page)

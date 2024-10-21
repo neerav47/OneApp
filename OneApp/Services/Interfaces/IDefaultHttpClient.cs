@@ -8,5 +8,7 @@ public interface IDefaultHttpClient
     Task<HttpResponseMessage> InvokeRequest(HttpRequestMessage requestMessage, CancellationToken cancellationToken = default);
 
     Task<HttpResponseMessage> InvokeRequest(Uri requestUrl, HttpMethod httpMethod, string? requestBody, string token);
+
+    string GetBaseAddress();
 }
 
