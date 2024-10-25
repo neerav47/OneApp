@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using OneApp.Services.Interfaces;
+using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 
@@ -7,10 +8,12 @@ namespace OneApp.Services;
 public class DefaultHttpClient : IDefaultHttpClient
 {
     private readonly HttpClient _httpClient;
+    private readonly IAuthenticationService _authenticationService;
 
-    public DefaultHttpClient(HttpClient httpClient)
+    public DefaultHttpClient(HttpClient httpClient, IAuthenticationService authenticationService)
     {
         this._httpClient = httpClient;
+        this._authenticationService = authenticationService;
     }
 
     public HttpRequestMessage CreateHttpRequestMessage(Uri requestUrl, HttpMethod httpMethod, string token = null)

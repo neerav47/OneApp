@@ -59,6 +59,7 @@ namespace OneApp.Extentions
 		public static void AddViewModels(this IServiceCollection serviceCollection)
 		{
 			serviceCollection.AddTransient<LoginViewModel>();
+			serviceCollection.AddTransient<ProductViewModel>();
 		}
 	}
 }

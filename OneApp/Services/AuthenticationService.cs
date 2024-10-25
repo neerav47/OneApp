@@ -5,7 +5,6 @@ using OneApp.Contracts.v1.Response;
 using OneApp.Extentions;
 using OneApp.Services.Interfaces;
 using System.Text;
-using System.Text.Json.Serialization;
 namespace OneApp.Services;
 
 internal class AuthenticationService(
