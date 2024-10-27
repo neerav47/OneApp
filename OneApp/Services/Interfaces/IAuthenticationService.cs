@@ -13,4 +13,8 @@ public interface IAuthenticationService
     Task SetUserContext(UserContext context);
 
     Task<UserContext> GetUserContext();
+
+    //void SetUserContext(UserContext context);
+
+    //UserContext GetUserContext();
 }

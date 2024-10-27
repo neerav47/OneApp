@@ -2,11 +2,74 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OneApp.Views.Products"
-             Title="Products">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             Title="Products"
+             xmlns:viewModels="clr-namespace:OneApp.ViewModels">
+    <ScrollView>
+        <StackLayout Margin="12">
+            <CollectionView ItemsSource="{Binding Products}"
+                            ItemsLayout="VerticalList"
+                            SelectedItem="{Binding SelectedProduct}">
+                            
+            <CollectionView.ItemTemplate SeparatorVisibility="True" SeparatorColor="White">
+                <DataTemplate>
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Edit"
+                                           BackgroundColor="Green"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ProductsViewModel}}, Path=EditInventoryCommand}"
+                                           CommandParameter="{Binding .}"/>
+                                            
+                            </SwipeItems>
+
+                        </SwipeView.RightItems>
+                        <Frame Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                               Padding="0"
+                               Margin="0"
+                               BorderColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+                            <FlexLayout Direction="Row"
+                                        JustifyContent="SpaceBetween"
+                                        Margin="10">
+                                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                                    <Image Source="profile.png" Margin="8"/>
+                                    <VerticalStackLayout VerticalOptions="Center">
+                                        <Label Text="{Binding Name}"
+                                               VerticalOptions="Center"
+                                               FontAttributes="Bold"
+                                               FontSize="Default"/>
+
+                                        <Label Text="{Binding ProductType.Name}"
+                                               VerticalOptions="Center"
+                                               FontAttributes="Bold"/>
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                                <VerticalStackLayout VerticalOptions="Center">
+                                    <Label Text="{Binding Inventory.Quantity}"
+                                           FontSize="Large"
+                                           FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </FlexLayout>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ProductsViewModel}}, Path=ProductSelectedCommand}"
+                                              CommandParameter="{Binding .}"
+                                              NumberOfTapsRequired="1" />
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Grid x:Name="LoadingOverlay"
+                  IsVisible="{Binding IsLoading}"
+                  HorizontalOptions="FillAndExpand"
+                  VerticalOptions="FillAndExpand"
+                  ZIndex="1">
+                  <ActivityIndicator IsRunning="True"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+            </Grid>
+
+        </StackLayout>
+        
+    </ScrollView>
 </ContentPage>

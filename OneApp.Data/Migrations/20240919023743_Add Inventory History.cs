@@ -19,7 +19,7 @@ namespace OneApp.Data.Migrations
                     InvetoryId = table.Column<Guid>(type: "char(36)", nullable: false),
                     ProductId = table.Column<Guid>(type: "char(36)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    TransactionId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TransactionId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "char(36)", nullable: false),
                     LastUpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),

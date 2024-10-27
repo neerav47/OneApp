@@ -9,10 +9,10 @@ public class ModelToDomainMapping : Profile
 {
     public ModelToDomainMapping()
     {
-        CreateMap<Product, ProductDto>();
-        CreateMap<Inventory, InventoryDto>();
+        CreateMap<Data.Models.Product, ProductDto>();
+        CreateMap<Data.Models.Inventory, InventoryDto>();
         CreateMap<Data.Models.Tenant, TenantDto>();
-        CreateMap<ProductType, ProductTypeDto>();
+        CreateMap<Data.Models.ProductType, ProductTypeDto>();
         CreateMap<Data.Models.User, UserDto>();
         CreateMap<Data.Models.Customer, CustomerDto>();
         CreateMap<TReceipt, InvoiceDto>().ForMember(dest => dest.InvoiceItems, opt => opt.MapFrom(src => src.SaleItems));
@@ -21,5 +21,8 @@ public class ModelToDomainMapping : Profile
         CreateMap<InvoiceDto, Invoice>();
         CreateMap<InvoiceItemDto, InvoiceItem>();
         CreateMap<CustomerDto, Contracts.v1.Response.Customer>();
+        CreateMap<ProductDto, Contracts.v1.Response.Product>();
+        CreateMap<ProductTypeDto, Contracts.v1.Response.ProductType>();
+        CreateMap<InventoryDto, Contracts.v1.Response.Inventory>();
     }
 }

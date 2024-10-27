@@ -47,6 +47,7 @@ namespace OneApp.Extentions
 		public static void AddServies(this IServiceCollection serviceCollection)
 		{
             serviceCollection.AddTransient<IAuthenticationService, AuthenticationService>();
+			serviceCollection.AddTransient<IProductService, ProductsService>();
         }
 
 		public static void AddPages(this IServiceCollection serviceCollection)
@@ -54,11 +55,13 @@ namespace OneApp.Extentions
             serviceCollection.AddTransient<MainPage>();
             serviceCollection.AddTransient<LoginPage>();
             serviceCollection.AddTransient<AppShell>();
+			serviceCollection.AddTransient<Products>();
         }
 
 		public static void AddViewModels(this IServiceCollection serviceCollection)
 		{
 			serviceCollection.AddTransient<LoginViewModel>();
+			serviceCollection.AddTransient<ProductsViewModel>();
 		}
 	}
 }

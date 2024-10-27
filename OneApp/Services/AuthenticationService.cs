@@ -53,10 +53,22 @@ internal class AuthenticationService(
         await SecureStorage.Default.SetAsync(USER_CONTEXT_KEY, JsonConvert.SerializeObject(context));
     }
 
+    //public void SetUserContext(UserContext context)
+    //{
+    //    Preferences.Set(USER_CONTEXT_KEY, JsonConvert.SerializeObject(context));
+    //}
+
     public async Task<UserContext> GetUserContext()
     {
-        var value = await SecureStorage.GetAsync(USER_CONTEXT_KEY);
+        var value = await SecureStorage.Default.GetAsync(USER_CONTEXT_KEY);
 
         return !string.IsNullOrWhiteSpace(value) ? JsonConvert.DeserializeObject<UserContext>(value) : null;
     }
+
+    //public UserContext GetUserContext()
+    //{
+    //    var value = Preferences.Default.Get<string>(USER_CONTEXT_KEY, null);
+
+    //    return !string.IsNullOrWhiteSpace(value) ? JsonConvert.DeserializeObject<UserContext>(value) : null;
+    //}
 }

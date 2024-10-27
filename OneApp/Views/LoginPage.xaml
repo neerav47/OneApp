@@ -34,16 +34,13 @@
             Command="{Binding LoginCommand}" IsVisible="{Binding IsPasswordFieldVisible}" />
 
         <Grid x:Name="LoadingOverlay"
-              BackgroundColor="Black"
-              Opacity="0.5"
               IsVisible="{Binding IsLoading}"
               HorizontalOptions="FillAndExpand"
               VerticalOptions="FillAndExpand"
               ZIndex="1">
             <ActivityIndicator IsRunning="True"
                                HorizontalOptions="Center"
-                               VerticalOptions="Center"
-                               Color="White"/>
+                               VerticalOptions="Center"/>
         </Grid>
 
         <Label Text="Forgot password?" HorizontalOptions="Center" TextColor="#3b4ba5">

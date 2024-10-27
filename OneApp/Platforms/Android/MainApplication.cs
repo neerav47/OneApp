@@ -3,8 +3,12 @@ using Android.Runtime;
 
 namespace OneApp
 {
+    #if DEBUG
+    [Application(UsesCleartextTraffic = true)]
+    #else
     [Application]
-    public class MainApplication : MauiApplication
+    #endif
+public class MainApplication : MauiApplication
     {
         public MainApplication(IntPtr handle, JniHandleOwnership ownership)
             : base(handle, ownership)
