@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<the49:BottomSheet xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OneApp.Views.BottomSheets.AddProductBottomSheet"
+             xmlns:the49="https://schemas.the49.com/dotnet/2023/maui"
+             Padding="0, 0, 0, 20"
+             xmlns:viewModels="clr-namespace:OneApp.ViewModels"
+             x:DataType="viewModels:ProductsViewModel"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    <the49:BottomSheet.Detents>
+        <the49:ContentDetent />
+    </the49:BottomSheet.Detents>
+
+    <VerticalStackLayout Spacing="5">
+        <FlexLayout JustifyContent="SpaceBetween"
+                    AlignItems="Center"
+                    Margin="18">
+            <Label Text="Cancel"
+                   TextColor="#3b4ba5"
+                   FontSize="16">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Cancel_Tapped" NumberOfTapsRequired="1" />
+                </Label.GestureRecognizers>
+            </Label>
+            <Label Text="New Product"
+                   FontAttributes="Bold"
+                   FontSize="Subtitle"
+                   TextColor="{AppThemeBinding Dark={StaticResource White}, Light={StaticResource Black}}"/>
+            <Label Text="Done"
+                   TextColor="#3b4ba5"
+                   FontSize="16">
+                <Label.Triggers>
+                   <DataTrigger TargetType="Label"
+                                Binding="{Binding ProductName}"
+                                Value="">
+                       <Setter Property="TextColor" Value="{StaticResource Gray500}" />
+                       <Setter Property="IsEnabled" Value="False" />
+                   </DataTrigger>
+                    <DataTrigger TargetType="Label"
+                                Binding="{Binding ProductDescription}"
+                                Value="">
+                       <Setter Property="TextColor" Value="{StaticResource Gray500}" />
+                       <Setter Property="IsEnabled" Value="False" />
+                   </DataTrigger>
+                    <DataTrigger TargetType="Label"
+                                Binding="{Binding SelectProductTypeIndex}"
+                                Value="-1">
+                       <Setter Property="TextColor" Value="{StaticResource Gray500}" />
+                       <Setter Property="IsEnabled" Value="False" />
+                   </DataTrigger>
+                </Label.Triggers>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AddProductCommand}" NumberOfTapsRequired="1" />
+                </Label.GestureRecognizers>
+            </Label>
+        </FlexLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <VerticalStackLayout Grid.Row="0"
+                                 Grid.Column="0"
+                                 Spacing="5">
+                <Border HeightRequest="130"
+                    WidthRequest="130"
+                    StrokeShape="RoundRectangle 70">
+                    <Image Source="profile.png"
+                           BackgroundColor="Grey">
+                        <Image.Behaviors>
+                            <toolkit:IconTintColorBehavior TintColor="White" />
+                        </Image.Behaviors>
+                    </Image>
+                </Border>
+                <Button Text="Add photo"
+                        Padding="0"
+                        WidthRequest="100"
+                        HeightRequest="30"
+                        CornerRadius="15"
+                        FontSize="12"
+                        FontAttributes="Bold"
+                        TextColor="{AppThemeBinding Dark={StaticResource White}, Light={StaticResource Black}}"
+                        BackgroundColor="{AppThemeBinding Dark={StaticResource Gray500}, Light={StaticResource Gray100}}"
+                        >
+                </Button>
+            </VerticalStackLayout>
+
+            <Entry x:Name="ProductNameEntry"
+                   Placeholder="Name"
+                   Grid.Row="1"
+                   Grid.Column="0"
+                   Margin="12, 10, 12, 0"
+                   Text="{Binding ProductName}"/>
+
+            <Entry x:Name="ProductDescriptionEntry"
+                   Placeholder="Description"
+                   Grid.Row="2"
+                   Grid.Column="0"
+                   Margin="12, 0"
+                   Text="{Binding ProductDescription}"/>
+
+            <Picker x:Name="ProductTypePicker"
+                    Title="Type"
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Margin="12, 0"
+                    ItemsSource="{Binding ProductTypes}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedIndex="{Binding SelectProductTypeIndex}">
+            </Picker>
+        </Grid>
+    </VerticalStackLayout>
+    
+</the49:BottomSheet>

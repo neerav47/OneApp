@@ -4,6 +4,7 @@ using OneApp.Extentions;
 using OneApp.Services;
 using OneApp.Services.Interfaces;
 using OneApp.Views;
+using The49.Maui.BottomSheet;
 
 namespace OneApp;
 
@@ -15,6 +16,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .UseBottomSheet()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

@@ -17,5 +17,6 @@ public partial class Products : ContentPage
     {
 		base.OnAppearing();
         Task.Run(_productVM.Load);
+		Task.Run(_productVM.LoadProductTypes);
 	}
 }

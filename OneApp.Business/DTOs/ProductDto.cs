@@ -19,6 +19,8 @@ public class ProductDto
     public Guid LastUpdatedBy { get; set; }
 
     public InventoryDto Inventory { get; set; } = default!;
+
+    public IEnumerable<InventoryHistoryDto> InventoryHistory { get; set; } = default!;
 }
 
 

@@ -23,7 +23,10 @@
 
         <Label Text="{Binding SelectedUser.Tenant.Name}" IsVisible="{Binding IsTenantPickerVisible, Converter={StaticResource InvertedBoolConverter}}" FontAttributes="Bold" />
 
-        <Entry Placeholder="Username" Keyboard="Chat" Text="{Binding UserName}" />
+        <Entry Placeholder="Username"
+               Keyboard="Chat"
+               Text="{Binding UserName}"
+               TextTransform="Lowercase"/>
 
         <Entry Placeholder="Password" IsPassword="True" IsVisible="{Binding IsPasswordFieldVisible}" Text="{Binding Password}"/>
 

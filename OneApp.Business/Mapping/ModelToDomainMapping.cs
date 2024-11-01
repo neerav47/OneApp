@@ -11,6 +11,7 @@ public class ModelToDomainMapping : Profile
     {
         CreateMap<Data.Models.Product, ProductDto>();
         CreateMap<Data.Models.Inventory, InventoryDto>();
+        CreateMap<InventoryHistory, InventoryHistoryDto>();
         CreateMap<Data.Models.Tenant, TenantDto>();
         CreateMap<Data.Models.ProductType, ProductTypeDto>();
         CreateMap<Data.Models.User, UserDto>();

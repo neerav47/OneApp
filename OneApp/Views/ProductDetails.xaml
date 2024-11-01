@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OneApp.Views.ProductDetails"
+             Title="Product Details"
+             xmlns:viewModels="clr-namespace:OneApp.ViewModels"
+             x:DataType="viewModels:ProductDetailsViewModel"
+             Shell.NavBarHasShadow="False"
+             >
+    <VerticalStackLayout Margin="0">
+        <BoxView HeightRequest="160"
+                 Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Gray950}}"
+                 />
+    </VerticalStackLayout>
+</ContentPage>

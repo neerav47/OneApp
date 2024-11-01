@@ -48,27 +48,27 @@ internal class AuthenticationService(
         return null;
     }
 
-    public async Task SetUserContext(UserContext context)
-    {
-        await SecureStorage.Default.SetAsync(USER_CONTEXT_KEY, JsonConvert.SerializeObject(context));
-    }
-
-    //public void SetUserContext(UserContext context)
+    //public async Task SetUserContext(UserContext context)
     //{
-    //    Preferences.Set(USER_CONTEXT_KEY, JsonConvert.SerializeObject(context));
+    //    await SecureStorage.Default.SetAsync(USER_CONTEXT_KEY, JsonConvert.SerializeObject(context));
     //}
 
-    public async Task<UserContext> GetUserContext()
+    public void SetUserContext(UserContext context)
     {
-        var value = await SecureStorage.Default.GetAsync(USER_CONTEXT_KEY);
-
-        return !string.IsNullOrWhiteSpace(value) ? JsonConvert.DeserializeObject<UserContext>(value) : null;
+        Preferences.Set(USER_CONTEXT_KEY, JsonConvert.SerializeObject(context));
     }
 
-    //public UserContext GetUserContext()
+    //public async Task<UserContext> GetUserContext()
     //{
-    //    var value = Preferences.Default.Get<string>(USER_CONTEXT_KEY, null);
+    //    var value = await SecureStorage.Default.GetAsync(USER_CONTEXT_KEY);
 
     //    return !string.IsNullOrWhiteSpace(value) ? JsonConvert.DeserializeObject<UserContext>(value) : null;
     //}
+
+    public UserContext GetUserContext()
+    {
+        var value = Preferences.Default.Get<string>(USER_CONTEXT_KEY, null);
+
+        return !string.IsNullOrWhiteSpace(value) ? JsonConvert.DeserializeObject<UserContext>(value) : null;
+    }
 }

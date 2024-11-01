@@ -110,6 +110,8 @@ public class ProductService: IProductService
         var product = await _context.Product
                                     .Include(p => p.ProductType)
                                     .Include(p => p.Inventory)
+                                    .Include(p => p.InventoryHistory
+                                                   .OrderByDescending(i => i.LastUpdatedDate))
                                     .AsSplitQuery()
                                     .SingleOrDefaultAsync(p => p.Id == Guid.Parse(id) && !p.IsDeleted);
         return _mapper.Map<ProductDto?>(product);
