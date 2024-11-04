@@ -56,14 +56,14 @@ namespace OneApp.Extentions
             serviceCollection.AddTransient<MainPage>();
             serviceCollection.AddTransient<LoginPage>();
             serviceCollection.AddTransient<AppShell>();
-			serviceCollection.AddTransient<Products>();
+			serviceCollection.AddSingleton<Products>();
 			serviceCollection.AddTransient<ProductDetails>();
         }
 
 		public static void AddViewModels(this IServiceCollection serviceCollection)
 		{
 			serviceCollection.AddTransient<LoginViewModel>();
-			serviceCollection.AddTransient<ProductsViewModel>();
+			serviceCollection.AddSingleton<ProductsViewModel>();
 			serviceCollection.AddTransient<ProductDetailsViewModel>();
 		}
 	}

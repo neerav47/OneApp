@@ -16,7 +16,10 @@ public partial class Products : ContentPage
 	protected override void OnAppearing()
     {
 		base.OnAppearing();
-        Task.Run(_productVM.Load);
-		Task.Run(_productVM.LoadProductTypes);
+		if (!_productVM.Products.Any())
+		{
+            Task.Run(_productVM.Load);
+            Task.Run(_productVM.LoadProductTypes);
+        }
 	}
 }

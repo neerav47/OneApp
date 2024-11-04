@@ -24,7 +24,7 @@
             </Label>
             <Label Text="New Product"
                    FontAttributes="Bold"
-                   FontSize="Subtitle"
+                   FontSize="18"
                    TextColor="{AppThemeBinding Dark={StaticResource White}, Light={StaticResource Black}}"/>
             <Label Text="Done"
                    TextColor="#3b4ba5"

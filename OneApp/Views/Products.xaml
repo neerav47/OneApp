@@ -17,6 +17,14 @@
             <CollectionView ItemsSource="{Binding Products}"
                             ItemsLayout="VerticalList"
                             SelectedItem="{Binding SelectedProduct}">
+                <!--<CollectionView.EmptyView>
+                    <FlexLayout Direction="Column"
+                                AlignItems="Center">
+                        <Label Text="No products to display"
+                               Margin="20"/>
+
+                    </FlexLayout>
+                </CollectionView.EmptyView>-->
                 <CollectionView.ItemTemplate SeparatorVisibility="True" SeparatorColor="White">
                     <DataTemplate>
                         <SwipeView>

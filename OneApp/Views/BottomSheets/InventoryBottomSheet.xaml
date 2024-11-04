@@ -81,7 +81,7 @@
                    Grid.ColumnSpan="2"/>-->
 
             <Label Text="Type:"
-                   FontAttributes="Bold"
+                   FontAttributes="None"
                    FontSize="Header"
                    VerticalOptions="Center"
                    HorizontalOptions="Start"
@@ -125,7 +125,7 @@
             </HorizontalStackLayout>
 
             <Label Text="Current:"
-                   FontAttributes="Bold"
+                   FontAttributes="None"
                    FontSize="Header"
                    VerticalOptions="Center"
                    Grid.Row="2"
@@ -141,7 +141,7 @@
                    />
         
             <Label Text="Change:"
-                   FontAttributes="Bold"
+                   FontAttributes="None"
                    FontSize="Header"
                    VerticalOptions="Center"
                    Grid.Row="3"
@@ -159,7 +159,7 @@
                    x:Name="newValueEntry"
                    />
             <Label Text="New:"
-                   FontAttributes="Bold"
+                   FontAttributes="None"
                    FontSize="Header"
                    VerticalOptions="Center"
                    Grid.Row="4"

@@ -40,7 +40,7 @@ public class ProductsService : IProductService
         }
         _logger.LogInformation($"{nameof(GetProducts)} completed.");
 
-        return null;
+        return Enumerable.Empty<Product>();
     }
 
     public async Task<bool> UpdateInventory(UpdateInventoryRequest request)

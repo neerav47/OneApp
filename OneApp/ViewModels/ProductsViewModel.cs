@@ -27,7 +27,9 @@ public partial class ProductsViewModel : ObservableObject
 		this._logger = logger;
 		ChangeValue = 0;
 		this.NewValue = SelectedProduct?.Inventory?.Quantity ?? 0;
-	}
+        Products = new ObservableCollection<Product>();
+		ProductTypes = new ObservableCollection<ProductType>();
+    }
 
 	[ObservableProperty]
 	bool _isLoading;
@@ -63,7 +65,7 @@ public partial class ProductsViewModel : ObservableObject
 	ObservableCollection<ProductType> productTypes;
 
 	partial void OnChangeValueChanging(int? value)
-	{
+	{	
 		var updateType = (InventoryUpdateType)UpdateInventoryType;
         var currentQuantity = SelectedProduct?.Inventory?.Quantity ?? 0;
         if (updateType == InventoryUpdateType.Add)
@@ -80,14 +82,16 @@ public partial class ProductsViewModel : ObservableObject
 	{
 		_logger.LogInformation($"{nameof(ProductsViewModel)}-{nameof(Load)} started.");
 		IsLoading = true;
-		Products = new ObservableCollection<Product>();
-
+		
 		var response = await _productService.GetProducts();
 
-		foreach (var p in response)
+		if (response.Any())
 		{
-			Products.Add(p);
-		}
+            foreach (var p in response)
+            {
+                Products.Add(p);
+            }
+        }
 
 		IsLoading = false;
 	}
@@ -95,7 +99,6 @@ public partial class ProductsViewModel : ObservableObject
 	public async Task LoadProductTypes()
 	{
         _logger.LogInformation($"{nameof(ProductsViewModel)}-{nameof(LoadProductTypes)} started.");
-        ProductTypes = new ObservableCollection<ProductType>();
 
         var response = await _productService.GetProductTypes();
 
@@ -110,7 +113,6 @@ public partial class ProductsViewModel : ObservableObject
 	{
 		_logger.LogInformation($"{nameof(OnProductsChanged)} started.");
 
-		//Application.Current.MainPage.DisplayAlert("Product", $"Name: {product.Name}", "Ok", "Cancel");
 		await Shell.Current.GoToAsync($"{nameof(ProductDetails)}", true,
 				new Dictionary<string, object>()
 				{

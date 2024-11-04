@@ -9,9 +9,4 @@ public partial class ProductDetails : ContentPage
 		InitializeComponent();
 		BindingContext = _productDetailsVM;
 	}
-
-    protected override void OnAppearing()
-    {
-        base.OnAppearing();
-    }
 }
