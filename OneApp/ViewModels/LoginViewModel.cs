@@ -85,7 +85,7 @@ public partial class LoginViewModel : ObservableObject
                 AccessToken = response.AccessToken,
                 RefreshToken = response.RefreshToken
             };
-            await _authenticationService.SetUserContext(userContext);
+            _authenticationService.SetUserContext(userContext);
             Application.Current.MainPage = _appShell;
         }
     }

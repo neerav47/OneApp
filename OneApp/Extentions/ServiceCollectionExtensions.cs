@@ -4,6 +4,7 @@ using OneApp.Services;
 using OneApp.Services.Interfaces;
 using OneApp.ViewModels;
 using OneApp.Views;
+using OneApp.Views.BottomSheets;
 using Polly;
 using Polly.Retry;
 
@@ -47,6 +48,7 @@ namespace OneApp.Extentions
 		public static void AddServies(this IServiceCollection serviceCollection)
 		{
             serviceCollection.AddTransient<IAuthenticationService, AuthenticationService>();
+			serviceCollection.AddTransient<IProductService, ProductsService>();
         }
 
 		public static void AddPages(this IServiceCollection serviceCollection)
@@ -54,11 +56,15 @@ namespace OneApp.Extentions
             serviceCollection.AddTransient<MainPage>();
             serviceCollection.AddTransient<LoginPage>();
             serviceCollection.AddTransient<AppShell>();
+			serviceCollection.AddSingleton<Products>();
+			serviceCollection.AddTransient<ProductDetails>();
         }
 
 		public static void AddViewModels(this IServiceCollection serviceCollection)
 		{
 			serviceCollection.AddTransient<LoginViewModel>();
+			serviceCollection.AddSingleton<ProductsViewModel>();
+			serviceCollection.AddTransient<ProductDetailsViewModel>();
 		}
 	}
 }

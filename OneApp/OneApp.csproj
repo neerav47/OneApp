@@ -65,10 +65,12 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.71" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.8" />
+		<PackageReference Include="The49.Maui.BottomSheet" Version="8.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="Views\" />
+	  <Folder Include="Views\BottomSheets\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <BundleResource Include="ResourcesNet\Images\home.svg">

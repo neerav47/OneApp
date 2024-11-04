@@ -32,7 +32,7 @@ namespace OneApp.Data.Migrations
                 name: "Transaction",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     Number = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -77,7 +77,7 @@ namespace OneApp.Data.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     ProductId = table.Column<Guid>(type: "char(36)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    TransactionId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TransactionId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     LastUpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),

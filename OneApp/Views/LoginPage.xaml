@@ -23,7 +23,10 @@
 
         <Label Text="{Binding SelectedUser.Tenant.Name}" IsVisible="{Binding IsTenantPickerVisible, Converter={StaticResource InvertedBoolConverter}}" FontAttributes="Bold" />
 
-        <Entry Placeholder="Username" Keyboard="Chat" Text="{Binding UserName}" />
+        <Entry Placeholder="Username"
+               Keyboard="Chat"
+               Text="{Binding UserName}"
+               TextTransform="Lowercase"/>
 
         <Entry Placeholder="Password" IsPassword="True" IsVisible="{Binding IsPasswordFieldVisible}" Text="{Binding Password}"/>
 
@@ -34,16 +37,13 @@
             Command="{Binding LoginCommand}" IsVisible="{Binding IsPasswordFieldVisible}" />
 
         <Grid x:Name="LoadingOverlay"
-              BackgroundColor="Black"
-              Opacity="0.5"
               IsVisible="{Binding IsLoading}"
               HorizontalOptions="FillAndExpand"
               VerticalOptions="FillAndExpand"
               ZIndex="1">
             <ActivityIndicator IsRunning="True"
                                HorizontalOptions="Center"
-                               VerticalOptions="Center"
-                               Color="White"/>
+                               VerticalOptions="Center"/>
         </Grid>
 
         <Label Text="Forgot password?" HorizontalOptions="Center" TextColor="#3b4ba5">

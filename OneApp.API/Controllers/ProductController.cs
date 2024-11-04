@@ -21,7 +21,8 @@ public class ProductController(
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetAllProducts()
     {
-        var products = await _productService.GetAllProducts();
+        var productDtos = await _productService.GetAllProducts();
+        var products = _mapper.Map<List<Contracts.v1.Response.Product>>(productDtos);
         return Ok(products);
     }
 

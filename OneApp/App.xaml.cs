@@ -13,7 +13,7 @@ namespace OneApp
             InitializeComponent();
             this._loginPage = serviceProvider.GetService<LoginPage>();
             this._appShell = serviceProvider.GetService<AppShell>();
-            MainPage = authenticationService.GetUserContext().GetAwaiter().GetResult() != null ? _appShell : _loginPage;
+            MainPage = authenticationService.GetUserContext() != null ? _appShell : _loginPage;
         }
     }
 }

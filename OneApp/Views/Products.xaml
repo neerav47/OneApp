@@ -2,11 +2,98 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OneApp.Views.Products"
-             Title="Products">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             Title="Products"
+             xmlns:viewModels="clr-namespace:OneApp.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="plus.png"
+                     Command="{Binding OpenAddProductBottomSheetCommand}"
+                     >
+            
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <ScrollView>
+        <StackLayout Margin="12">
+            <CollectionView ItemsSource="{Binding Products}"
+                            ItemsLayout="VerticalList"
+                            SelectedItem="{Binding SelectedProduct}">
+                <!--<CollectionView.EmptyView>
+                    <FlexLayout Direction="Column"
+                                AlignItems="Center">
+                        <Label Text="No products to display"
+                               Margin="20"/>
+
+                    </FlexLayout>
+                </CollectionView.EmptyView>-->
+                <CollectionView.ItemTemplate SeparatorVisibility="True" SeparatorColor="White">
+                    <DataTemplate>
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Inventory"
+                                               BackgroundColor="Green"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ProductsViewModel}}, Path=EditInventoryCommand}"
+                                               CommandParameter="{Binding .}"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Frame Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                                   Padding="0"
+                                   Margin="0"
+                                   BorderColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+                                <FlexLayout Direction="Row"
+                                            JustifyContent="SpaceBetween"
+                                            Margin="0, 10, 0, 10">
+                                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                                        <Image Source="profile.png"
+                                               Margin="8">
+                                            <Image.Behaviors>
+                                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                                            </Image.Behaviors>
+                                        </Image>
+                                        <VerticalStackLayout VerticalOptions="Center">
+                                            <Label Text="{Binding Name}"
+                                                   VerticalOptions="Center"
+                                                   FontAttributes="Bold"
+                                                   FontSize="Default"/>
+
+                                            <Label Text="{Binding ProductType.Name}"
+                                                   VerticalOptions="Center"
+                                                   FontAttributes="Bold"/>
+                                        </VerticalStackLayout>
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout VerticalOptions="Center"
+                                                           Spacing="10">
+                                        <Label Text="{Binding Inventory.Quantity}"
+                                               FontSize="Large"
+                                               FontAttributes="Bold"/>
+                                        <Image Source="sidearrow_dark.png">
+                                            <Image.Behaviors>
+                                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                                            </Image.Behaviors>
+                                        </Image>
+                                    </HorizontalStackLayout>
+                                </FlexLayout>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ProductsViewModel}}, Path=ProductSelectedCommand}"
+                                                  CommandParameter="{Binding .}"
+                                                  NumberOfTapsRequired="1" />
+                                </Frame.GestureRecognizers>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                </CollectionView>
+            <Grid x:Name="LoadingOverlay"
+                  IsVisible="{Binding IsLoading}"
+                  HorizontalOptions="FillAndExpand"
+                  VerticalOptions="FillAndExpand"
+                  ZIndex="1">
+                  <ActivityIndicator IsRunning="True"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+            </Grid>
+
+        </StackLayout>
+        
+    </ScrollView>
 </ContentPage>

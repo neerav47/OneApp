@@ -15,7 +15,7 @@ namespace OneApp.API.Controllers
     {
         [HttpPut]
         [Authorize(Roles = Role.SystemAdmin)]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> UpdateInventory([FromBody] UpdateInventoryRequest request)
         {

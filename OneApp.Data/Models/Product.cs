@@ -36,6 +36,8 @@ public class Product
     public bool IsDeleted { get; set; }
 
     public Inventory Inventory { get; set; } = default!;
+
+    public ICollection<InventoryHistory> InventoryHistory { get; set; } = default!;
 }
 
 

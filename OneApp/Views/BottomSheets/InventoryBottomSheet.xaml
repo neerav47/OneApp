@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<the49:BottomSheet xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OneApp.Views.BottomSheets.InventoryBottomSheet"
+             xmlns:the49="https://schemas.the49.com/dotnet/2023/maui"
+             Padding="16, 16, 16, 0"
+             xmlns:viewModels="clr-namespace:OneApp.ViewModels"
+             x:DataType="viewModels:ProductsViewModel"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    <the49:BottomSheet.Detents>
+        <the49:ContentDetent />
+    </the49:BottomSheet.Detents>
+    <the49:BottomSheet.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+        <ResourceDictionary>
+            <toolkit:EnumToBoolConverter x:Key="EnumToBoolConverter" />
+        </ResourceDictionary>
+    </the49:BottomSheet.Resources>
+    <VerticalStackLayout Spacing="5">
+        <FlexLayout JustifyContent="SpaceBetween"
+                    AlignItems="Center"
+                    Margin="0, 0, 0, 20">
+            <Label Text="Cancel"
+                   TextColor="#3b4ba5"
+                   FontSize="16">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Dismiss"/>
+                </Label.GestureRecognizers>
+            </Label>
+            <Label Text="Update Inventory"
+                   FontAttributes="Bold"
+                   FontSize="18"
+                   TextColor="{AppThemeBinding Dark={StaticResource White}, Light={StaticResource Black}}"/>
+            <Label Text="Done"
+                   TextColor="#3b4ba5"
+                   FontSize="16"
+                   IsVisible="{Binding InProgress, Converter={StaticResource InvertedBoolConverter}}">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label"
+                                 Binding="{Binding ChangeValue}"
+                                 Value="0">
+                        <Setter Property="IsEnabled" Value="False" />
+                        <Setter Property="TextColor" Value="{StaticResource Gray500}" />
+                    </DataTrigger>
+                </Label.Triggers>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding UpdateInventoryCommand}" NumberOfTapsRequired="1"/>
+                </Label.GestureRecognizers>
+            </Label>
+            <ActivityIndicator IsRunning="{Binding InProgress}"
+                               IsVisible="{Binding InProgress}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Grid.Row="5"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"/>
+        </FlexLayout>
+        <Grid RowSpacing="25">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <!--<Label Text="Update Inventory"
+                   FontAttributes="Bold"
+                   FontSize="Subtitle"
+                   HorizontalOptions="Center"
+                   Grid.Row="0"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="2"/>-->
+
+            <Label Text="Type:"
+                   FontAttributes="None"
+                   FontSize="Header"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"
+                   Grid.Row="1"
+                   Grid.Column="0" />
+            <HorizontalStackLayout RadioButtonGroup.GroupName="animals"
+                            Spacing="20"
+                            VerticalOptions="Center"
+                            HorizontalOptions="End"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            RadioButtonGroup.SelectedValue="{Binding UpdateInventoryType}">
+                <RadioButton Content="Add"
+                             Value="0"
+                             IsChecked="True">
+                    <!--<RadioButton.Content>
+                        <StackLayout>
+                            <Image Source="user.png"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center" />
+                            <Label Text="Add"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="End" />
+                        </StackLayout>
+                    </RadioButton.Content>-->
+                </RadioButton>
+                <RadioButton Content="Subtract"
+                             Value="1">
+                    <!--<RadioButton.Content>
+                        <StackLayout>
+                            <Image Source="user.png"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center" />
+                            <Label Text="Subtract"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="End" />
+                        </StackLayout>
+                    </RadioButton.Content>-->
+                </RadioButton>
+        
+            </HorizontalStackLayout>
+
+            <Label Text="Current:"
+                   FontAttributes="None"
+                   FontSize="Header"
+                   VerticalOptions="Center"
+                   Grid.Row="2"
+                   Grid.Column="0"/>
+
+            <Label Text="{Binding SelectedProduct.Inventory.Quantity}"
+                   FontSize="Header"
+                   VerticalOptions="Center"
+                   Grid.Row="2"
+                   Grid.Column="1"
+                   HorizontalOptions="End"
+                   Margin="0, 0, 4, 0"
+                   />
+        
+            <Label Text="Change:"
+                   FontAttributes="None"
+                   FontSize="Header"
+                   VerticalOptions="Center"
+                   Grid.Row="3"
+                   Grid.Column="0"/>
+
+            <Entry Placeholder="Enter new value"
+                   Grid.Row="3"
+                   Grid.Column="1"
+                   VerticalOptions="Center"
+                   FontAttributes="Bold"
+                   FontSize="Header"
+                   Text="{Binding ChangeValue}"
+                   Keyboard="Numeric"
+                   HorizontalTextAlignment="End"
+                   x:Name="newValueEntry"
+                   />
+            <Label Text="New:"
+                   FontAttributes="None"
+                   FontSize="Header"
+                   VerticalOptions="Center"
+                   Grid.Row="4"
+                   Grid.Column="0"/>
+
+            <Label Text="{Binding NewValue}"
+                   FontSize="Header"
+                   VerticalOptions="Center"
+                   Grid.Row="4"
+                   Grid.Column="1"
+                   HorizontalOptions="End"
+                   Margin="0, 0, 4, 0"/>
+            <!--<HorizontalStackLayout Spacing="20"
+                                   Grid.Row="5"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   HorizontalOptions="Center"
+                                   IsVisible="{Binding InProgress, Converter={StaticResource InvertedBoolConverter}}">
+                <Button Text="Update"
+                        BackgroundColor="Green"
+                        TextColor="{StaticResource White}"
+                        WidthRequest="120"
+                        CornerRadius="20"
+                        Command="{Binding UpdateInventoryCommand}"/>
+                <Button Text="Dismiss"
+                        BackgroundColor="Red"
+                        TextColor="{StaticResource White}"
+                        WidthRequest="120"
+                        CornerRadius="20"
+                        Clicked="Dismiss"/>
+            </HorizontalStackLayout>
+            <ActivityIndicator IsRunning="{Binding InProgress}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Grid.Row="5"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"/>-->
+    </Grid>
+    </VerticalStackLayout>
+</the49:BottomSheet>
