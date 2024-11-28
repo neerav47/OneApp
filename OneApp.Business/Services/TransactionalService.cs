@@ -113,11 +113,11 @@ public sealed class TransactionalService : ITransactionalService
         return result;
     }
 
-    public async Task<IEnumerable<InvoiceDto>?> GetInvoices(Guid id, OneApp.Contracts.v1.Enums.Status? status, Guid? userId)
+    public async Task<IEnumerable<InvoiceDto>?> GetInvoices(Contracts.v1.Enums.Status? status, Guid? userId)
     {
         var predicateBuilder = PredicateBuilder.New<TReceipt>();
 
-        predicateBuilder.And(t => t.Id == id && t.TenantId == _tenantId && !t.IsDeleted);
+        predicateBuilder.And(t => t.TenantId == _tenantId && !t.IsDeleted);
 
         if (status is not null)
         {
@@ -134,6 +134,7 @@ public sealed class TransactionalService : ITransactionalService
                                      .Include(t => t.Customer)
                                      .Include(t => t.SaleItems.Where(s => !s.IsDeleted))
                                      .AsSplitQuery()
+                                     .OrderByDescending(r => r.LastUpdatedDate)
                                      .ToListAsync();
 
         return _mapper.Map<List<InvoiceDto>?>(invoices);

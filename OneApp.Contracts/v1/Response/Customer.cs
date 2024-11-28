@@ -1,9 +1,12 @@
 ﻿namespace OneApp.Contracts.v1.Response;
 
-public record Customer(
-    Guid Id,
-    string FirstName,
-    string LastName,
-    string? Email,
-    string Phone,
-    string Address);
+public class Customer
+{
+    public Guid Id { get; set; }
+    public string FirstName { get; set; } = default!;
+    public string LastName { get; set; } = default!;
+    public string? Email { get; set; }
+    public string Phone { get; set; } = default!;
+    public string Address { get; set; } = default!;
+    public string FullName => $"{LastName}, {FirstName}";
+}

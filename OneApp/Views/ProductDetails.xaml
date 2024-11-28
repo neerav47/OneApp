@@ -11,99 +11,99 @@
         <BackButtonBehavior TextOverride=" "/>
     </Shell.BackButtonBehavior>
     <ScrollView>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <VerticalStackLayout Grid.Row="0"
-                                     Grid.Column="0"
-                                     Padding="10">
-                    <Frame HeightRequest="150"
-                           WidthRequest="150"
-                           CornerRadius="75"
-                           Margin="20"
-                           BackgroundColor="{StaticResource Gray500}">
-                    </Frame>
-                    <Label Text="Product Name"
-                           HorizontalTextAlignment="Center"
-                           FontAttributes="Bold"
-                           FontSize="Title"
-                           FontAutoScalingEnabled="True"
-                           />
-                    <Label Text="Product Description"
-                           HorizontalTextAlignment="Center"
-                           FontAutoScalingEnabled="True"
-                           Margin="5"
-                           />
-                </VerticalStackLayout>
-                <VerticalStackLayout Grid.Row="1"
-                                     Grid.Column="0"
-                                     Padding="12">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <VerticalStackLayout Grid.Row="0"
+                                    Grid.Column="0"
+                                    Padding="10">
+                <Frame HeightRequest="150"
+                        WidthRequest="150"
+                        CornerRadius="75"
+                        Margin="20"
+                        BackgroundColor="{StaticResource Gray500}">
+                </Frame>
+                <Label Text="Product Name"
+                        HorizontalTextAlignment="Center"
+                        FontAttributes="Bold"
+                        FontSize="Title"
+                        FontAutoScalingEnabled="True"
+                        />
+                <Label Text="Product Description"
+                        HorizontalTextAlignment="Center"
+                        FontAutoScalingEnabled="True"
+                        Margin="5"
+                        />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Row="1"
+                                    Grid.Column="0"
+                                    Padding="12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
                     
-                        <Label Grid.Row="0"
-                               Grid.Column="0"
-                               Grid.ColumnSpan="2"
-                               Text="Inventory"
-                               FontAttributes="Bold"
-                               FontSize="22" />
+                    <Label Grid.Row="0"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Text="Inventory"
+                            FontAttributes="Bold"
+                            FontSize="22" />
 
-                        <VerticalStackLayout Grid.Row="1"
-                                             Grid.Column="0"
-                                             Margin="0, 15, 0, 0"
-                                             Spacing="4">
-                            <Label Text="In stock"
-                                   TextColor="{StaticResource Gray200}"/>
-                            <Label Text="20"
-                                   FontSize="20"
-                                   FontAttributes="Bold"/>
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Row="1"
-                                             Grid.Column="1"
-                                             Margin="0, 15, 0, 0"
-                                             Spacing="4">
-                            <Label Text="Unit price"
-                                   TextColor="{StaticResource Gray200}"/>
-                            <Label Text="130.00"
-                                   FontSize="20"
-                                   FontAttributes="Bold"/>
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Row="2"
-                                             Grid.Column="0"
-                                             Margin="0, 12, 0, 0"
-                                             Spacing="4">
-                            <Label Text="Average sale price"
-                                   TextColor="{StaticResource Gray200}"/>
-                            <Label Text="130.00"
-                                   FontSize="20"
-                                   FontAttributes="Bold"/>
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Row="2"
-                                             Grid.Column="1"
-                                             Margin="0, 12, 0, 0"
-                                             Spacing="4">
-                            <Label Text="Total unit sales"
-                                   TextColor="{StaticResource Gray200}"/>
-                            <Label Text="10"
-                                   FontSize="20"
-                                   FontAttributes="Bold"/>
-                        </VerticalStackLayout>
-                    </Grid>
-                </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="1"
+                                            Grid.Column="0"
+                                            Margin="0, 15, 0, 0"
+                                            Spacing="4">
+                        <Label Text="In stock"
+                                TextColor="{StaticResource Gray200}"/>
+                        <Label Text="20"
+                                FontSize="20"
+                                FontAttributes="Bold"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="1"
+                                            Grid.Column="1"
+                                            Margin="0, 15, 0, 0"
+                                            Spacing="4">
+                        <Label Text="Unit price"
+                                TextColor="{StaticResource Gray200}"/>
+                        <Label Text="130.00"
+                                FontSize="20"
+                                FontAttributes="Bold"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="2"
+                                            Grid.Column="0"
+                                            Margin="0, 12, 0, 0"
+                                            Spacing="4">
+                        <Label Text="Average sale price"
+                                TextColor="{StaticResource Gray200}"/>
+                        <Label Text="130.00"
+                                FontSize="20"
+                                FontAttributes="Bold"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="2"
+                                            Grid.Column="1"
+                                            Margin="0, 12, 0, 0"
+                                            Spacing="4">
+                        <Label Text="Total unit sales"
+                                TextColor="{StaticResource Gray200}"/>
+                        <Label Text="10"
+                                FontSize="20"
+                                FontAttributes="Bold"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </VerticalStackLayout>
 
-            </Grid>
+        </Grid>
     </ScrollView>
 </ContentPage>

@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OneApp.Views.Invoices"
+             xmlns:viewModels="clr-namespace:OneApp.ViewModels"
+             Title="Invoices"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:dxe="clr-namespace:DevExpress.Maui.Editors;assembly=DevExpress.Maui.Editors"
+             xmlns:dx="http://schemas.devexpress.com/maui">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior Command="{Binding LoadCommand}" EventName="Loaded" />
+    </ContentPage.Behaviors>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="plus.png"
+                     Clicked="OpenNewInvoiceBottomSheet">
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <Shell.BackgroundColor>
+        <Color>Black</Color>
+    </Shell.BackgroundColor>
+    <ScrollView>
+        <VerticalStackLayout>
+            <dxe:FilterChipGroup HorizontalOptions="Center"
+                                 ItemsSource="{Binding Chips}"
+                                 DisplayMember="Text"/>
+            <CollectionView ItemsSource="{Binding Invoices}">
+                <CollectionView.EmptyView>
+                    <StackLayout Padding="30">
+                        <Label Text="No invoices to display"
+                               HorizontalTextAlignment="Center"
+                               FontSize="16"/>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate SeparatorVisibility="True" SeparatorColor="White">
+                    <DataTemplate>
+                        <Frame Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                               Padding="0"
+                               Margin="0"
+                               BorderColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+                            <VerticalStackLayout Margin="10, 10, 10, 0" Spacing="15">
+                                <FlexLayout Direction="Row"
+                                            JustifyContent="SpaceBetween">
+                                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                                        <VerticalStackLayout VerticalOptions="Center" Spacing="10">
+                                            <Label Text="{Binding Customer.FullName}"
+                                                    VerticalOptions="Center"
+                                                    FontAttributes="None"
+                                                    FontSize="18"/>
+                                            <StackLayout Orientation="Horizontal"
+                                                         Spacing="10">
+                                                <HorizontalStackLayout>
+                                                    <Label Text="Items: "
+                                                           FontSize="14"
+                                                           TextColor="{StaticResource Gray200}"/>
+                                                    <Label Text="{Binding ItemsCount}"
+                                                           FontSize="14"
+                                                           TextColor="{StaticResource Gray200}"/>
+                                                </HorizontalStackLayout>
+                                                <HorizontalStackLayout>
+                                                    <Label Text="Status: "
+                                                           FontSize="14"
+                                                           TextColor="{StaticResource Gray200}"/>
+                                                    <Label Text="{Binding Status}"
+                                                           FontSize="14"
+                                                           TextColor="{StaticResource Gray200}"/>
+                                                </HorizontalStackLayout>
+                                            </StackLayout>
+                                    
+                                        </VerticalStackLayout>
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout VerticalOptions="Center"
+                                                           Spacing="5">
+                                        <Label Text="{Binding Total}"
+                                                FontSize="Large"
+                                                FontAttributes="Bold"/>
+                                        <Image Source="sidearrow_dark.png">
+                                            <Image.Behaviors>
+                                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                                            </Image.Behaviors>
+                                        </Image>
+                                    </HorizontalStackLayout>
+                                </FlexLayout>
+                                <BoxView HeightRequest="0.6" Color="{StaticResource Gray600}" />
+                            </VerticalStackLayout>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:InvoicesViewModel}}, Path=InvoiceSelectedCommand}"
+                                                CommandParameter="{Binding .}"
+                                                NumberOfTapsRequired="1" />
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <dx:BottomSheet x:Name="newInvoiceBottomSheet"
+                            ShowGrabber="False"
+                            AllowDismiss="True"
+                            CornerRadius="10"
+                            HalfExpandedRatio="0.9">
+                <Label Text="test" />
+            </dx:BottomSheet>
+            </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

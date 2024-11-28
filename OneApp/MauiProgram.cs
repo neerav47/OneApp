@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using DevExpress.Maui;
 using Microsoft.Extensions.Logging;
 using OneApp.Extentions;
 using OneApp.Services;
@@ -15,6 +16,10 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseDevExpress()
+            .UseDevExpressCollectionView()
+            .UseDevExpressControls()
+            .UseDevExpressEditors()
             .UseMauiCommunityToolkit()
             .UseBottomSheet()
             .ConfigureFonts(fonts =>
