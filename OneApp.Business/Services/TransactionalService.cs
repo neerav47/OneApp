@@ -81,6 +81,8 @@ public sealed class TransactionalService : ITransactionalService
         var invoice = await _context.TReceipt
                                     .Include(t => t.Customer)
                                     .Include(t => t.SaleItems.Where(s => !s.IsDeleted))
+                                    .ThenInclude(ts => ts.Product)
+                                    .ThenInclude(p => p.ProductType)
                                     .AsSplitQuery()
                                     .SingleOrDefaultAsync(t => t.Id == Guid.Parse(id) && 
                                                           t.TenantId == _tenantId &&

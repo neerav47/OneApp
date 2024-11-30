@@ -111,5 +111,26 @@ public class ProductsService : IProductService
 
         return response?.IsSuccessStatusCode == true;
     }
+
+    public async Task<Product> GetProductById(string id)
+    {
+        _logger.LogInformation($"{nameof(GetProductById)} started");
+        var userContext = _authenticationService.GetUserContext();
+        var request = _httpClient.CreateHttpRequestMessage(
+            new Uri($"{_httpClient.GetBaseAddress()}/api/v1/product/{id}"),
+            HttpMethod.Get,
+            userContext.AccessToken);
+
+        var response = await _httpClient.InvokeRequest(request);
+
+        if (response?.IsSuccessStatusCode == true)
+        {
+            var result = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Product>(result);
+        }
+        _logger.LogInformation($"{nameof(GetProductById)} completed.");
+
+        return default;
+    }
 }
 

@@ -32,8 +32,8 @@ public class ProductController(
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetProductById(string id)
     {
-        var product = await _productService.GetProductById(id);
-        return product != null ? Ok(product) : NotFound();
+        var productDto = await _productService.GetProductById(id);
+        return productDto != null ? Ok(_mapper.Map<Contracts.v1.Response.Product>(productDto)) : NotFound();
     }
 
     [HttpDelete("v1/product/{id}")]

@@ -11,6 +11,7 @@ using OneApp.Data.Context;
 using OneApp.Data.Models;
 using OneApp.Data.Services;
 using System.Data;
+using System.Runtime.CompilerServices;
 
 namespace OneApp.Business.Services;
 
@@ -111,10 +112,32 @@ public class ProductService: IProductService
                                     .Include(p => p.ProductType)
                                     .Include(p => p.Inventory)
                                     .Include(p => p.InventoryHistory
-                                                   .OrderByDescending(i => i.LastUpdatedDate))
+                                                   .OrderByDescending(i => i.LastUpdatedDate)
+                                                   .Take(5))
                                     .AsSplitQuery()
                                     .SingleOrDefaultAsync(p => p.Id == Guid.Parse(id) && !p.IsDeleted);
-        return _mapper.Map<ProductDto?>(product);
+
+        if (product is not null)
+        {
+            var receipts = await (from tr in _context.TReceipt
+                                                     .Where(r => !r.IsDeleted && r.TenantId == _tenantId)
+                                                     .Include(r => r.Customer)
+                                  join ts in _context.TSaleItem
+                                                     .Where(s => !s.IsDeleted && s.TenantId == _tenantId)
+                                                     .IgnoreAutoIncludes()
+                                  on tr.Id equals ts.ReceiptId
+                                  where ts.ProductId.Equals(Guid.Parse(id))
+                                  select new
+                                  {
+                                      Invoice = tr,
+                                      InvoiceItems = ts
+                                  }).ToListAsync();
+
+            var productDto = _mapper.Map<ProductDto>(product);
+            productDto.Invoices = _mapper.Map<List<InvoiceDto>>(receipts?.Select(r => r.Invoice).ToList());
+            return productDto;
+        }
+        return default;
     }
 
     #endregion

@@ -13,5 +13,7 @@ public interface IProductService
     Task<IEnumerable<ProductType>> GetProductTypes();
 
     Task<bool> CreateProduct(CreateProductRequest request);
+
+    Task<Product> GetProductById(string id);
 }
 

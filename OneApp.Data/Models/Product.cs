@@ -38,6 +38,10 @@ public class Product
     public Inventory Inventory { get; set; } = default!;
 
     public ICollection<InventoryHistory> InventoryHistory { get; set; } = default!;
+
+    public ICollection<TSaleItem> InvoiceItems { get; set; } = default!;
+
+    public double? UnitPrice { get; set; }
 }
 
 

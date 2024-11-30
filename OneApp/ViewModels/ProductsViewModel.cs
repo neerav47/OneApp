@@ -111,13 +111,9 @@ public partial class ProductsViewModel : ObservableObject
 	[RelayCommand]
 	private async Task ProductSelected(Product product)
 	{
-		_logger.LogInformation($"{nameof(OnProductsChanged)} started.");
+		_logger.LogInformation($"{nameof(ProductSelected)} started.");
 
-		await Shell.Current.GoToAsync($"{nameof(ProductDetails)}", true,
-				new Dictionary<string, object>()
-				{
-					{"Product", product }
-				});
+		await Shell.Current.GoToAsync($"{nameof(ProductDetails)}?productId={product.Id.ToString()}", true);
     }
 
 	[RelayCommand]
