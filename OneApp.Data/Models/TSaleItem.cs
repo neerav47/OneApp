@@ -41,4 +41,6 @@ public sealed class TSaleItem
     public Guid LastUpdatedBy { get; set; }
 
     public TReceipt Receipt { get; set; } = default!;
+
+    public Product Product { get; set; } = default!;
 }

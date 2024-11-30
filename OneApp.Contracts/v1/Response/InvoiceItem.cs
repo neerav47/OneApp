@@ -11,4 +11,5 @@ public record InvoiceItem(
     DateTime CreatedDate,
     Guid CreatedBy,
     DateTime LastUpdatedDate,
-    Guid LastUpdatedBy);
+    Guid LastUpdatedBy,
+    Product Product);

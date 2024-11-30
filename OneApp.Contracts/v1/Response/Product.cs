@@ -10,4 +10,8 @@ public record Product(
     Guid CreatedBy,
     DateTime LastUpdatedDate,
     Guid LastUpdatedBy,
-    Inventory Inventory);
+    Inventory Inventory,
+    IEnumerable<InventoryHistory> InventoryHistory,
+    IEnumerable<Invoice> Invoices,
+    double? AverageSalePrice,
+    decimal? TotalUnitSales);

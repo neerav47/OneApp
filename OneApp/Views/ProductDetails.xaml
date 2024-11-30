@@ -11,99 +11,121 @@
         <BackButtonBehavior TextOverride=" "/>
     </Shell.BackButtonBehavior>
     <ScrollView>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <VerticalStackLayout Grid.Row="0"
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <VerticalStackLayout Grid.Row="0"
                                      Grid.Column="0"
                                      Padding="10">
-                    <Frame HeightRequest="150"
+                <Frame HeightRequest="150"
                            WidthRequest="150"
                            CornerRadius="75"
                            Margin="20"
                            BackgroundColor="{StaticResource Gray500}">
-                    </Frame>
-                    <Label Text="Product Name"
+                </Frame>
+                <Label Text="{Binding Product.Name}"
                            HorizontalTextAlignment="Center"
                            FontAttributes="Bold"
                            FontSize="Title"
                            FontAutoScalingEnabled="True"
                            />
-                    <Label Text="Product Description"
+                <Label Text="{Binding Product.Description}"
                            HorizontalTextAlignment="Center"
                            FontAutoScalingEnabled="True"
                            Margin="5"
                            />
-                </VerticalStackLayout>
-                <VerticalStackLayout Grid.Row="1"
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Row="1"
                                      Grid.Column="0"
                                      Padding="12">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                    
-                        <Label Grid.Row="0"
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0"
                                Grid.Column="0"
                                Grid.ColumnSpan="2"
                                Text="Inventory"
                                FontAttributes="Bold"
                                FontSize="22" />
 
-                        <VerticalStackLayout Grid.Row="1"
+                    <VerticalStackLayout Grid.Row="1"
                                              Grid.Column="0"
                                              Margin="0, 15, 0, 0"
                                              Spacing="4">
-                            <Label Text="In stock"
+                        <Label Text="In stock"
                                    TextColor="{StaticResource Gray200}"/>
-                            <Label Text="20"
-                                   FontSize="20"
+                        <Label Text="{Binding Product.Inventory.Quantity}"
+                                   FontSize="16"
                                    FontAttributes="Bold"/>
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Row="1"
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="1"
                                              Grid.Column="1"
                                              Margin="0, 15, 0, 0"
                                              Spacing="4">
-                            <Label Text="Unit price"
+                        <Label Text="Unit price"
                                    TextColor="{StaticResource Gray200}"/>
-                            <Label Text="130.00"
-                                   FontSize="20"
+                        <Label Text="130.00"
+                                   FontSize="16"
                                    FontAttributes="Bold"/>
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Row="2"
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="2"
                                              Grid.Column="0"
                                              Margin="0, 12, 0, 0"
                                              Spacing="4">
-                            <Label Text="Average sale price"
+                        <Label Text="Average sale price"
                                    TextColor="{StaticResource Gray200}"/>
-                            <Label Text="130.00"
-                                   FontSize="20"
+                        <Label Text="{Binding Product.AverageSalePrice}"
+                                   FontSize="16"
                                    FontAttributes="Bold"/>
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Row="2"
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="2"
                                              Grid.Column="1"
                                              Margin="0, 12, 0, 0"
                                              Spacing="4">
-                            <Label Text="Total unit sales"
+                        <Label Text="Total unit sales"
                                    TextColor="{StaticResource Gray200}"/>
-                            <Label Text="10"
-                                   FontSize="20"
+                        <Label Text="{Binding Product.TotalUnitSales}"
+                                   FontSize="16"
                                    FontAttributes="Bold"/>
-                        </VerticalStackLayout>
-                    </Grid>
-                </VerticalStackLayout>
-
-            </Grid>
+                    </VerticalStackLayout>
+                </Grid>
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Row="2">
+                <Label Text="Invoices"
+                       FontAttributes="Bold"
+                       FontSize="22"
+                       Padding="12"/>
+                <CollectionView ItemsSource="{Binding Product.Invoices}"
+                                ItemsLayout="VerticalList"
+                                Margin="12, 0, 0, 0">
+                    <CollectionView.ItemTemplate SeparatorVisibility="True" SeparatorColor="White">
+                        <DataTemplate>
+                            <VerticalStackLayout Padding="0">
+                                <!--<Label Text="{Binding Customer.FirstName}"/>
+                                <Label Text="{Binding TransactionId}" />-->
+                                <Label Text="Test customer name"/>
+                                <Label Text="7089734" />
+                                <BoxView HeightRequest="0.5" BackgroundColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Gray200}}" Margin="0,10,0,0" />
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </Grid>
     </ScrollView>
 </ContentPage>
