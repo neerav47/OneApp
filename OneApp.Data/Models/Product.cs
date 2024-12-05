@@ -41,7 +41,7 @@ public class Product
 
     public ICollection<TSaleItem> InvoiceItems { get; set; } = default!;
 
-    public double? UnitPrice { get; set; }
+    //public double? UnitPrice { get; set; }
 }
 
 

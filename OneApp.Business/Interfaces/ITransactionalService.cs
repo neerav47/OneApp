@@ -10,7 +10,7 @@ public interface ITransactionalService
 
     Task<InvoiceDto?> GetInvoiceById(string id);
 
-    Task<IEnumerable<InvoiceDto>?> GetInvoices(Guid id, Status? statusId, Guid? userId);
+    Task<IEnumerable<InvoiceDto>?> GetInvoices(Status? statusId, Guid? userId);
 
     Task<bool> DeleteInvoice(string id);
 

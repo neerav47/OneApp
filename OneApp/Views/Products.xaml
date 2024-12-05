@@ -7,10 +7,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="plus.png"
-                     Command="{Binding OpenAddProductBottomSheetCommand}"
-                     >
-            
-        </ToolbarItem>
+                     Command="{Binding OpenAddProductBottomSheetCommand}" />
     </ContentPage.ToolbarItems>
     <ScrollView>
         <StackLayout Margin="12">

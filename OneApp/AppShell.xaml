@@ -19,8 +19,8 @@
             />
 
         <ShellContent
-            Title="Settings"
-            ContentTemplate="{DataTemplate view:Settings}"
+            Title="Invoices"
+            ContentTemplate="{DataTemplate view:Invoices}"
             Icon="settings.png"/>
 
         <ShellContent 

@@ -94,11 +94,11 @@ public class TransactionalController(ITransactionalService _transactionalService
         return Ok(result);
     }
 
-    [HttpGet("v1/invoices/{id}")]
+    [HttpGet("v1/invoices")]
     [ProducesResponseType(typeof(IEnumerable<Invoice>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetInvoices(Guid id, [FromQuery] Status? status, [FromQuery] Guid? userId)
+    public async Task<IActionResult> GetInvoices([FromQuery] Status? status, [FromQuery] Guid? userId)
     {
-        var invoiceDtos = await _transactionalService.GetInvoices(id, status, userId);
+        var invoiceDtos = await _transactionalService.GetInvoices(status, userId);
         return Ok(_mapper.Map<List<Invoice>?>(invoiceDtos));
     }
 }

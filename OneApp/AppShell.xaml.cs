@@ -9,6 +9,7 @@ namespace OneApp
             InitializeComponent();
 
             Routing.RegisterRoute(nameof(ProductDetails), typeof(ProductDetails));
+            Routing.RegisterRoute(nameof(InvoiceDetails), typeof(InvoiceDetails));
         }
     }
 }

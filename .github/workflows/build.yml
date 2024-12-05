@@ -25,7 +25,10 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
-        
+
+    - name: Register Custom Source
+      run: dotnet nuget add source https://nuget.devexpress.com/api/v3/index.json -p ${{ secrets.DEVEXPRESS_SECRET }} -u DevExpress -n devexpress-nuget      
+    
     - name: Install MAUI workload
       run:  dotnet workload install android ios maui-android maui-ios maui-windows maccatalyst
       
@@ -60,6 +63,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
+
+    - name: Register Custom Source
+      run: dotnet nuget add source https://nuget.devexpress.com/api/v3/index.json -p ${{ secrets.DEVEXPRESS_SECRET }} -u DevExpress -n devexpress-nuget
         
     - name: Install MAUI workload
       run:  dotnet workload install android ios maui-android maui-ios maui-windows maccatalyst
