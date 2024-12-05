@@ -23,4 +23,6 @@ public class InvoiceItemDto
     public DateTime LastUpdatedDate { get; set; }
 
     public Guid LastUpdatedBy { get; set; }
+
+    public ProductDto Product { get; set; } = default!;
 }

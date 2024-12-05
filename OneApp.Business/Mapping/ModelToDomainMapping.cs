@@ -11,19 +11,20 @@ public class ModelToDomainMapping : Profile
     {
         CreateMap<Data.Models.Product, ProductDto>();
         CreateMap<Data.Models.Inventory, InventoryDto>();
-        CreateMap<InventoryHistory, InventoryHistoryDto>();
+        CreateMap<Data.Models.InventoryHistory, InventoryHistoryDto>();
         CreateMap<Data.Models.Tenant, TenantDto>();
         CreateMap<Data.Models.ProductType, ProductTypeDto>();
         CreateMap<Data.Models.User, UserDto>();
         CreateMap<Data.Models.Customer, CustomerDto>();
         CreateMap<TReceipt, InvoiceDto>().ForMember(dest => dest.InvoiceItems, opt => opt.MapFrom(src => src.SaleItems));
         CreateMap<TSaleItem, InvoiceItemDto>();
-
+        CreateMap<Data.Models.Product, ProductDto>();
         CreateMap<InvoiceDto, Invoice>();
         CreateMap<InvoiceItemDto, InvoiceItem>();
         CreateMap<CustomerDto, Contracts.v1.Response.Customer>();
         CreateMap<ProductDto, Contracts.v1.Response.Product>();
         CreateMap<ProductTypeDto, Contracts.v1.Response.ProductType>();
         CreateMap<InventoryDto, Contracts.v1.Response.Inventory>();
+        CreateMap<InventoryHistoryDto, Contracts.v1.Response.InventoryHistory>();
     }
 }
