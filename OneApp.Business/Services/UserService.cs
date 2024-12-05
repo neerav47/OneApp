@@ -126,25 +126,30 @@ public class UserService(
             .Include(u => u.Tenant)
             .SingleOrDefaultAsync(u => u.Email!.Equals(email, StringComparison.OrdinalIgnoreCase));
 
-        var roles = await (from ur in _context.UserRoles
-                           join r in _context.Roles on ur.RoleId equals r.Id
-                           where ur.UserId == user.Id
-                           select new RoleDto
-                           {
-                               Id = ur.RoleId,
-                               Name = r.Name!
-                           }).ToListAsync();
-
-
-        return new UserDetailDto
+        if (user != null)
         {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Email= user.Email!,
-            Tenant = _mapper.Map<TenantDto>(user.Tenant),
-            Roles = roles
-        };
+            var roles = await (from ur in _context.UserRoles
+                               join r in _context.Roles on ur.RoleId equals r.Id
+                               where ur.UserId == user.Id
+                               select new RoleDto
+                               {
+                                   Id = ur.RoleId,
+                                   Name = r.Name!
+                               }).ToListAsync();
+
+
+            return new UserDetailDto
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email!,
+                Tenant = _mapper.Map<TenantDto>(user.Tenant),
+                Roles = roles
+            };
+        }
+
+        return default;
     }
 
     public async Task UpdateUserById(string id, IDictionary<string, object> payload)

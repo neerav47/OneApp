@@ -66,7 +66,7 @@ public class AuthService(
             throw new Exception("Failed to validate refresh token.");
         }
 
-        var userDetails = await _userService.GetUserByEmail(user.Email);
+        var userDetails = await _userService.GetUserByEmail(user.Email!);
 
         return await GetTokenResponse(user, userDetails?.RoleNames ?? []);
     }
@@ -89,7 +89,7 @@ public class AuthService(
     {
         var claims = new List<Claim>()
         {
-            new(JwtRegisteredClaimNames.Email, user.Email),
+            new(JwtRegisteredClaimNames.Email, user.Email!),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.GivenName, user.FirstName),
             new(JwtRegisteredClaimNames.FamilyName, user.LastName),
