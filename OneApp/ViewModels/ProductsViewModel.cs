@@ -31,7 +31,7 @@ public partial class ProductsViewModel : ObservableObject
 		ProductTypes = new ObservableCollection<ProductType>();
     }
 
-	[ObservableProperty]
+    [ObservableProperty]
 	bool _isLoading;
 
 	[ObservableProperty]

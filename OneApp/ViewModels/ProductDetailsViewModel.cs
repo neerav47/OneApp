@@ -29,6 +29,9 @@ public partial class ProductDetailsViewModel: ObservableObject
     Product _product;
 
     [ObservableProperty]
+    IEnumerable<Invoice> _invoices;
+
+    [ObservableProperty]
     Invoice _selectedInvoice;
 
 	public async Task Load()
@@ -38,6 +41,7 @@ public partial class ProductDetailsViewModel: ObservableObject
         IsLoading = true;
 
         Product = await _productService.GetProductById(ProductId);
+        Invoices = Product?.Invoices;
 
         IsLoading = false;
     }

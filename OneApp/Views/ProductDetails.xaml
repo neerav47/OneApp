@@ -4,8 +4,8 @@
              x:Class="OneApp.Views.ProductDetails"
              Title="Details"
              xmlns:viewModels="clr-namespace:OneApp.ViewModels"
-             x:DataType="viewModels:ProductDetailsViewModel"
              Shell.NavBarHasShadow="False"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              >
     <Shell.BackButtonBehavior>
         <BackButtonBehavior TextOverride=" "/>
@@ -68,7 +68,7 @@
                                              Margin="0, 15, 0, 0"
                                              Spacing="4">
                         <Label Text="In stock"
-                                   TextColor="{StaticResource Gray200}"/>
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                         <Label Text="{Binding Product.Inventory.Quantity}"
                                    FontSize="16"
                                    FontAttributes="Bold"/>
@@ -78,7 +78,7 @@
                                              Margin="0, 15, 0, 0"
                                              Spacing="4">
                         <Label Text="Unit price"
-                                   TextColor="{StaticResource Gray200}"/>
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                         <Label Text="130.00"
                                    FontSize="16"
                                    FontAttributes="Bold"/>
@@ -88,7 +88,7 @@
                                              Margin="0, 12, 0, 0"
                                              Spacing="4">
                         <Label Text="Average sale price"
-                                   TextColor="{StaticResource Gray200}"/>
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                         <Label Text="{Binding Product.AverageSalePrice}"
                                    FontSize="16"
                                    FontAttributes="Bold"/>
@@ -98,7 +98,7 @@
                                              Margin="0, 12, 0, 0"
                                              Spacing="4">
                         <Label Text="Total unit sales"
-                                   TextColor="{StaticResource Gray200}"/>
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                         <Label Text="{Binding Product.TotalUnitSales}"
                                    FontSize="16"
                                    FontAttributes="Bold"/>
@@ -110,18 +110,71 @@
                        FontAttributes="Bold"
                        FontSize="22"
                        Padding="12"/>
-                <CollectionView ItemsSource="{Binding Product.Invoices}"
-                                ItemsLayout="VerticalList"
-                                Margin="12, 0, 0, 0">
+                <CollectionView ItemsSource="{Binding Invoices}">
+                    <CollectionView.EmptyView>
+                        <StackLayout Padding="30">
+                            <Label Text="No invoices to display"
+                                   HorizontalTextAlignment="Center"
+                                   FontSize="16"/>
+                        </StackLayout>
+                    </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate SeparatorVisibility="True" SeparatorColor="White">
                         <DataTemplate>
-                            <VerticalStackLayout Padding="0">
-                                <!--<Label Text="{Binding Customer.FirstName}"/>
-                                <Label Text="{Binding TransactionId}" />-->
-                                <Label Text="Test customer name"/>
-                                <Label Text="7089734" />
-                                <BoxView HeightRequest="0.5" BackgroundColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Gray200}}" Margin="0,10,0,0" />
-                            </VerticalStackLayout>
+                            <Frame Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                               Padding="0"
+                               Margin="0"
+                               BorderColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+                                <VerticalStackLayout Margin="10, 10, 10, 0" Spacing="15">
+                                    <FlexLayout Direction="Row"
+                                                JustifyContent="SpaceBetween">
+                                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                                            <VerticalStackLayout VerticalOptions="Center">
+                                                <Label Text="{Binding Customer.FullName}"
+                                                        VerticalOptions="Center"
+                                                        FontAttributes="None"
+                                                        FontSize="18"/>
+                                                <StackLayout Orientation="Horizontal"
+                                                             Spacing="10">
+                                                    <HorizontalStackLayout>
+                                                        <Label Text="Items: "
+                                                               FontSize="14"
+                                                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                                                        <Label Text="{Binding ItemsCount}"
+                                                               FontSize="14"
+                                                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                                                    </HorizontalStackLayout>
+                                                    <HorizontalStackLayout>
+                                                        <Label Text="Status: "
+                                                               FontSize="14"
+                                                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                                                        <Label Text="{Binding Status}"
+                                                               FontSize="14"
+                                                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                                                    </HorizontalStackLayout>
+                                                </StackLayout>
+                                    
+                                            </VerticalStackLayout>
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout VerticalOptions="Center"
+                                                               Spacing="5">
+                                            <!--<Label Text="{Binding Total}"
+                                                    FontSize="Large"
+                                                    FontAttributes="Bold"/>-->
+                                            <Image Source="sidearrow_dark.png">
+                                                <Image.Behaviors>
+                                                    <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                                                </Image.Behaviors>
+                                            </Image>
+                                        </HorizontalStackLayout>
+                                    </FlexLayout>
+                                    <BoxView HeightRequest="0.6" Color="{StaticResource Gray600}" />
+                                </VerticalStackLayout>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:InvoicesViewModel}}, Path=InvoiceSelectedCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    NumberOfTapsRequired="1" />
+                                </Frame.GestureRecognizers>
+                            </Frame>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>

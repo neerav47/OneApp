@@ -24,8 +24,8 @@ public class ProductDto
 
     public IEnumerable<InvoiceDto> Invoices { get; set; } = default!;
 
-    public double? AverageSalePrice =>
-        Invoices?.Select(i => i.InvoiceItems).Sum(s => s.Sum(s => s.UnitPrice)) / Invoices?.Count();
+    public double? AverageSalePrice => Invoices?.Count() > 0 ?
+        Invoices?.Select(i => i.InvoiceItems).Sum(s => s.Sum(s => s.UnitPrice)) / Invoices?.Count() : 0;
 
     public decimal? TotalUnitSales => Invoices?.Select(i => i.InvoiceItems).Sum(s => s.Sum(s => s.Quantity));
 }

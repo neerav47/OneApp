@@ -15,9 +15,6 @@
                      Clicked="OpenNewInvoiceBottomSheet">
         </ToolbarItem>
     </ContentPage.ToolbarItems>
-    <Shell.BackgroundColor>
-        <Color>Black</Color>
-    </Shell.BackgroundColor>
     <ScrollView>
         <VerticalStackLayout>
             <dxe:FilterChipGroup HorizontalOptions="Center"
@@ -41,7 +38,7 @@
                                 <FlexLayout Direction="Row"
                                             JustifyContent="SpaceBetween">
                                     <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                                        <VerticalStackLayout VerticalOptions="Center" Spacing="10">
+                                        <VerticalStackLayout VerticalOptions="Center">
                                             <Label Text="{Binding Customer.FullName}"
                                                     VerticalOptions="Center"
                                                     FontAttributes="None"
@@ -51,18 +48,18 @@
                                                 <HorizontalStackLayout>
                                                     <Label Text="Items: "
                                                            FontSize="14"
-                                                           TextColor="{StaticResource Gray200}"/>
+                                                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                                                     <Label Text="{Binding ItemsCount}"
                                                            FontSize="14"
-                                                           TextColor="{StaticResource Gray200}"/>
+                                                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                                                 </HorizontalStackLayout>
                                                 <HorizontalStackLayout>
                                                     <Label Text="Status: "
                                                            FontSize="14"
-                                                           TextColor="{StaticResource Gray200}"/>
+                                                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                                                     <Label Text="{Binding Status}"
                                                            FontSize="14"
-                                                           TextColor="{StaticResource Gray200}"/>
+                                                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                                                 </HorizontalStackLayout>
                                             </StackLayout>
                                     
@@ -72,7 +69,7 @@
                                                            Spacing="5">
                                         <Label Text="{Binding Total}"
                                                 FontSize="Large"
-                                                FontAttributes="Bold"/>
+                                                FontAttributes="None"/>
                                         <Image Source="sidearrow_dark.png">
                                             <Image.Behaviors>
                                                 <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
