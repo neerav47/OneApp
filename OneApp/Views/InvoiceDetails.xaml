@@ -2,9 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OneApp.Views.InvoiceDetails"
-             Title="Invoice details"
+             Title="Details"
              xmlns:viewModels="clr-namespace:OneApp.ViewModels"
-             
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding InitCommand}" EventName="Loaded" />
@@ -26,15 +25,15 @@
                 <Label Grid.Row="0"
                        Grid.ColumnSpan="3"
                        Text="Invoice#"
-                       FontSize="30"
+                       FontSize="26"
                        FontAttributes="Bold"/>
                 <VerticalStackLayout Grid.Row="1"
                                      Grid.Column="0"
                                      Spacing="10">
                     <Label Text="Invoice Date"
-                           TextColor="{StaticResource Gray200}"/>
+                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                     <Label Text="{Binding Invoice.CreatedDate}"
-                           FontAttributes="Bold"
+                           FontAttributes="None"
                            FontSize="18"/>
                 </VerticalStackLayout>
 
@@ -42,9 +41,9 @@
                                      Grid.Column="1"
                                      Spacing="10">
                     <Label Text="Total amount"
-                           TextColor="{StaticResource Gray200}"/>
+                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                     <Label Text="{Binding Invoice.Total}"
-                           FontAttributes="Bold"
+                           FontAttributes="None"
                            FontSize="18"/>
                 </VerticalStackLayout>
 
@@ -52,9 +51,9 @@
                                      Grid.Column="2"
                                      Spacing="10">
                     <Label Text="Status"
-                           TextColor="{StaticResource Gray200}"/>
+                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                     <Label Text="{Binding Invoice.Status}"
-                           FontAttributes="Bold"
+                           FontAttributes="None"
                            FontSize="18"/>
                 </VerticalStackLayout>
 
@@ -62,7 +61,7 @@
                                      Grid.ColumnSpan="3"
                                      Spacing="10">
                     <Label Text="Customer"
-                           TextColor="{StaticResource Gray200}" />
+                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
 
                     <HorizontalStackLayout Spacing="20">
                         <Image Source="profile.png"
@@ -73,11 +72,11 @@
                         </Image>
                         <VerticalStackLayout Spacing="2">
                             <Label Text="{Binding Invoice.Customer.FullName}"
-                                   FontAttributes="Bold"
+                                   FontAttributes="None"
                                    FontSize="18"/> 
                             <Label Text="{Binding Invoice.Customer.Phone}"
                                    FontAttributes="None"
-                                   TextColor="{StaticResource Gray200}"/>
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
@@ -85,7 +84,7 @@
                                      Grid.ColumnSpan="3"
                                      Spacing="10">
                     <Label Text="Items"
-                           TextColor="{StaticResource Gray200}" />
+                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
 
                     <CollectionView ItemsSource="{Binding Invoice.InvoiceItems}">
                         <CollectionView.EmptyView>
@@ -115,22 +114,22 @@
                                                         <HorizontalStackLayout>
                                                             <Label Text="{Binding Quantity}"
                                                                    FontSize="14"
-                                                                   TextColor="{StaticResource Gray200}"/>
+                                                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                                                             <Label Text=" X "
                                                                    FontSize="14"
-                                                                   TextColor="{StaticResource Gray200}"/>
+                                                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                                                             <Label Text="{Binding UnitPrice}"
                                                                    FontSize="14"
-                                                                   TextColor="{StaticResource Gray200}"/>
+                                                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                                                         </HorizontalStackLayout>
-                                                        <HorizontalStackLayout>
+                                                        <!--<HorizontalStackLayout>
                                                             <Label Text="Status: "
                                                                    FontSize="14"
-                                                                   TextColor="{StaticResource Gray200}"/>
+                                                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                                                             <Label Text="{Binding Status}"
                                                                    FontSize="14"
-                                                                   TextColor="{StaticResource Gray200}"/>
-                                                        </HorizontalStackLayout>
+                                                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                                                        </HorizontalStackLayout>-->
                                                     </StackLayout>
                                     
                                                 </VerticalStackLayout>
