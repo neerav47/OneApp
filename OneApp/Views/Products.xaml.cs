@@ -18,8 +18,10 @@ public partial class Products : ContentPage
 		base.OnAppearing();
 		if (!_productVM.Products.Any())
 		{
+			_productVM.IsLoading = true;
             Task.Run(_productVM.Load);
             Task.Run(_productVM.LoadProductTypes);
+			_productVM.IsLoading = false;
         }
 	}
 }

@@ -29,6 +29,7 @@ public partial class ProductsViewModel : ObservableObject
 		this.NewValue = SelectedProduct?.Inventory?.Quantity ?? 0;
         Products = new ObservableCollection<Product>();
 		ProductTypes = new ObservableCollection<ProductType>();
+		SelectedFilters = new List<ProductType>();
     }
 
     [ObservableProperty]
@@ -38,7 +39,7 @@ public partial class ProductsViewModel : ObservableObject
 	Product _selectedProduct;
 
 	[ObservableProperty]
-	ObservableCollection<Product> _products;
+	IEnumerable<Product> _products;
 
 	[ObservableProperty]
 	bool _inProgress;
@@ -62,7 +63,13 @@ public partial class ProductsViewModel : ObservableObject
 	int _selectProductTypeIndex = -1;
 
 	[ObservableProperty]
-	ObservableCollection<ProductType> productTypes;
+	IEnumerable<ProductType> productTypes;
+
+	[ObservableProperty]
+    IList<ProductType> _selectedFilters;
+
+	[ObservableProperty]
+	string _searchText = string.Empty;
 
 	partial void OnChangeValueChanging(int? value)
 	{	
@@ -81,31 +88,15 @@ public partial class ProductsViewModel : ObservableObject
 	public async Task Load()
 	{
 		_logger.LogInformation($"{nameof(ProductsViewModel)}-{nameof(Load)} started.");
-		IsLoading = true;
-		
-		var response = await _productService.GetProducts();
-
-		if (response.Any())
-		{
-            foreach (var p in response)
-            {
-                Products.Add(p);
-            }
-        }
-
-		IsLoading = false;
-	}
+		Products = await _productService.GetProducts();
+        _logger.LogInformation($"{nameof(ProductsViewModel)}-{nameof(Load)} completed.");
+    }
 
 	public async Task LoadProductTypes()
 	{
         _logger.LogInformation($"{nameof(ProductsViewModel)}-{nameof(LoadProductTypes)} started.");
-
-        var response = await _productService.GetProductTypes();
-
-        foreach (var p in response)
-        {
-            ProductTypes.Add(p);
-        }
+        ProductTypes = await _productService.GetProductTypes();
+        _logger.LogInformation($"{nameof(ProductsViewModel)}-{nameof(LoadProductTypes)} completed.");
     }
 
 	[RelayCommand]
@@ -182,7 +173,7 @@ public partial class ProductsViewModel : ObservableObject
         {
             Name = ProductName.Trim(),
 			Description = ProductDescription.Trim(),
-			ProductTypeId = ProductTypes[SelectProductTypeIndex].Id.ToString()
+			ProductTypeId = ProductTypes.ElementAt(SelectProductTypeIndex).Id.ToString()
         };
 
         var response = await _productService.CreateProduct(request);
@@ -197,5 +188,29 @@ public partial class ProductsViewModel : ObservableObject
             InProgress = !response;
         }
     }
+
+	[RelayCommand]
+	public Task OnFilterChange()
+	{
+		if(SelectedFilters?.Count() > 0)
+		{
+            _logger.LogInformation($"{nameof(ProductsViewModel)}-{nameof(OnFilterChange)} started.");
+			var productTypeIds = SelectedFilters.Select(s => s.Id);
+
+			Products = Products.Where(p => productTypeIds.Contains(p.ProductType.Id)).AsEnumerable();
+
+			_logger.LogInformation($"{nameof(ProductsViewModel)}-{nameof(OnFilterChange)} completed.");
+        }
+		return Task.CompletedTask;
+    }
+
+	[RelayCommand]
+	void OnSearch()
+	{
+		_logger.LogInformation($"{nameof(ProductsViewModel)}-{nameof(OnSearch)} started.");
+		var text = SearchText;
+
+		_logger.LogInformation($"{nameof(ProductsViewModel)}-{nameof(OnSearch)} completed.");
+	}
 }
 

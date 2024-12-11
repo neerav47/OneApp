@@ -6,7 +6,9 @@
              Title="Invoices"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:dxe="clr-namespace:DevExpress.Maui.Editors;assembly=DevExpress.Maui.Editors"
-             xmlns:dx="http://schemas.devexpress.com/maui">
+             xmlns:dx="http://schemas.devexpress.com/maui"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             ios:Page.UseSafeArea="True">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding LoadCommand}" EventName="Loaded" />
     </ContentPage.Behaviors>
@@ -17,6 +19,22 @@
     </ContentPage.ToolbarItems>
     <ScrollView>
         <VerticalStackLayout>
+            <dxe:TextEdit EndIcon="search"
+                          PlaceholderText="Search invoices"
+                          TextFontSize="14"
+                          ClearIconColor="{StaticResource Gray300}"
+                          TextVerticalAlignment="Center"
+                          BackgroundColor="{AppThemeBinding Light=White, Dark=Black}"
+                          BorderThickness="1"
+                          BorderColor="{AppThemeBinding Light=#DCD8E0, Dark=#938F99}"
+                          BoxPadding="20,6,10,6"
+                          PlaceholderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark=#938F99}"
+                          EndIconColor="{AppThemeBinding Light={StaticResource Gray300}, Dark=#CAC4D0}"
+                          FocusedBorderColor="Transparent"
+                          CornerRadius="10"
+                          HeightRequest="35"
+                          Margin="10, 10, 10, 5"
+                          TextColor="{AppThemeBinding Light={StaticResource Gray950}, Dark=#E6E1E5}"/>
             <dxe:FilterChipGroup HorizontalOptions="Center"
                                  ItemsSource="{Binding Chips}"
                                  DisplayMember="Text"/>
