@@ -50,6 +50,13 @@ public partial class InvoicesViewModel : ObservableObject
     }
 
     [RelayCommand]
+    public async Task CreateInvoiceSelected()
+    {
+        _logger.LogInformation($"{nameof(InvoicesViewModel)}-{nameof(CreateInvoiceSelected)} started.");
+        await Shell.Current.GoToAsync($"{nameof(CreateInvoice)}");
+    }
+
+    [RelayCommand]
     public async Task Load()
     {
         _logger.LogInformation($"{nameof(InvoicesViewModel)}-{nameof(Load)} started.");

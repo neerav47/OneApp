@@ -50,6 +50,7 @@ namespace OneApp.Extentions
             serviceCollection.AddTransient<IAuthenticationService, AuthenticationService>();
 			serviceCollection.AddTransient<IProductService, ProductsService>();
 			serviceCollection.AddTransient<ITransactionService, TransactionService>();
+			serviceCollection.AddTransient<ICustomerService, CustomerService>();
         }
 
 		public static void AddPages(this IServiceCollection serviceCollection)
@@ -61,6 +62,7 @@ namespace OneApp.Extentions
 			serviceCollection.AddTransient<ProductDetails>();
 			serviceCollection.AddSingleton<Invoices>();
 			serviceCollection.AddTransient<InvoiceDetails>();
+			serviceCollection.AddSingleton<CreateInvoice>();
         }
 
 		public static void AddViewModels(this IServiceCollection serviceCollection)
@@ -70,6 +72,7 @@ namespace OneApp.Extentions
 			serviceCollection.AddTransient<ProductDetailsViewModel>();
 			serviceCollection.AddSingleton<InvoicesViewModel>();
 			serviceCollection.AddTransient<InvoiceDetailsViewModel>();
+			serviceCollection.AddSingleton<CreateInvoiceViewModel>();
 		}
 	}
 }

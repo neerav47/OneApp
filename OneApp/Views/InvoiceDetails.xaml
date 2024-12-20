@@ -4,156 +4,149 @@
              x:Class="OneApp.Views.InvoiceDetails"
              Title="Details"
              xmlns:viewModels="clr-namespace:OneApp.ViewModels"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             BackgroundColor="#e0e0e0">
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior Command="{Binding InitCommand}" EventName="Loaded" />
+        <toolkit:EventToCommandBehavior Command="{Binding InitCommand}"
+                                        EventName="Loaded"/>
     </ContentPage.Behaviors>
     <ScrollView>
         <VerticalStackLayout>
-            <Grid Margin="10" RowSpacing="30">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Label Grid.Row="0"
-                       Grid.ColumnSpan="3"
-                       Text="Invoice#"
-                       FontSize="26"
-                       FontAttributes="Bold"/>
-                <VerticalStackLayout Grid.Row="1"
-                                     Grid.Column="0"
-                                     Spacing="10">
-                    <Label Text="Invoice Date"
-                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
-                    <Label Text="{Binding Invoice.CreatedDate}"
-                           FontAttributes="None"
-                           FontSize="18"/>
-                </VerticalStackLayout>
+            <Frame Padding="10"
+                   Margin="5"
+                   Grid.Row="0"
+                   Grid.ColumnSpan="3">
+                <Grid RowSpacing="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0"
+                           Grid.ColumnSpan="3"
+                           Text="Invoice#"
+                           FontSize="26"
+                           FontAttributes="Bold"/>
+                    <VerticalStackLayout Grid.Row="1"
+                                         Grid.Column="0">
+                        <Label Text="Invoice Date"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                        <Label Text="{Binding Invoice.CreatedDate}"
+                               FontAttributes="None"
+                               FontSize="16"/>
+                    </VerticalStackLayout>
 
-                <VerticalStackLayout Grid.Row="1"
-                                     Grid.Column="1"
-                                     Spacing="10">
-                    <Label Text="Total amount"
-                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
-                    <Label Text="{Binding Invoice.Total}"
-                           FontAttributes="None"
-                           FontSize="18"/>
-                </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="1"
+                                         Grid.Column="1">
+                        <Label Text="Total amount"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                        <Label Text="{Binding Invoice.Total}"
+                               FontAttributes="None"
+                               FontSize="16"/>
+                    </VerticalStackLayout>
 
-                <VerticalStackLayout Grid.Row="1"
-                                     Grid.Column="2"
-                                     Spacing="10">
-                    <Label Text="Status"
-                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
-                    <Label Text="{Binding Invoice.Status}"
-                           FontAttributes="None"
-                           FontSize="18"/>
-                </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="1"
+                                         Grid.Column="2">
+                        <Label Text="Status"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                        <Label Text="{Binding Invoice.Status}"
+                               FontAttributes="None"
+                               FontSize="16"/>
+                    </VerticalStackLayout>
 
-                <VerticalStackLayout Grid.Row="2"
-                                     Grid.ColumnSpan="3"
-                                     Spacing="10">
-                    <Label Text="Customer"
-                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+                    <VerticalStackLayout Grid.Row="2"
+                                         Grid.ColumnSpan="3"
+                                         Spacing="5">
+                        <Label Text="Customer"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
 
-                    <HorizontalStackLayout Spacing="20">
-                        <Image Source="profile.png"
-                               Margin="0">
-                            <Image.Behaviors>
-                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
-                            </Image.Behaviors>
-                        </Image>
-                        <VerticalStackLayout Spacing="2">
-                            <Label Text="{Binding Invoice.Customer.FullName}"
-                                   FontAttributes="None"
-                                   FontSize="18"/> 
-                            <Label Text="{Binding Invoice.Customer.Phone}"
-                                   FontAttributes="None"
-                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
-                        </VerticalStackLayout>
-                    </HorizontalStackLayout>
-                </VerticalStackLayout>
-                <VerticalStackLayout Grid.Row="3"
-                                     Grid.ColumnSpan="3"
-                                     Spacing="10">
-                    <Label Text="Items"
-                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
-
-                    <CollectionView ItemsSource="{Binding Invoice.InvoiceItems}">
-                        <CollectionView.EmptyView>
-                            <StackLayout Padding="30">
-                                <Label Text="No invoice items."
-                                       HorizontalTextAlignment="Center"
-                                       FontSize="16"/>
-                            </StackLayout>
-                        </CollectionView.EmptyView>
-                        <CollectionView.ItemTemplate SeparatorVisibility="True" SeparatorColor="White">
-                            <DataTemplate>
-                                <Frame Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
-                                       Padding="0"
-                                       Margin="0"
-                                       BorderColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
-                                    <VerticalStackLayout Margin="0" Spacing="15">
-                                        <FlexLayout Direction="Row"
-                                                    JustifyContent="SpaceBetween">
-                                            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                                                <VerticalStackLayout VerticalOptions="Center" Spacing="10">
-                                                    <Label Text="{Binding ProductId}"
-                                                            VerticalOptions="Center"
-                                                            FontAttributes="None"
-                                                            FontSize="18"/>
-                                                    <StackLayout Orientation="Horizontal"
-                                                                 Spacing="10">
-                                                        <HorizontalStackLayout>
-                                                            <Label Text="{Binding Quantity}"
-                                                                   FontSize="14"
-                                                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
-                                                            <Label Text=" X "
-                                                                   FontSize="14"
-                                                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
-                                                            <Label Text="{Binding UnitPrice}"
-                                                                   FontSize="14"
-                                                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
-                                                        </HorizontalStackLayout>
-                                                        <!--<HorizontalStackLayout>
-                                                            <Label Text="Status: "
-                                                                   FontSize="14"
-                                                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
-                                                            <Label Text="{Binding Status}"
-                                                                   FontSize="14"
-                                                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
-                                                        </HorizontalStackLayout>-->
-                                                    </StackLayout>
-                                    
-                                                </VerticalStackLayout>
-                                            </HorizontalStackLayout>
-                                            <HorizontalStackLayout VerticalOptions="Center"
-                                                                   Spacing="5">
-                                                <Label Text="{Binding Total}"
-                                                        FontSize="Large"
-                                                        FontAttributes="Bold"/>
-                                            </HorizontalStackLayout>
-                                        </FlexLayout>
-                                        <BoxView HeightRequest="0.6" Color="{StaticResource Gray600}" />
-                                    </VerticalStackLayout>
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:InvoicesViewModel}}, Path=InvoiceSelectedCommand}"
-                                                        CommandParameter="{Binding .}"
-                                                        NumberOfTapsRequired="1" />
-                                    </Frame.GestureRecognizers>
-                                </Frame>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Grid>
+                        <HorizontalStackLayout Spacing="15">
+                            <Image Source="profile.png"
+                                   Margin="0">
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                </Image.Behaviors>
+                            </Image>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding Invoice.Customer.FullName}"
+                                       FontAttributes="None"
+                                       FontSize="18"/>
+                                <Label Text="{Binding Invoice.Customer.Phone}"
+                                       FontAttributes="None"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Grid>
+            </Frame>
+            <Label Text="Items"
+                   Margin="5"
+                   FontAttributes="Bold"/>
+            <CollectionView ItemsSource="{Binding Invoice.InvoiceItems}">
+                <CollectionView.EmptyView>
+                    <StackLayout Padding="30">
+                        <Label Text="No invoice items."
+                               HorizontalTextAlignment="Center"
+                               FontSize="16"/>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate SeparatorVisibility="True"
+                                             SeparatorColor="White">
+                    <DataTemplate>
+                        <Frame Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                               Padding="0"
+                               Margin="5"
+                               BorderColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+                            <VerticalStackLayout Margin="10"
+                                                 Spacing="15">
+                                <FlexLayout Direction="Row"
+                                            JustifyContent="SpaceBetween">
+                                    <HorizontalStackLayout Spacing="10"
+                                                           HorizontalOptions="Center">
+                                        <VerticalStackLayout VerticalOptions="Center">
+                                            <Label Text="Test"
+                                                   VerticalOptions="Center"
+                                                   FontAttributes="None"
+                                                   FontSize="18"/>
+                                            <StackLayout Orientation="Horizontal"
+                                                         Spacing="10">
+                                                <HorizontalStackLayout HorizontalOptions="Center">
+                                                    <Label Text="Quantity: "
+                                                           FontSize="14"
+                                                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                                                    <Label Text="{Binding Quantity}"
+                                                           FontSize="14"
+                                                           TextColor="Green"/>
+                                                </HorizontalStackLayout>
+                                                <HorizontalStackLayout>
+                                                    <Label Text="Unit price: "
+                                                           FontSize="14"
+                                                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                                                    <Label Text="{Binding UnitPrice}"
+                                                           FontSize="14"
+                                                           TextColor="Green"/>
+                                                </HorizontalStackLayout>
+                                            </StackLayout>
+                                        </VerticalStackLayout>
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout VerticalOptions="Center"
+                                                           Spacing="5">
+                                        <Label Text="{Binding Total}"
+                                               FontSize="Large"
+                                               FontAttributes="Bold"
+                                               TextColor="Green"/>
+                                    </HorizontalStackLayout>
+                                </FlexLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

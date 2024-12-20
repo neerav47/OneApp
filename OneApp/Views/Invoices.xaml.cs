@@ -23,4 +23,10 @@ public partial class Invoices : ContentPage
         _logger.LogInformation($"{nameof(InvoicesViewModel)}-{nameof(OpenNewInvoiceBottomSheet)} started.");
         newInvoiceBottomSheet.State = BottomSheetState.HalfExpanded;
     }
+
+	void OpenFilterPopup(Object sender, EventArgs e)
+	{
+		actionsPopup.PlacementTarget = (View)FilterFrame;
+		actionsPopup.IsOpen = !actionsPopup.IsOpen;
+	}
 }

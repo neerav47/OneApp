@@ -76,4 +76,9 @@ public sealed class CustomerService : ICustomerService
         var customer = await _context.Customer.SingleOrDefaultAsync(c => c.Id == Guid.Parse(id) && c.TenantId == _tenantId);
         return _mapper.Map<CustomerDto?>(customer);
     }
+
+    public async Task<IEnumerable<CustomerDto>> GetCustomers(){
+        var customers = await _context.Customer.Where(c => c.TenantId == _tenantId).ToListAsync();
+        return _mapper.Map<List<CustomerDto>>(customers);
+    }
 }

@@ -7,7 +7,8 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:dxe="clr-namespace:DevExpress.Maui.Editors;assembly=DevExpress.Maui.Editors"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
-             ios:Page.UseSafeArea="True">
+             ios:Page.UseSafeArea="True"
+             BackgroundColor="#e0e0e0">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="plus.png"
                      Command="{Binding OpenAddProductBottomSheetCommand}">
@@ -33,13 +34,11 @@
                           Text="{Binding SearchText}"
                           TextChangedCommand="{Binding SearchCommand}"
                           TextColor="{AppThemeBinding Light={StaticResource Gray950}, Dark=#E6E1E5}"/>
-
             <dxe:FilterChipGroup HorizontalOptions="Center"
                                  ItemsSource="{Binding ProductTypes, Mode=TwoWay}"
                                  DisplayMember="Name"
                                  SelectedItems="{Binding SelectedFilters}"
-                                 SelectionChangedCommand="{Binding FilterChangeCommand}"
-                                 />
+                                 SelectionChangedCommand="{Binding FilterChangeCommand}"/>
             <CollectionView ItemsSource="{Binding Products}"
                             ItemsLayout="VerticalList"
                             SelectedItem="{Binding SelectedProduct}">
@@ -50,7 +49,8 @@
                                FontSize="16"/>
                     </StackLayout>
                 </CollectionView.EmptyView>
-                <CollectionView.ItemTemplate SeparatorVisibility="True" SeparatorColor="White">
+                <CollectionView.ItemTemplate SeparatorVisibility="True"
+                                             SeparatorColor="White">
                     <DataTemplate>
                         <SwipeView>
                             <SwipeView.RightItems>
@@ -63,65 +63,68 @@
                             </SwipeView.RightItems>
                             <Frame Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
                                    Padding="0"
-                                   Margin="0"
+                                   Margin="5"
+                                   HeightRequest="65"
                                    BorderColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
-                                <VerticalStackLayout Margin="10, 10, 10, 0" Spacing="15" >
+                                <VerticalStackLayout Margin="10, 10, 10, 0"
+                                                     Spacing="15">
                                     <FlexLayout Direction="Row"
-                                            JustifyContent="SpaceBetween">
-                                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                                        <Image Source="profile.png"
-                                               Margin="8">
-                                            <Image.Behaviors>
-                                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
-                                            </Image.Behaviors>
-                                        </Image>
-                                        <VerticalStackLayout VerticalOptions="Center">
-                                            <Label Text="{Binding Name}"
-                                                   VerticalOptions="Center"
-                                                   FontAttributes="None"
-                                                   FontSize="18"/>
+                                                JustifyContent="SpaceBetween">
+                                        <HorizontalStackLayout Spacing="10"
+                                                               HorizontalOptions="Center">
+                                            <Image Source="profile.png"
+                                                   Margin="8">
+                                                <Image.Behaviors>
+                                                    <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                                </Image.Behaviors>
+                                            </Image>
+                                            <VerticalStackLayout VerticalOptions="Center">
+                                                <Label Text="{Binding Name}"
+                                                       VerticalOptions="Center"
+                                                       FontAttributes="None"
+                                                       FontSize="18"/>
 
-                                            <Label Text="{Binding ProductType.Name}"
-                                                   VerticalOptions="Center"
-                                                   FontSize="14"
-                                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
-                                        </VerticalStackLayout>
-                                    </HorizontalStackLayout>
-                                    <HorizontalStackLayout VerticalOptions="Center"
-                                                           Spacing="10">
-                                        <Label Text="{Binding Inventory.Quantity}"
-                                               FontSize="Large"
-                                               FontAttributes="None"/>
-                                        <Image Source="sidearrow_dark.png">
-                                            <Image.Behaviors>
-                                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
-                                            </Image.Behaviors>
-                                        </Image>
-                                    </HorizontalStackLayout>
-                                </FlexLayout>
-                                    <BoxView HeightRequest="0.6" Color="{StaticResource Gray600}" />
+                                                <Label Text="{Binding ProductType.Name}"
+                                                       VerticalOptions="Center"
+                                                       FontSize="14"
+                                                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                                            </VerticalStackLayout>
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout VerticalOptions="Center"
+                                                               Spacing="0">
+                                            <Label Text="{Binding Inventory.Quantity}"
+                                                   FontSize="Large"
+                                                   FontAttributes="Bold"
+                                                   TextColor="Green"/>
+                                            <Image Source="sidearrow_dark.png">
+                                                <Image.Behaviors>
+                                                    <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                                </Image.Behaviors>
+                                            </Image>
+                                        </HorizontalStackLayout>
+                                    </FlexLayout>
                                 </VerticalStackLayout>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ProductsViewModel}}, Path=ProductSelectedCommand}"
-                                                  CommandParameter="{Binding .}"
-                                                  NumberOfTapsRequired="1" />
+                                                          CommandParameter="{Binding .}"
+                                                          NumberOfTapsRequired="1"/>
                                 </Frame.GestureRecognizers>
                             </Frame>
                         </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-                </CollectionView>
+            </CollectionView>
             <Grid x:Name="LoadingOverlay"
                   IsVisible="{Binding IsLoading}"
                   HorizontalOptions="FillAndExpand"
                   VerticalOptions="FillAndExpand"
                   ZIndex="1">
-                  <ActivityIndicator IsRunning="True"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
+                <ActivityIndicator IsRunning="True"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
             </Grid>
 
         </VerticalStackLayout>
-        
+
     </ScrollView>
 </ContentPage>

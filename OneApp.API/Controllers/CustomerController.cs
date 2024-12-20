@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneApp.Business.Interfaces;
 using OneApp.Contracts.v1.Request;
+using OneApp.Contracts.v1.Response;
 using System.Net;
 
 namespace OneApp.API.Controllers;
@@ -10,7 +12,9 @@ namespace OneApp.API.Controllers;
 [Route("api")]
 [ApiController]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class CustomerController(ICustomerService _customerService) : ControllerBase
+public class CustomerController(
+    ICustomerService _customerService,
+    IMapper _mapper) : ControllerBase
 {
     [HttpPost("v1/customer")]
     [ProducesResponseType((int)HttpStatusCode.Created)]
@@ -29,5 +33,13 @@ public class CustomerController(ICustomerService _customerService) : ControllerB
     {
         var customer = await _customerService.GetCustomerbyId(id);
         return customer != null ? Ok(customer) : NotFound();
+    }
+
+    [HttpGet("v1/customers")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetCustomers()
+    {
+        var customerDtos = await _customerService.GetCustomers();
+        return Ok(_mapper.Map<List<Customer>>(customerDtos));
     }
 }
