@@ -98,7 +98,7 @@
                                              Margin="0, 12, 0, 0"
                                              Spacing="4">
                         <Label Text="Total unit sales"
-                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                         <Label Text="{Binding Product.TotalUnitSales}"
                                    FontSize="16"
                                    FontAttributes="Bold"/>

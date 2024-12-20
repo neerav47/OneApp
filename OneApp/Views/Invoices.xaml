@@ -6,38 +6,87 @@
              Title="Invoices"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:dxe="clr-namespace:DevExpress.Maui.Editors;assembly=DevExpress.Maui.Editors"
+             xmlns:dxco="clr-namespace:DevExpress.Maui.Controls;assembly=DevExpress.Maui.Controls"
              xmlns:dx="http://schemas.devexpress.com/maui"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
-             ios:Page.UseSafeArea="True">
+             ios:Page.UseSafeArea="True"
+             BackgroundColor="#e0e0e0">
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior Command="{Binding LoadCommand}" EventName="Loaded" />
+        <toolkit:EventToCommandBehavior Command="{Binding LoadCommand}"
+                                        EventName="Loaded"/>
     </ContentPage.Behaviors>
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="plus.png"
-                     Clicked="OpenNewInvoiceBottomSheet">
+                     Command="{Binding CreateInvoiceSelectedCommand}">
         </ToolbarItem>
     </ContentPage.ToolbarItems>
     <ScrollView>
         <VerticalStackLayout>
-            <dxe:TextEdit EndIcon="search"
-                          PlaceholderText="Search invoices"
-                          TextFontSize="14"
-                          ClearIconColor="{StaticResource Gray300}"
-                          TextVerticalAlignment="Center"
-                          BackgroundColor="{AppThemeBinding Light=White, Dark=Black}"
-                          BorderThickness="1"
-                          BorderColor="{AppThemeBinding Light=#DCD8E0, Dark=#938F99}"
-                          BoxPadding="20,6,10,6"
-                          PlaceholderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark=#938F99}"
-                          EndIconColor="{AppThemeBinding Light={StaticResource Gray300}, Dark=#CAC4D0}"
-                          FocusedBorderColor="Transparent"
-                          CornerRadius="10"
-                          HeightRequest="35"
-                          Margin="10, 10, 10, 5"
-                          TextColor="{AppThemeBinding Light={StaticResource Gray950}, Dark=#E6E1E5}"/>
-            <dxe:FilterChipGroup HorizontalOptions="Center"
-                                 ItemsSource="{Binding Chips}"
-                                 DisplayMember="Text"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="0.12*"/>
+                </Grid.ColumnDefinitions>
+                <dxe:TextEdit EndIcon="search"
+                              PlaceholderText="Search invoices"
+                              TextFontSize="14"
+                              ClearIconColor="{StaticResource Gray300}"
+                              TextVerticalAlignment="Center"
+                              BackgroundColor="{AppThemeBinding Light=White, Dark=Black}"
+                              BorderThickness="1"
+                              BorderColor="{AppThemeBinding Light=#DCD8E0, Dark=#938F99}"
+                              BoxPadding="20,6,10,6"
+                              PlaceholderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark=#938F99}"
+                              EndIconColor="{AppThemeBinding Light={StaticResource Gray300}, Dark=#CAC4D0}"
+                              FocusedBorderColor="Transparent"
+                              CornerRadius="10"
+                              HeightRequest="35"
+                              Margin="5, 10, 0, 5"
+                              TextColor="{AppThemeBinding Light={StaticResource Gray950}, Dark=#E6E1E5}"
+                              Grid.Row="0"
+                              Grid.Column="0"/>
+                <Frame  x:Name="FilterFrame"
+                        HeightRequest="35"
+                        Margin="5, 10, 5, 5"
+                        Padding="0"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        CornerRadius="10"
+                        BackgroundColor="{AppThemeBinding Light=White, Dark=Black}"
+                        BorderColor="{AppThemeBinding Light=White, Dark=Black}">
+                    <VerticalStackLayout VerticalOptions="Center"
+                                         HorizontalOptions="Center">
+                        <Image Source="filter.png"
+                               HeightRequest="25"
+                               WidthRequest="21">
+                            <Image.Behaviors>
+                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Gray300}, Dark=#CAC4D0}"/>
+                            </Image.Behaviors>
+                        </Image>
+                    </VerticalStackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OpenFilterPopup"
+                                              NumberOfTapsRequired="1"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
+                <dxco:DXPopup x:Name="actionsPopup"
+                              Placement="Top"
+                              CornerRadius="8"
+                              HorizontalAlignment="Default"
+                              ShadowColor="{AppThemeBinding Light={StaticResource Gray500}, Dark=Black}"
+                              ShadowRadius="5">
+                    <VerticalStackLayout Padding="8,6">
+                        <dxe:FilterChipGroup HorizontalOptions="Center"
+                                             VerticalOptions="Center"
+                                             ItemsSource="{Binding Chips}"
+                                             DisplayMember="Text"
+                                             IsMultiline="True"/>
+                    </VerticalStackLayout>
+                </dxco:DXPopup>
+            </Grid>
             <CollectionView ItemsSource="{Binding Invoices}">
                 <CollectionView.EmptyView>
                     <StackLayout Padding="30">
@@ -46,21 +95,25 @@
                                FontSize="16"/>
                     </StackLayout>
                 </CollectionView.EmptyView>
-                <CollectionView.ItemTemplate SeparatorVisibility="True" SeparatorColor="White">
+                <CollectionView.ItemTemplate SeparatorVisibility="True"
+                                             SeparatorColor="White">
                     <DataTemplate>
                         <Frame Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
                                Padding="0"
-                               Margin="0"
+                               Margin="5"
+                               HeightRequest="65"
                                BorderColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
-                            <VerticalStackLayout Margin="10, 10, 10, 0" Spacing="15">
+                            <VerticalStackLayout Margin="10, 10, 10, 0"
+                                                 Spacing="15">
                                 <FlexLayout Direction="Row"
                                             JustifyContent="SpaceBetween">
-                                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                                    <HorizontalStackLayout Spacing="10"
+                                                           HorizontalOptions="Center">
                                         <VerticalStackLayout VerticalOptions="Center">
                                             <Label Text="{Binding Customer.FullName}"
-                                                    VerticalOptions="Center"
-                                                    FontAttributes="None"
-                                                    FontSize="18"/>
+                                                   VerticalOptions="Center"
+                                                   FontAttributes="None"
+                                                   FontSize="18"/>
                                             <StackLayout Orientation="Horizontal"
                                                          Spacing="10">
                                                 <HorizontalStackLayout>
@@ -80,27 +133,27 @@
                                                            TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                                                 </HorizontalStackLayout>
                                             </StackLayout>
-                                    
+
                                         </VerticalStackLayout>
                                     </HorizontalStackLayout>
                                     <HorizontalStackLayout VerticalOptions="Center"
-                                                           Spacing="5">
+                                                           Spacing="0">
                                         <Label Text="{Binding Total}"
-                                                FontSize="Large"
-                                                FontAttributes="None"/>
+                                               FontSize="Large"
+                                               FontAttributes="Bold"
+                                               TextColor="Green"/>
                                         <Image Source="sidearrow_dark.png">
                                             <Image.Behaviors>
-                                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                             </Image.Behaviors>
                                         </Image>
                                     </HorizontalStackLayout>
                                 </FlexLayout>
-                                <BoxView HeightRequest="0.6" Color="{StaticResource Gray600}" />
                             </VerticalStackLayout>
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:InvoicesViewModel}}, Path=InvoiceSelectedCommand}"
-                                                CommandParameter="{Binding .}"
-                                                NumberOfTapsRequired="1" />
+                                                      CommandParameter="{Binding .}"
+                                                      NumberOfTapsRequired="1"/>
                             </Frame.GestureRecognizers>
                         </Frame>
                     </DataTemplate>
@@ -111,8 +164,9 @@
                             AllowDismiss="True"
                             CornerRadius="10"
                             HalfExpandedRatio="0.9">
-                <Label Text="test" />
+                <Label Text="test"/>
             </dx:BottomSheet>
-            </VerticalStackLayout>
+
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

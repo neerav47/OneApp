@@ -6,13 +6,16 @@
              Shell.NavBarIsVisible="False"
              xmlns:viewModels="clr-namespace:OneApp.ViewModels"
              x:DataType="viewModels:LoginViewModel"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:dx="http://schemas.devexpress.com/maui"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             ios:Page.UseSafeArea="True">
     <ContentPage.Resources>
         <ResourceDictionary>
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    <VerticalStackLayout VerticalOptions="Center" Margin="30" Spacing="30">
+    <VerticalStackLayout VerticalOptions="Center" Margin="20" Spacing="30">
         <Label 
             Text="Sign in"
             HorizontalOptions="Start"
@@ -23,12 +26,12 @@
 
         <Label Text="{Binding SelectedUser.Tenant.Name}" IsVisible="{Binding IsTenantPickerVisible, Converter={StaticResource InvertedBoolConverter}}" FontAttributes="Bold" />
 
-        <Entry Placeholder="Username"
+        <dx:TextEdit LabelText="Username"
                Keyboard="Chat"
                Text="{Binding UserName}"
-               TextTransform="Lowercase"/>
+               />
 
-        <Entry Placeholder="Password" IsPassword="True" IsVisible="{Binding IsPasswordFieldVisible}" Text="{Binding Password}"/>
+        <dx:PasswordEdit LabelText="Password" IsVisible="{Binding IsPasswordFieldVisible}" Text="{Binding Password}"/>
 
         <Button Text="Next" CornerRadius="20" WidthRequest="220" FontSize="Subtitle" HorizontalOptions="Center" 
                 Command="{Binding NextCommand}" IsVisible="{Binding IsPasswordFieldVisible, Converter={StaticResource InvertedBoolConverter}}"/>
