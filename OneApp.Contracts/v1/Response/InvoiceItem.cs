@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace OneApp.Contracts.v1.Response;
+﻿namespace OneApp.Contracts.v1.Response;
 
 public class InvoiceItem
 {
