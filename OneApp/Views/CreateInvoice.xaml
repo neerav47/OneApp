@@ -14,7 +14,7 @@
                     JustifyContent="SpaceBetween">
             <VerticalStackLayout>
                 <Frame Padding="5"
-                       Margin="5">
+                       Margin="8">
                     <VerticalStackLayout>
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
@@ -46,7 +46,7 @@
                             </VerticalStackLayout>
                         </Grid>
                         <dx:AutoCompleteEdit LabelText="Customer"
-                                             x:Name="customers"
+                                             x:Name="customersAutoCompleteEdit"
                                              FocusedBorderColor="{StaticResource Primary}"
                                              FocusedLabelColor="{StaticResource Primary}"
                                              ItemsSource="{Binding Customers}"
@@ -54,7 +54,10 @@
                                              PlaceholderText="Select customer"
                                              DisplayMember="FullName"
                                              SelectedItem="{Binding SelectedCustomer}"
-                                             Margin="5">
+                                             Margin="5"
+                                             ErrorText="{Binding CustomersAutoCompleteEditErrorText}"
+                                             HasError="{Binding HasCustomersAutoCompleteEditErrors}"
+                                             SelectionChanged="customersAutoCompleteEdit_SelectionChanged">
                             <!-- <dx:AutoCompleteEdit.ItemTemplate>
                         <DataTemplate>
                             <VerticalStackLayout>
@@ -70,11 +73,11 @@
                         </dx:AutoCompleteEdit>
                     </VerticalStackLayout>
                 </Frame>
-                <VerticalStackLayout Margin="5"
+                <VerticalStackLayout Margin="8, 0, 8, 5"
                                      Spacing="10">
                     <FlexLayout Direction="Row"
                                 JustifyContent="SpaceBetween"
-                                Margin="5">
+                                Margin="8">
                         <Label Text="Items"
                                FontAttributes="Bold"/>
                         <ImageButton Source="circle_plus.png"
@@ -82,36 +85,91 @@
                                      WidthRequest="25"
                                      Clicked="OpenAddItemsBottomSheet"/>
                     </FlexLayout>
-                    <CollectionView>
+                    <CollectionView ItemsSource="{Binding NewInvoiceItems, Mode=TwoWay}">
                         <CollectionView.EmptyView>
                             <Label Text="No items"
                                    HorizontalTextAlignment="Center"/>
                         </CollectionView.EmptyView>
+                        <CollectionView.ItemTemplate SeparatorVisibility="True"
+                                                     SeparatorColor="White">
+                            <DataTemplate>
+                                <Frame Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                                       Padding="0"
+                                       Margin="0, 5, 0, 5"
+                                       BorderColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+                                    <VerticalStackLayout Margin="10"
+                                                         Spacing="15">
+                                        <FlexLayout Direction="Row"
+                                                    JustifyContent="SpaceBetween">
+                                            <HorizontalStackLayout Spacing="10"
+                                                                   HorizontalOptions="Center">
+                                                <VerticalStackLayout VerticalOptions="Center">
+                                                    <Label Text="{Binding ProductName}"
+                                                           VerticalOptions="Center"
+                                                           FontAttributes="None"
+                                                           FontSize="18"/>
+                                                    <StackLayout Orientation="Horizontal"
+                                                                 Spacing="10">
+                                                        <HorizontalStackLayout HorizontalOptions="Center">
+                                                            <Label Text="Quantity: "
+                                                                   FontSize="14"
+                                                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                                                            <Label Text="{Binding Quantity}"
+                                                                   FontSize="14"
+                                                                   TextColor="Green"/>
+                                                        </HorizontalStackLayout>
+                                                        <HorizontalStackLayout>
+                                                            <Label Text="Unit price: "
+                                                                   FontSize="14"
+                                                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
+                                                            <Label Text="{Binding UnitPrice}"
+                                                                   FontSize="14"
+                                                                   TextColor="Green"/>
+                                                        </HorizontalStackLayout>
+                                                    </StackLayout>
+                                                </VerticalStackLayout>
+                                            </HorizontalStackLayout>
+                                            <HorizontalStackLayout VerticalOptions="Center"
+                                                                   Spacing="5">
+                                                <Label Text="{Binding Total}"
+                                                       FontSize="Large"
+                                                       FontAttributes="Bold"
+                                                       TextColor="Green"/>
+                                            </HorizontalStackLayout>
+                                        </FlexLayout>
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
                     </CollectionView>
                 </VerticalStackLayout>
                 <dx:BottomSheet x:Name="addItemsBottomSheet"
-                                ShowGrabber="True"
+                                ShowGrabber="False"
                                 AllowDismiss="False"
                                 CornerRadius="5"
                                 IsModal="True"
                                 HalfExpandedRatio="0.6"
                                 BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
-                    <FlexLayout Direction="Column">
-                        <Label Text="Item details"
+                    <FlexLayout Direction="Column"
+                                JustifyContent="SpaceBetween">
+                        <Label Text="Add item"
                                HorizontalTextAlignment="Center"
                                FontAttributes="Bold"
                                FontSize="18"/>
-                        <VerticalStackLayout Margin="10"
+                        <VerticalStackLayout Margin="10, 0, 10, 10"
                                              Spacing="10">
                             <dx:AutoCompleteEdit LabelText="Items"
-                                                 x:Name="it"
+                                                 x:Name="itemAutoCompleteEdit"
                                                  FocusedBorderColor="{StaticResource Primary}"
                                                  FocusedLabelColor="{StaticResource Primary}"
                                                  ItemsSource="{Binding Products}"
                                                  DropDownBackgroundColor="#e0e0e0"
                                                  PlaceholderText="Select item"
                                                  DisplayMember="Name"
-                                                 SelectedItem="{Binding SelectedProduct}">
+                                                 SelectedItem="{Binding SelectedProduct}"
+                                                 ErrorText="{Binding ItemAutoCompleteEditErrorText}"
+                                                 HasError="{Binding HasItemAutoCompleteEditErrors}"
+                                                 SelectionChanged="itemAutoCompleteEdit_SelectionChanged">
                                 <dx:AutoCompleteEdit.ItemTemplate>
                                     <DataTemplate>
                                         <VerticalStackLayout>
@@ -126,20 +184,29 @@
                                 </dx:AutoCompleteEdit.ItemTemplate>
                             </dx:AutoCompleteEdit>
                             <dx:NumericEdit LabelText="Unit price"
-                                            x:Name="UnitPriceTextEdit"
+                                            x:Name="unitPriceTextEdit"
                                             FocusedBorderColor="{StaticResource Primary}"
                                             FocusedLabelColor="{StaticResource Primary}"
                                             IsUpDownIconVisible="True"
                                             TextHorizontalAlignment="Start"
                                             StepValue="1"
-                                            Value="0"/>
+                                            Value="{Binding UnitPrice}"
+                                            ErrorText="{Binding UnitPriceTextEditErrorText}"
+                                            HasError="{Binding HasUnitPriceTextEditErrors}"
+                                            MaxDecimalDigitCount="0"
+                                            ValueChanged="unitPriceTextEdit_ValueChanged"/>
                             <dx:NumericEdit LabelText="Quantity"
-                                            x:Name="QuantityTextEdit"
+                                            x:Name="quantityTextEdit"
                                             FocusedBorderColor="{StaticResource Primary}"
                                             FocusedLabelColor="{StaticResource Primary}"
                                             IsUpDownIconVisible="True"
                                             TextHorizontalAlignment="Start"
-                                            StepValue="1"/>
+                                            StepValue="1"
+                                            Value="{Binding Quantity}"
+                                            ErrorText="{Binding QuantityTextEditErrorText}"
+                                            HasError="{Binding HasQuantityTextEditErrors}"
+                                            MaxDecimalDigitCount="0"
+                                            ValueChanged="quantityTextEdit_ValueChanged"/>
                         </VerticalStackLayout>
                         <Grid Margin="10"
                               ColumnSpacing="15"
@@ -155,33 +222,76 @@
                             <Label Text="Total"
                                    Grid.Row="0"
                                    Grid.Column="0"
-                                   FontSize="20"
                                    FontAttributes="Bold"
-                                   Padding="20, 0, 0, 0"/>
-                            <Label Text="500"
+                                   Padding="10, 0, 0, 0"/>
+                            <Label Text="{Binding SubTotal}"
                                    Grid.Row="0"
                                    Grid.Column="1"
-                                   FontSize="20"
                                    FontAttributes="Bold"
                                    FlowDirection="RightToLeft"
-                                   Padding="0, 0, 20, 0"/>
+                                   Padding="0, 0, 10, 0"/>
                             <dx:DXButton Content="Cancel"
                                          Grid.Row="1"
                                          Grid.Column="0"
                                          ButtonType="Outlined"
-                                         Clicked="DXButton_Clicked"/>
+                                         HeightRequest="35"
+                                         Padding="0"
+                                         Clicked="itemCancelButtonClicked"
+                                         TextColor="{StaticResource Primary}"/>
                             <dx:DXButton x:Name="AddButton"
                                          Content="Add"
                                          Grid.Row="1"
                                          Grid.Column="1"
-                                         BackgroundColor="{StaticResource Primary}"/>
+                                         HeightRequest="35"
+                                         Padding="0"
+                                         BackgroundColor="{StaticResource Primary}"
+                                         Clicked="addItemButtonClicked"/>
                         </Grid>
                     </FlexLayout>
                 </dx:BottomSheet>
             </VerticalStackLayout>
-            <dx:DXButton Content="Save"
-                         Margin="5"
-                         BackgroundColor="{StaticResource Primary}"/>
+            <Frame CornerRadius="0"
+                   Padding="10">
+                <Grid Margin="0"
+                      RowSpacing="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Text="Total amount"
+                           Margin="10, 5, 5, 5"
+                           FontAttributes="Bold"/>
+                    <Label Grid.Row="0"
+                           Grid.Column="1"
+                           Text="{Binding Total}"
+                           Margin="5, 5, 10, 5"
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="End"/>
+                    <dx:DXButton Grid.Row="1"
+                                 Grid.Column="0"
+                                 Content="Cancel"
+                                 Margin="5"
+                                 ButtonType="Outlined"
+                                 TextColor="{StaticResource Primary}"
+                                 HeightRequest="35"
+                                 Padding="0"
+                                 Clicked="invoiceCancelButtonCLicked"/>
+                    <dx:DXButton Grid.Row="1"
+                                 Grid.Column="1"
+                                 Content="Save"
+                                 Margin="5"
+                                 BackgroundColor="{StaticResource Primary}"
+                                 HeightRequest="35"
+                                 Padding="0"
+                                 Command="{Binding SaveInvoiceCommand}"/>
+                </Grid>
+            </Frame>
         </FlexLayout>
     </ScrollView>
 </ContentPage>

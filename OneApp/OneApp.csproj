@@ -74,9 +74,9 @@
 	  <Folder Include="Views\BottomSheets\" />
 	</ItemGroup>
 	<ItemGroup>
-	  <BundleResource Include="ResourcesNet\Images\home.svg">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </BundleResource>
+	  <BundleResource Include="ResourcesNet\Images\home.svg" />
+	  <BundleResource Include="ResourcesNet\Images\circle_plus.svg" />
+	  <BundleResource Include="ResourcesNet\Images\filter.svg" />
 	  <BundleResource Include="ResourcesNet\Images\products.svg" />
 	  <BundleResource Include="ResourcesNet\Images\settings.svg" />
 	  <BundleResource Include="ResourcesNet\Images\user.svg" />
@@ -88,6 +88,9 @@
 	  <BundleResource Include="ResourcesNet\Images\inventory.svg" />
 	  <BundleResource Include="ResourcesNet\Splash\logo.svg" />
 	  <BundleResource Include="ResourcesNet\Images\profile.svg" />
+	  <BundleResource Include="ResourcesNet\Images\plus.svg" />
+	  <BundleResource Include="ResourcesNet\Images\search.svg" />
+	  <BundleResource Include="ResourcesNet\Images\sidearrow_dark.svg" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\OneApp.Contracts\OneApp.Contracts.csproj" />

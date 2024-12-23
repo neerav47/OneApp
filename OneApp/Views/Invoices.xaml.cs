@@ -18,12 +18,6 @@ public partial class Invoices : ContentPage
 		BindingContext = this._invoicesVM;
 	}
 
-    void OpenNewInvoiceBottomSheet(System.Object sender, System.EventArgs e)
-    {
-        _logger.LogInformation($"{nameof(InvoicesViewModel)}-{nameof(OpenNewInvoiceBottomSheet)} started.");
-        newInvoiceBottomSheet.State = BottomSheetState.HalfExpanded;
-    }
-
 	void OpenFilterPopup(Object sender, EventArgs e)
 	{
 		actionsPopup.PlacementTarget = (View)FilterFrame;

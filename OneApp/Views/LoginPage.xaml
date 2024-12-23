@@ -12,32 +12,52 @@
              ios:Page.UseSafeArea="True">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <VerticalStackLayout VerticalOptions="Center" Margin="20" Spacing="30">
-        <Label 
+    <VerticalStackLayout VerticalOptions="Center"
+                         Margin="20"
+                         Spacing="30">
+        <Label
             Text="Sign in"
             HorizontalOptions="Start"
             FontSize="Title"
             FontAttributes="Bold"/>
 
-        <Picker x:Name="tenantPicker" Title="Tenant" VerticalOptions="CenterAndExpand" ItemsSource="{Binding Users}" ItemDisplayBinding="{Binding Tenant.Name}" SelectedItem="{Binding SelectedUser}" IsVisible="{Binding IsTenantPickerVisible}"/>
+        <Picker x:Name="tenantPicker"
+                Title="Tenant"
+                ItemsSource="{Binding Users}"
+                ItemDisplayBinding="{Binding Tenant.Name}"
+                SelectedItem="{Binding SelectedUser}"
+                IsVisible="{Binding IsTenantPickerVisible}"/>
 
-        <Label Text="{Binding SelectedUser.Tenant.Name}" IsVisible="{Binding IsTenantPickerVisible, Converter={StaticResource InvertedBoolConverter}}" FontAttributes="Bold" />
+        <Label Text="{Binding SelectedUser.Tenant.Name}"
+               IsVisible="{Binding IsTenantPickerVisible, Converter={StaticResource InvertedBoolConverter}}"
+               FontAttributes="Bold"/>
 
         <dx:TextEdit LabelText="Username"
-               Keyboard="Chat"
-               Text="{Binding UserName}"
-               />
+                     Keyboard="Chat"
+                     Text="{Binding UserName}"/>
 
-        <dx:PasswordEdit LabelText="Password" IsVisible="{Binding IsPasswordFieldVisible}" Text="{Binding Password}"/>
+        <dx:PasswordEdit LabelText="Password"
+                         IsVisible="{Binding IsPasswordFieldVisible}"
+                         Text="{Binding Password}"/>
 
-        <Button Text="Next" CornerRadius="20" WidthRequest="220" FontSize="Subtitle" HorizontalOptions="Center" 
-                Command="{Binding NextCommand}" IsVisible="{Binding IsPasswordFieldVisible, Converter={StaticResource InvertedBoolConverter}}"/>
+        <Button Text="Next"
+                CornerRadius="20"
+                WidthRequest="220"
+                FontSize="Subtitle"
+                HorizontalOptions="Center"
+                Command="{Binding NextCommand}"
+                IsVisible="{Binding IsPasswordFieldVisible, Converter={StaticResource InvertedBoolConverter}}"/>
 
-        <Button Text="Sign In" CornerRadius="20" WidthRequest="220" FontSize="Subtitle" HorizontalOptions="Center" 
-            Command="{Binding LoginCommand}" IsVisible="{Binding IsPasswordFieldVisible}" />
+        <Button Text="Sign In"
+                CornerRadius="20"
+                WidthRequest="220"
+                FontSize="Subtitle"
+                HorizontalOptions="Center"
+                Command="{Binding LoginCommand}"
+                IsVisible="{Binding IsPasswordFieldVisible}"/>
 
         <Grid x:Name="LoadingOverlay"
               IsVisible="{Binding IsLoading}"
@@ -49,9 +69,12 @@
                                VerticalOptions="Center"/>
         </Grid>
 
-        <Label Text="Forgot password?" HorizontalOptions="Center" TextColor="#3b4ba5">
+        <Label Text="Forgot password?"
+               HorizontalOptions="Center"
+               TextColor="#3b4ba5">
             <Label.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding ForgorPasswordCommand}" NumberOfTapsRequired="1" />
+                <TapGestureRecognizer Command="{Binding ForgorPasswordCommand}"
+                                      NumberOfTapsRequired="1"/>
             </Label.GestureRecognizers>
         </Label>
     </VerticalStackLayout>

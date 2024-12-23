@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Text;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OneApp.Contracts.v1.Enums;
+using OneApp.Contracts.v1.Request;
 using OneApp.Contracts.v1.Response;
 using OneApp.Services.Interfaces;
 
@@ -61,6 +63,43 @@ public class TransactionService : ITransactionService
         _logger.LogInformation($"{nameof(TransactionService)}-{nameof(GetInvoiceById)} completed.");
 
         return default;
+    }
+
+    public async Task<bool> CreateInvoice(CreateInvoiceRequest request)
+    {
+        _logger.LogInformation($"{nameof(TransactionService)}-{nameof(CreateInvoice)} started");
+        var userContext = _authenticationService.GetUserContext();
+
+        var requestMessage = _httpClient.CreateHttpRequestMessage(
+            new Uri($"{_httpClient.GetBaseAddress()}/api/Transactional/v1/invoice"),
+            HttpMethod.Post,
+            userContext.AccessToken);
+
+        var requestBody = JsonConvert.SerializeObject(request);
+        var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
+        requestMessage.Content = content;
+
+        var response = await _httpClient.InvokeRequest(requestMessage);
+
+        _logger.LogInformation($"{nameof(TransactionService)}-{nameof(CreateInvoice)} completed.");
+
+        return response?.IsSuccessStatusCode == true;
+    }
+
+    public async Task<bool> DeleteInvoiceById(string id)
+    {
+        _logger.LogInformation($"{nameof(TransactionService)}-{nameof(DeleteInvoiceById)} started");
+        var userContext = _authenticationService.GetUserContext();
+        var request = _httpClient.CreateHttpRequestMessage(
+            new Uri($"{_httpClient.GetBaseAddress()}/api/Transactional/v1/invoice/{id}"),
+            HttpMethod.Delete,
+            userContext.AccessToken);
+
+        var response = await _httpClient.InvokeRequest(request);
+
+        _logger.LogInformation($"{nameof(TransactionService)}-{nameof(DeleteInvoiceById)} completed.");
+
+        return response?.IsSuccessStatusCode == true;
     }
 }
 

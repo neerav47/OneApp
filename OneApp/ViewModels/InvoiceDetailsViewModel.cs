@@ -36,6 +36,7 @@ public partial class InvoiceDetailsViewModel : ObservableObject
 		IsLoading = true;
 		Invoice = await _transactionService.GetInvoiceById(Guid.Parse(InvoiceId));
 		IsLoading = false;
-    }
+		_logger.LogInformation($"{nameof(InvoiceDetailsViewModel)}-{nameof(Init)} completed.");
+	}
 }
 

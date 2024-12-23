@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using OneApp.Contracts.v1.Enums;
 using OneApp.Contracts.v1.Response;
 using OneApp.Services.Interfaces;
 using OneApp.Views;
@@ -16,10 +17,10 @@ public partial class InvoicesViewModel : ObservableObject
     public InvoicesViewModel(
         ITransactionService transactionService,
         ILogger<InvoicesViewModel> logger)
-	{
+    {
         this._transactionService = transactionService;
         this._logger = logger;
-	}
+    }
 
     [ObservableProperty]
     public IList<string> _chips = new List<string>()
@@ -36,9 +37,9 @@ public partial class InvoicesViewModel : ObservableObject
     [ObservableProperty]
     bool _isLoading;
 
-	[RelayCommand]
-	public void AddInvoice()
-	{
+    [RelayCommand]
+    public void AddInvoice()
+    {
         Application.Current.MainPage.DisplayAlert("New invoice", "New invoice clicked", "Ok", "Cancel");
     }
 
@@ -69,5 +70,33 @@ public partial class InvoicesViewModel : ObservableObject
 
         _logger.LogInformation($"{nameof(InvoicesViewModel)}-{nameof(Load)} completed.");
     }
-}
 
+    [RelayCommand]
+    public void EditInvoice(Invoice invoice)
+    {
+        Application.Current.MainPage.DisplayAlert("Edit invoice", "Edit invoice command", "Ok", "Cancel");
+    }
+
+    [RelayCommand]
+    public async Task DeleteInvoice(Invoice invoice)
+    {
+        _logger.LogInformation($"{nameof(InvoicesViewModel)}-{nameof(DeleteInvoice)} started.");
+        // Invoice status must not be Completed
+        if (invoice.Status == Status.Completed)
+        {
+            _ = Application.Current.MainPage.DisplayAlert("Delete invoice", "Completed invoice can't be deleted.", "Ok");
+            return;
+        }
+        // Confirm invoice delete
+        bool response = await Application.Current.MainPage.DisplayAlert("Delete invoice", "Are you sure you want to delete invoice?", "Ok", "Cancel");
+        if (response)
+        {
+            var deleteResponse = await _transactionService.DeleteInvoiceById(invoice.Id.ToString());
+            if (deleteResponse)
+            {
+                _ = Load();
+            }
+        }
+        _logger.LogInformation($"{nameof(InvoicesViewModel)}-{nameof(DeleteInvoice)} completed.");
+    }
+}
