@@ -29,8 +29,8 @@ namespace OneApp.Extentions
 			serviceCollection.AddHttpClient<IDefaultHttpClient, DefaultHttpClient>(client =>
 			{
 				client.DefaultRequestHeaders.Add("Accept", "application/json");
-            }).AddPolicyHandler(GetRetryPolicy())
-		      .SetHandlerLifetime(TimeSpan.FromMinutes(60));
+			}).AddPolicyHandler(GetRetryPolicy())
+			  .SetHandlerLifetime(TimeSpan.FromMinutes(60));
 		}
 
 		public static bool IsRetryableStatusCode(HttpStatusCode statusCode)
@@ -42,35 +42,35 @@ namespace OneApp.Extentions
 		{
 			return Policy.HandleResult<HttpResponseMessage>(r => IsRetryableStatusCode(r.StatusCode))
 				.Or<HttpRequestException>()
-				.WaitAndRetryAsync(retryCount: MaxRetryAttempts, sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(x: 2, retryAttempt) / 2)); 
+				.WaitAndRetryAsync(retryCount: MaxRetryAttempts, sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(x: 2, retryAttempt) / 2));
 		}
 
 		public static void AddServies(this IServiceCollection serviceCollection)
 		{
-            serviceCollection.AddTransient<IAuthenticationService, AuthenticationService>();
+			serviceCollection.AddTransient<IAuthenticationService, AuthenticationService>();
 			serviceCollection.AddTransient<IProductService, ProductsService>();
 			serviceCollection.AddTransient<ITransactionService, TransactionService>();
 			serviceCollection.AddTransient<ICustomerService, CustomerService>();
-        }
+		}
 
 		public static void AddPages(this IServiceCollection serviceCollection)
 		{
-            serviceCollection.AddTransient<MainPage>();
-            serviceCollection.AddTransient<LoginPage>();
-            serviceCollection.AddTransient<AppShell>();
+			serviceCollection.AddTransient<MainPage>();
+			serviceCollection.AddTransient<LoginPage>();
+			serviceCollection.AddTransient<AppShell>();
 			serviceCollection.AddSingleton<Products>();
 			serviceCollection.AddTransient<ProductDetails>();
-			serviceCollection.AddSingleton<Invoices>();
+			serviceCollection.AddTransient<Invoices>();
 			serviceCollection.AddTransient<InvoiceDetails>();
 			serviceCollection.AddSingleton<CreateInvoice>();
-        }
+		}
 
 		public static void AddViewModels(this IServiceCollection serviceCollection)
 		{
 			serviceCollection.AddTransient<LoginViewModel>();
 			serviceCollection.AddSingleton<ProductsViewModel>();
 			serviceCollection.AddTransient<ProductDetailsViewModel>();
-			serviceCollection.AddSingleton<InvoicesViewModel>();
+			serviceCollection.AddTransient<InvoicesViewModel>();
 			serviceCollection.AddTransient<InvoiceDetailsViewModel>();
 			serviceCollection.AddSingleton<CreateInvoiceViewModel>();
 		}

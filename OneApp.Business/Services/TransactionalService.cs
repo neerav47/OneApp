@@ -61,8 +61,11 @@ public sealed class TransactionalService : ITransactionalService
                 LastUpdatedDate = DateTime.UtcNow,
                 TenantId = _tenantId,
             };
-
             await _context.TReceipt.AddAsync(receipt);
+            if (request.NewInvoiceItems is not null && request.NewInvoiceItems.Count > 0)
+            {
+                await AddInvoiceItems(receiptId, request.NewInvoiceItems);
+            }
             await _context.SaveChangesAsync();
             transaction.Commit();
             _logger.LogInformation($"{nameof(CreateInvoice)} transaction scope completed.");
@@ -84,7 +87,7 @@ public sealed class TransactionalService : ITransactionalService
                                     .ThenInclude(ts => ts.Product)
                                     .ThenInclude(p => p.ProductType)
                                     .AsSplitQuery()
-                                    .SingleOrDefaultAsync(t => t.Id == Guid.Parse(id) && 
+                                    .SingleOrDefaultAsync(t => t.Id == Guid.Parse(id) &&
                                                           t.TenantId == _tenantId &&
                                                           !t.IsDeleted);
         return _mapper.Map<InvoiceDto?>(invoice);
@@ -98,19 +101,28 @@ public sealed class TransactionalService : ITransactionalService
         try
         {
             _logger.LogInformation($"{nameof(DeleteInvoice)} transaction scope started.");
+            var dateTimeUTCNow = DateTime.UtcNow;
+            // Delete TReceipt
             var count = await _context.TReceipt
                                       .Where(t => t.TenantId == this._tenantId && t.Id == Guid.Parse(id))
                                       .ExecuteUpdateAsync(p => p.SetProperty(pt => pt.IsDeleted, true)
                                                                 .SetProperty(pt => pt.LastUpdatedBy, _userId)
-                                                                .SetProperty(pt => pt.LastUpdatedDate, DateTime.UtcNow));
+                                                                .SetProperty(pt => pt.LastUpdatedDate, dateTimeUTCNow));
+            // Delete TSaleItems
+            var saleItemCount = await _context.TSaleItem.Where(ts => ts.TenantId == this._tenantId && ts.ReceiptId == Guid.Parse(id))
+                                                        .ExecuteUpdateAsync(p => p.SetProperty(p => p.IsDeleted, true)
+                                                        .SetProperty(p => p.LastUpdatedBy, _userId)
+                                                        .SetProperty(p => p.LastUpdatedDate, dateTimeUTCNow));
+
             await transaction.CommitAsync();
             result = count > 0;
+            _logger.LogInformation($"TReceipt deleted: {result}, TSaleItems deleted: {saleItemCount}");
             _logger.LogInformation($"{nameof(DeleteInvoice)} transaction scope completed.");
         }
         catch (Exception ex)
         {
             _logger.LogError($"{nameof(DeleteInvoice)} failed.");
-            throw new Exception("Failed to delete product", ex);
+            throw new Exception("Failed to delete invoice", ex);
         }
         return result;
     }
@@ -191,7 +203,7 @@ public sealed class TransactionalService : ITransactionalService
         {
             _logger.LogInformation($"{nameof(DeleteInvoiceItem)} transaction scope started.");
             var count = await _context.TSaleItem
-                                      .Where(t => t.TenantId == this._tenantId && 
+                                      .Where(t => t.TenantId == this._tenantId &&
                                                   t.Id == invoiceItemId &&
                                                   t.ReceiptId == invoiceId &&
                                                   !t.IsDeleted)
@@ -219,9 +231,9 @@ public sealed class TransactionalService : ITransactionalService
         {
             _logger.LogInformation($"{nameof(EditInvoiceItem)} transaction scope started.");
             var count = await _context.TSaleItem
-                          .Where(s => !s.IsDeleted && 
-                                       s.ReceiptId == invoiceId && 
-                                       s.Id == invoiceItemId && 
+                          .Where(s => !s.IsDeleted &&
+                                       s.ReceiptId == invoiceId &&
+                                       s.Id == invoiceItemId &&
                                        s.TenantId == this._tenantId)
                           .ExecuteUpdateAsync(s => s.SetProperty(s => s.UnitPrice, request.UnitPrice)
                                                     .SetProperty(s => s.Quantity, request.Quantity)
@@ -294,7 +306,7 @@ public sealed class TransactionalService : ITransactionalService
         var inventorys = await _context.Inventory.Where(i => request.ProductIds.Contains(i.ProductId)).ToListAsync();
 
         // Invoice Items
-        foreach(var invoiceItem in request.InvoiceItems)
+        foreach (var invoiceItem in request.InvoiceItems)
         {
             // Add inventory history
             var inventory = inventorys.Single(i => i.ProductId == invoiceItem.ProductId);
@@ -363,10 +375,10 @@ public sealed class TransactionalService : ITransactionalService
 
         var inventorys = await _context.Inventory.Where(i => request.ProductIds.Contains(i.ProductId)).ToListAsync();
 
-        foreach(var invoiceItem in request.InvoiceItems)
+        foreach (var invoiceItem in request.InvoiceItems)
         {
             var inventory = inventorys.Single(i => i.ProductId == invoiceItem.ProductId);
-            
+
             if (invoiceItem.Quantity > inventory.Quantity)
             {
                 _logger.LogError($"{nameof(ValidateCheckoutRequest)}: Insufficient quantity for product: {invoiceItem.ProductId}");
@@ -375,5 +387,28 @@ public sealed class TransactionalService : ITransactionalService
         }
 
         _logger.LogInformation($"{nameof(ValidateCheckoutRequest)} completed.");
+    }
+
+    async Task AddInvoiceItems(Guid receiptId, List<NewInvoiceItem> newInvoiceItems)
+    {
+        _logger.LogInformation($"{nameof(AddInvoiceItems)} started.");
+        var tsaleItems = new List<TSaleItem>();
+        foreach (var newInvoiceItem in newInvoiceItems)
+        {
+            tsaleItems.Add(new TSaleItem
+            {
+                Id = Guid.NewGuid(),
+                ReceiptId = receiptId,
+                ProductId = newInvoiceItem.ProductId,
+                Quantity = newInvoiceItem.Quantity,
+                UnitPrice = newInvoiceItem.UnitPrice,
+                CreatedBy = _userId,
+                CreatedDate = DateTime.UtcNow,
+                LastUpdatedBy = _userId,
+                LastUpdatedDate = DateTime.UtcNow,
+                TenantId = _tenantId,
+            });
+        }
+        await _context.TSaleItem.AddRangeAsync(tsaleItems);
     }
 }
