@@ -95,4 +95,9 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\OneApp.Contracts\OneApp.Contracts.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="CustomControls/LoadingIndicator.xaml.cs">
+	    <DependentUpon>LoadingIndicator.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
 </Project>
