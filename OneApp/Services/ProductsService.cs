@@ -10,22 +10,22 @@ namespace OneApp.Services;
 
 public class ProductsService : IProductService
 {
-	private readonly IDefaultHttpClient _httpClient;
+    private readonly IDefaultHttpClient _httpClient;
     private readonly ILogger<ProductsService> _logger;
     private readonly IAuthenticationService _authenticationService;
 
     public ProductsService(IDefaultHttpClient httpClient, ILogger<ProductsService> logger,
         IAuthenticationService authenticationService)
-	{
-		this._httpClient = httpClient;
+    {
+        this._httpClient = httpClient;
         this._logger = logger;
         this._authenticationService = authenticationService;
-	}
+    }
 
-	public async Task<IEnumerable<Product>> GetProducts()
-	{
+    public async Task<IEnumerable<Product>> GetProducts()
+    {
         _logger.LogInformation($"{nameof(GetProducts)} started");
-        var userContext = _authenticationService.GetUserContext();
+        var userContext = await _authenticationService.GetUserContext();
         var request = _httpClient.CreateHttpRequestMessage(
             new Uri($"{_httpClient.GetBaseAddress()}/api/v1/getProducts"),
             HttpMethod.Get,
@@ -46,7 +46,7 @@ public class ProductsService : IProductService
     public async Task<bool> UpdateInventory(UpdateInventoryRequest request)
     {
         _logger.LogInformation($"{nameof(ProductsService)}-{nameof(UpdateInventory)} started");
-        var userContext = _authenticationService.GetUserContext();
+        var userContext = await _authenticationService.GetUserContext();
 
         var requestMessage = _httpClient.CreateHttpRequestMessage(
             new Uri($"{_httpClient.GetBaseAddress()}/api/Inventory"),
@@ -72,7 +72,7 @@ public class ProductsService : IProductService
     public async Task<IEnumerable<ProductType>> GetProductTypes()
     {
         _logger.LogInformation($"{nameof(ProductsService)}-{nameof(GetProductTypes)} started");
-        var userContext = _authenticationService.GetUserContext();
+        var userContext = await _authenticationService.GetUserContext();
 
         var requestMessage = _httpClient.CreateHttpRequestMessage(
             new Uri($"{_httpClient.GetBaseAddress()}/api/v1/getProductTypes"),
@@ -94,7 +94,7 @@ public class ProductsService : IProductService
     public async Task<bool> CreateProduct(CreateProductRequest request)
     {
         _logger.LogInformation($"{nameof(ProductsService)}-{nameof(CreateProduct)} started");
-        var userContext = _authenticationService.GetUserContext();
+        var userContext = await _authenticationService.GetUserContext();
 
         var requestMessage = _httpClient.CreateHttpRequestMessage(
             new Uri($"{_httpClient.GetBaseAddress()}/api/v1/product"),
@@ -115,7 +115,7 @@ public class ProductsService : IProductService
     public async Task<Product> GetProductById(string id)
     {
         _logger.LogInformation($"{nameof(GetProductById)} started");
-        var userContext = _authenticationService.GetUserContext();
+        var userContext = await _authenticationService.GetUserContext();
         var request = _httpClient.CreateHttpRequestMessage(
             new Uri($"{_httpClient.GetBaseAddress()}/api/v1/product/{id}"),
             HttpMethod.Get,

@@ -16,15 +16,15 @@ public class CustomerService : ICustomerService
         IDefaultHttpClient httpClient,
         ILogger<CustomerService> logger,
         IAuthenticationService authenticationService)
-	{
-		this._httpClient = httpClient;
+    {
+        this._httpClient = httpClient;
         this._logger = logger;
         this._authenticationService = authenticationService;
-	}
+    }
     public async Task<IEnumerable<Customer>> GetCustomers()
     {
         _logger.LogInformation($"{nameof(GetCustomers)} started");
-        var userContext = _authenticationService.GetUserContext();
+        var userContext = await _authenticationService.GetUserContext();
         var request = _httpClient.CreateHttpRequestMessage(
             new Uri($"{_httpClient.GetBaseAddress()}/api/v1/customers"),
             HttpMethod.Get,

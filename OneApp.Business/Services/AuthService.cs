@@ -57,7 +57,7 @@ public class AuthService(
 
         var user = await _context.Users.SingleOrDefaultAsync(u => u.Id.Equals(userId, StringComparison.OrdinalIgnoreCase));
 
-        if (user == null || 
+        if (user == null ||
             user.RefreshToken == null ||
             user.RefreshTokenExpiry < DateTime.UtcNow ||
             !user.RefreshToken.Equals(request.RefreshToken))
@@ -85,7 +85,7 @@ public class AuthService(
 
     #region Private methods
 
-    private string GenerateJwtToken(User user, string[] roles)
+    private (string, DateTime) GenerateJwtToken(User user, string[] roles)
     {
         var claims = new List<Claim>()
         {
@@ -104,30 +104,30 @@ public class AuthService(
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]!));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
+        var tokenExpiry = DateTime.UtcNow.AddMinutes(30);
         var token = new JwtSecurityToken(
             issuer: _configuration["JWT:Issuer"],
             audience: "One",
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(30),
+            expires: tokenExpiry,
             signingCredentials: credentials
         );
 
         var tokenResponse = new JwtSecurityTokenHandler().WriteToken(token);
-        return tokenResponse;
+        return (tokenResponse, tokenExpiry);
     }
 
-    private async Task<string> GenerateRefrestToken(User user)
+    private async Task<(string, DateTime)> GenerateRefrestToken(User user)
     {
         string token = RandomNumberGenerator.GetHexString(REFRESH_TOKEN_SIZE);
-
+        var tokenExpiry = DateTime.UtcNow.AddHours(12);
         await _userService.UpdateUserById(user.Id, new Dictionary<string, object>()
         {
             { nameof(user.RefreshToken), token },
-            { nameof(user.RefreshTokenExpiry), DateTime.UtcNow.AddHours(12) }
+            { nameof(user.RefreshTokenExpiry), tokenExpiry }
         });
 
-        return token;
+        return (token, tokenExpiry);
     }
 
     private string ValidateJwt(string token)
@@ -165,8 +165,8 @@ public class AuthService(
     private async Task<TokenResponse> GetTokenResponse(User user, string[] roles)
     {
         var response = new TokenResponse();
-        response.AccessToken = GenerateJwtToken(user, roles);
-        response.RefreshToken = await GenerateRefrestToken(user);
+        (response.AccessToken, response.AccessTokenExpiration) = GenerateJwtToken(user, roles);
+        (response.RefreshToken, response.RefreshTokenExpiration) = await GenerateRefrestToken(user);
         return response;
     }
 
