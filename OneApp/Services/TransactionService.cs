@@ -26,7 +26,7 @@ public class TransactionService : ITransactionService
     public async Task<IEnumerable<Invoice>> GetInvoices(Status? status, Guid? userId)
     {
         _logger.LogInformation($"{nameof(TransactionService)}-{nameof(GetInvoices)} started");
-        var userContext = _authenticationService.GetUserContext();
+        var userContext = await _authenticationService.GetUserContext();
         var request = _httpClient.CreateHttpRequestMessage(
             new Uri($"{_httpClient.GetBaseAddress()}/api/Transactional/v1/invoices"),
             HttpMethod.Get,
@@ -47,7 +47,7 @@ public class TransactionService : ITransactionService
     public async Task<Invoice> GetInvoiceById(Guid id)
     {
         _logger.LogInformation($"{nameof(TransactionService)}-{nameof(GetInvoices)} started");
-        var userContext = _authenticationService.GetUserContext();
+        var userContext = await _authenticationService.GetUserContext();
         var request = _httpClient.CreateHttpRequestMessage(
             new Uri($"{_httpClient.GetBaseAddress()}/api/Transactional/v1/invoice/{id}"),
             HttpMethod.Get,
@@ -68,7 +68,7 @@ public class TransactionService : ITransactionService
     public async Task<bool> CreateInvoice(CreateInvoiceRequest request)
     {
         _logger.LogInformation($"{nameof(TransactionService)}-{nameof(CreateInvoice)} started");
-        var userContext = _authenticationService.GetUserContext();
+        var userContext = await _authenticationService.GetUserContext();
 
         var requestMessage = _httpClient.CreateHttpRequestMessage(
             new Uri($"{_httpClient.GetBaseAddress()}/api/Transactional/v1/invoice"),
@@ -89,7 +89,7 @@ public class TransactionService : ITransactionService
     public async Task<bool> DeleteInvoiceById(string id)
     {
         _logger.LogInformation($"{nameof(TransactionService)}-{nameof(DeleteInvoiceById)} started");
-        var userContext = _authenticationService.GetUserContext();
+        var userContext = await _authenticationService.GetUserContext();
         var request = _httpClient.CreateHttpRequestMessage(
             new Uri($"{_httpClient.GetBaseAddress()}/api/Transactional/v1/invoice/{id}"),
             HttpMethod.Delete,

@@ -10,11 +10,9 @@ public interface IAuthenticationService
 
     Task<IEnumerable<User>> GetUser(string userName);
 
-    //Task SetUserContext(UserContext context);
+    Task SetUserContext(UserContext context);
 
-    //Task<UserContext> GetUserContext();
+    Task<UserContext> GetUserContext();
 
-    void SetUserContext(UserContext context);
-
-    UserContext GetUserContext();
+    Task RefreshUserContext();
 }
