@@ -70,7 +70,7 @@ internal class AuthenticationService(
             return;
         }
         // Access token expired or expiring in 1 minutes
-        if (userContext.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(1))
+        if (userContext.AccessTokenExpiration > DateTime.UtcNow.AddMinutes(1))
         {
             return;
         }

@@ -56,7 +56,7 @@ public partial class LoginViewModel : ObservableObject
         }
         else
         {
-            foreach(var u in response)
+            foreach (var u in response)
             {
                 Users.Add(u);
             }
@@ -83,9 +83,11 @@ public partial class LoginViewModel : ObservableObject
             {
                 User = SelectedUser,
                 AccessToken = response.AccessToken,
-                RefreshToken = response.RefreshToken
+                RefreshToken = response.RefreshToken,
+                AccessTokenExpiration = response.AccessTokenExpiration,
+                RefreshTokenExpiration = response.RefreshTokenExpiration
             };
-            _authenticationService.SetUserContext(userContext);
+            await _authenticationService.SetUserContext(userContext);
             Application.Current.MainPage = _appShell;
         }
     }
