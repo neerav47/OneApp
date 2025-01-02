@@ -38,12 +38,6 @@ public partial class InvoicesViewModel : ObservableObject
     bool _isLoading;
 
     [RelayCommand]
-    public void AddInvoice()
-    {
-        Application.Current.MainPage.DisplayAlert("New invoice", "New invoice clicked", "Ok", "Cancel");
-    }
-
-    [RelayCommand]
     public async Task InvoiceSelected(Invoice invoice)
     {
         _logger.LogInformation($"{nameof(InvoiceSelected)} started.");
@@ -72,9 +66,16 @@ public partial class InvoicesViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void EditInvoice(Invoice invoice)
+    public async Task EditInvoice(Invoice invoice)
     {
-        Application.Current.MainPage.DisplayAlert("Edit invoice", "Edit invoice command", "Ok", "Cancel");
+        _logger.LogInformation($"{nameof(InvoicesViewModel)}-{nameof(EditInvoice)} started.");
+        // Invoice status must not be Completed
+        if (invoice.Status == Status.Completed)
+        {
+            _ = Application.Current.MainPage.DisplayAlert("Edit invoice", "Completed invoice can't be deleted.", "Ok");
+            return;
+        }
+        await Shell.Current.GoToAsync($"{nameof(EditInvoice)}?InvoiceId={invoice.Id.ToString()}", true);
     }
 
     [RelayCommand]

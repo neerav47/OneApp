@@ -31,7 +31,10 @@
                                        TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                                 <DatePicker HorizontalOptions="Start"
                                             FontSize="16"
-                                            FontAttributes="Bold"/>
+                                            FontAttributes="Bold"
+                                            Date="{Binding InvoiceDate}"
+                                            MinimumDate="{Binding InvoiceDate}"
+                                            MaximumDate="{Binding InvoiceDate}"/>
                             </VerticalStackLayout>
 
                             <VerticalStackLayout Grid.Row="0"
@@ -41,7 +44,8 @@
                                        TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}"/>
                                 <DatePicker HorizontalOptions="Start"
                                             FontSize="16"
-                                            FontAttributes="Bold"/>
+                                            FontAttributes="Bold"
+                                            MinimumDate="{Binding InvoiceDate}"/>
 
                             </VerticalStackLayout>
                         </Grid>

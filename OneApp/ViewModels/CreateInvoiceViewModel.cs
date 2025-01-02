@@ -76,6 +76,9 @@ public partial class CreateInvoiceViewModel : ObservableObject
 
     [ObservableProperty]
     int _subTotal = 0;
+
+    [ObservableProperty]
+    DateTime _invoiceDate = DateTime.Now.Date;
     public async Task LoadProducts()
     {
         if (Products.Count() > 0)
