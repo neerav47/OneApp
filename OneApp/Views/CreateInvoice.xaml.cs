@@ -25,8 +25,8 @@ public partial class CreateInvoice : ContentPage
         _logger.LogInformation($"{nameof(CreateInvoice)}-{nameof(OpenAddItemsBottomSheet)} started.");
         Task.Run(async () =>
         {
-            await Task.WhenAll(this._createInvoiceVM.LoadProducts(), this._createInvoiceVM.LoadCustomers());
-            _logger.LogInformation("Loading products, customers complete.");
+            await this._createInvoiceVM.LoadProducts();
+            _logger.LogInformation("Loading products complete.");
         });
         addItemsBottomSheet.State = BottomSheetState.HalfExpanded;
         _logger.LogInformation($"{nameof(CreateInvoice)}-{nameof(OpenAddItemsBottomSheet)} completed.");
@@ -72,7 +72,6 @@ public partial class CreateInvoice : ContentPage
     private void invoiceCancelButtonCLicked(object sender, EventArgs e)
     {
         this._createInvoiceVM.SelectedCustomer = null;
-        customersAutoCompleteEdit.Text = string.Empty;
         this._createInvoiceVM.CustomersAutoCompleteEditErrorText = string.Empty;
         this._createInvoiceVM.HasCustomersAutoCompleteEditErrors = false;
         this._createInvoiceVM.NewInvoiceItems = [];

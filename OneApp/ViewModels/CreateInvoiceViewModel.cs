@@ -79,6 +79,22 @@ public partial class CreateInvoiceViewModel : ObservableObject
 
     [ObservableProperty]
     DateTime _invoiceDate = DateTime.Now.Date;
+
+    [ObservableProperty]
+    bool _isLoading = false;
+
+    [RelayCommand]
+    public async Task Init()
+    {
+        if (Customers.Count() > 0)
+            return;
+        _logger.LogInformation($"{nameof(CreateInvoiceViewModel)}-{nameof(Init)} started.");
+        IsLoading = true;
+        Customers = await _customerService.GetCustomers();
+        IsLoading = false;
+        _logger.LogInformation($"{nameof(CreateInvoiceViewModel)}-{nameof(Init)} completed.");
+    }
+
     public async Task LoadProducts()
     {
         if (Products.Count() > 0)
@@ -86,15 +102,6 @@ public partial class CreateInvoiceViewModel : ObservableObject
         _logger.LogInformation($"{nameof(CreateInvoiceViewModel)}-{nameof(LoadProducts)} started.");
         Products = await _productService.GetProducts();
         _logger.LogInformation($"{nameof(CreateInvoiceViewModel)}-{nameof(LoadProducts)} completed.");
-    }
-
-    public async Task LoadCustomers()
-    {
-        if (Customers.Count() > 0)
-            return;
-        _logger.LogInformation($"{nameof(CreateInvoiceViewModel)}-{nameof(LoadCustomers)} started.");
-        Customers = await _customerService.GetCustomers();
-        _logger.LogInformation($"{nameof(CreateInvoiceViewModel)}-{nameof(LoadCustomers)} completed.");
     }
 
     [RelayCommand]

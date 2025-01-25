@@ -5,7 +5,8 @@
              Title="Details"
              xmlns:viewModels="clr-namespace:OneApp.ViewModels"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             BackgroundColor="#e0e0e0">
+             BackgroundColor="#e0e0e0"
+             Shell.TabBarIsVisible="False">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding InitCommand}"
                                         EventName="Loaded"/>
@@ -15,6 +16,12 @@
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="edit.png"
+                     Text="Edit"
+                     Command="{Binding EditInvoiceCommand}">
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
     <StackLayout>
         <ScrollView IsVisible="{Binding IsLoading, Mode=TwoWay, Converter={StaticResource InvertedBoolConverter}}">
             <VerticalStackLayout>
@@ -106,7 +113,7 @@
                         <DataTemplate>
                             <Frame Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
                                    Padding="0"
-                                   Margin="8, 5, 8, 5"
+                                   Margin="10, 5, 10, 5"
                                    BorderColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
                                 <VerticalStackLayout Margin="10"
                                                      Spacing="15">
