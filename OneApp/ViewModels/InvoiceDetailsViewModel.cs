@@ -38,5 +38,13 @@ public partial class InvoiceDetailsViewModel : ObservableObject
 		IsLoading = false;
 		_logger.LogInformation($"{nameof(InvoiceDetailsViewModel)}-{nameof(Init)} completed.");
 	}
+
+	[RelayCommand]
+	public async Task EditInvoice()
+	{
+		_logger.LogInformation($"{nameof(InvoiceDetailsViewModel)}-{nameof(EditInvoice)} started.");
+		await Shell.Current.GoToAsync($"{nameof(EditInvoice)}?InvoiceId={Invoice.Id.ToString()}");
+		_logger.LogInformation($"{nameof(InvoiceDetailsViewModel)}-{nameof(EditInvoice)} completed.");
+	}
 }
 

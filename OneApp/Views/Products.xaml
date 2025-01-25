@@ -30,7 +30,7 @@
                           FocusedBorderColor="Transparent"
                           CornerRadius="10"
                           HeightRequest="35"
-                          Margin="10, 10, 10, 5"
+                          Margin="8, 10, 8, 5"
                           Text="{Binding SearchText}"
                           TextChangedCommand="{Binding SearchCommand}"
                           TextColor="{AppThemeBinding Light={StaticResource Gray950}, Dark=#E6E1E5}"/>
@@ -63,7 +63,7 @@
                             </SwipeView.RightItems>
                             <Frame Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
                                    Padding="0"
-                                   Margin="5"
+                                   Margin="10, 5, 10, 5"
                                    HeightRequest="65"
                                    BorderColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
                                 <VerticalStackLayout Margin="10, 10, 10, 0"

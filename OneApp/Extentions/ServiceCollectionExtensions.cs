@@ -62,7 +62,7 @@ namespace OneApp.Extentions
 			serviceCollection.AddTransient<ProductDetails>();
 			serviceCollection.AddTransient<Invoices>();
 			serviceCollection.AddTransient<InvoiceDetails>();
-			serviceCollection.AddSingleton<CreateInvoice>();
+			serviceCollection.AddTransient<CreateInvoice>();
 			serviceCollection.AddTransient<EditInvoice>();
 		}
 
@@ -73,7 +73,7 @@ namespace OneApp.Extentions
 			serviceCollection.AddTransient<ProductDetailsViewModel>();
 			serviceCollection.AddTransient<InvoicesViewModel>();
 			serviceCollection.AddTransient<InvoiceDetailsViewModel>();
-			serviceCollection.AddSingleton<CreateInvoiceViewModel>();
+			serviceCollection.AddTransient<CreateInvoiceViewModel>();
 			serviceCollection.AddTransient<EditInvoiceViewModel>();
 		}
 	}

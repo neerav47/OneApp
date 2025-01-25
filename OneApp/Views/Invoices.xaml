@@ -11,7 +11,7 @@
              xmlns:dx="http://schemas.devexpress.com/maui"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              ios:Page.UseSafeArea="True"
-             BackgroundColor="#e0e0e0">
+             BackgroundColor="{AppThemeBinding Light=#e0e0e0, Dark=Black}">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding LoadCommand}"
                                         EventName="Loaded"/>
@@ -35,35 +35,35 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
-                        <ColumnDefinition Width="0.12*"/>
+                        <ColumnDefinition Width="0.15*"/>
                     </Grid.ColumnDefinitions>
                     <dxe:TextEdit EndIcon="search"
                                   PlaceholderText="Search invoices"
                                   TextFontSize="14"
                                   ClearIconColor="{StaticResource Gray300}"
                                   TextVerticalAlignment="Center"
-                                  BackgroundColor="{AppThemeBinding Light=White, Dark=Black}"
+                                  BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray950}}"
                                   BorderThickness="1"
-                                  BorderColor="{AppThemeBinding Light=#DCD8E0, Dark=#938F99}"
+                                  BorderColor="{AppThemeBinding Light=#DCD8E0, Dark={StaticResource Gray950}}"
                                   BoxPadding="20,6,10,6"
                                   PlaceholderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark=#938F99}"
                                   EndIconColor="{AppThemeBinding Light={StaticResource Gray300}, Dark=#CAC4D0}"
                                   FocusedBorderColor="Transparent"
                                   CornerRadius="10"
                                   HeightRequest="35"
-                                  Margin="5, 10, 0, 5"
+                                  Margin="10, 10, 5, 5"
                                   TextColor="{AppThemeBinding Light={StaticResource Gray950}, Dark=#E6E1E5}"
                                   Grid.Row="0"
                                   Grid.Column="0"/>
                     <Frame  x:Name="FilterFrame"
                             HeightRequest="35"
-                            Margin="5, 10, 5, 5"
+                            Margin="5, 10, 10, 5"
                             Padding="0"
                             Grid.Row="0"
                             Grid.Column="1"
                             CornerRadius="10"
-                            BackgroundColor="{AppThemeBinding Light=White, Dark=Black}"
-                            BorderColor="{AppThemeBinding Light=White, Dark=Black}">
+                            BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray950}}"
+                            BorderColor="{AppThemeBinding Light=White, Dark={StaticResource Gray950}}">
                         <VerticalStackLayout VerticalOptions="Center"
                                              HorizontalOptions="Center">
                             <Image Source="filter.png"
@@ -83,8 +83,9 @@
                                   Placement="Top"
                                   CornerRadius="8"
                                   HorizontalAlignment="Default"
-                                  ShadowColor="{AppThemeBinding Light={StaticResource Gray500}, Dark=Black}"
-                                  ShadowRadius="5">
+                                  ShadowColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray950}}"
+                                  ShadowRadius="5"
+                                  BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray950}}">
                         <VerticalStackLayout Padding="8,6">
                             <dxe:FilterChipGroup HorizontalOptions="Center"
                                                  VerticalOptions="Center"
@@ -108,21 +109,45 @@
                             <SwipeView>
                                 <SwipeView.RightItems>
                                     <SwipeItems>
-                                        <SwipeItem Text="Edit"
-                                                   BackgroundColor="Green"
-                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:InvoicesViewModel}}, Path=EditInvoiceCommand}"
-                                                   CommandParameter="{Binding .}"/>
-                                        <SwipeItem Text="Delete"
-                                                   BackgroundColor="Red"
-                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:InvoicesViewModel}}, Path=DeleteInvoiceCommand}"
-                                                   CommandParameter="{Binding .}"/>
+                                        <SwipeItemView Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:InvoicesViewModel}}, Path=EditInvoiceCommand}"
+                                                       CommandParameter="{Binding .}"
+                                                       BackgroundColor="Green"
+                                                       Margin="20">
+                                            <StackLayout HorizontalOptions="Center"
+                                                         VerticalOptions="Center">
+                                                <Image Source="edit.png"
+                                                       HeightRequest="25"
+                                                       WidthRequest="25">
+                                                    <Image.Behaviors>
+                                                        <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                                    </Image.Behaviors>
+                                                </Image>
+                                            </StackLayout>
+                                        </SwipeItemView>
+                                        <SwipeItemView Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:InvoicesViewModel}}, Path=DeleteInvoiceCommand}"
+                                                       CommandParameter="{Binding .}"
+                                                       BackgroundColor="Red"
+                                                       Margin="20">
+                                            <StackLayout HorizontalOptions="Center"
+                                                         VerticalOptions="Center">
+                                                <Image Source="delete.png"
+                                                       HeightRequest="25"
+                                                       WidthRequest="25">
+                                                    <Image.Behaviors>
+                                                        <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                                    </Image.Behaviors>
+                                                </Image>
+                                            </StackLayout>
+                                        </SwipeItemView>
+
+
                                     </SwipeItems>
                                 </SwipeView.RightItems>
-                                <Frame Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                                <Frame Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}"
                                        Padding="0"
-                                       Margin="5"
+                                       Margin="10, 5, 10, 5"
                                        HeightRequest="65"
-                                       BorderColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+                                       BorderColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}">
                                     <VerticalStackLayout Margin="10, 10, 10, 0"
                                                          Spacing="15">
                                         <FlexLayout Direction="Row"
