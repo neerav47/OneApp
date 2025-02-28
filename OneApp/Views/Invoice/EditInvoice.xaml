@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OneApp.Views.Invoice.EditInvoice"
@@ -9,7 +9,8 @@
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              ios:Page.UseSafeArea="True"
              BackgroundColor="#e0e0e0"
-             Shell.TabBarIsVisible="False">
+             Shell.TabBarIsVisible="False"
+             xmlns:controls="clr-namespace:OneApp.CustomControls">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding InitCommand}"
                                         EventName="Loaded"/>
@@ -81,7 +82,7 @@
                         <ImageButton Source="circle_plus.png"
                                      HeightRequest="25"
                                      WidthRequest="25"
-                                     Clicked="OpenAddItemsBottomSheet"/>
+                                     Clicked="OpenAddOrEditInvoiceItemBottomSheet"/>
                     </FlexLayout>
                     <CollectionView ItemsSource="{Binding Invoice.InvoiceItems, Mode=TwoWay}">
                         <CollectionView.EmptyView>
@@ -94,8 +95,10 @@
                                 <SwipeView>
                                     <SwipeView.RightItems>
                                         <SwipeItems>
-                                            <SwipeItemView BackgroundColor="Green"
-                                                           Margin="20">
+                                            <SwipeItemView BackgroundColor="orange"
+                                                           Margin="20"
+                                                           Invoked="OpenAddOrEditInvoiceItemBottomSheet"
+                                                           CommandParameter="{Binding .}">
                                                 <StackLayout HorizontalOptions="Center"
                                                              VerticalOptions="Center">
                                                     <Image Source="edit.png"
@@ -108,7 +111,9 @@
                                                 </StackLayout>
                                             </SwipeItemView>
                                             <SwipeItemView BackgroundColor="Red"
-                                                           Margin="20">
+                                                           Margin="20"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:EditInvoiceViewModel}}, Path=DeleteInvoiceItemCommand}"
+                                                           CommandParameter="{Binding .}">
                                                 <StackLayout HorizontalOptions="Center"
                                                              VerticalOptions="Center">
                                                     <Image Source="delete.png"
@@ -175,112 +180,20 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </VerticalStackLayout>
-                <!-- <dx:BottomSheet x:Name="addItemsBottomSheet"
+                <dx:BottomSheet x:Name="addItemsBottomSheet"
                                 ShowGrabber="False"
                                 AllowDismiss="False"
                                 CornerRadius="5"
                                 IsModal="True"
                                 HalfExpandedRatio="0.6"
                                 BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
-                    <FlexLayout Direction="Column"
-                                JustifyContent="SpaceBetween">
-                        <Label Text="Add item"
-                               HorizontalTextAlignment="Center"
-                               FontAttributes="Bold"
-                               FontSize="18"/>
-                        <VerticalStackLayout Margin="10, 0, 10, 10"
-                                             Spacing="10">
-                            <dx:AutoCompleteEdit LabelText="Items"
-                                                 x:Name="itemAutoCompleteEdit"
-                                                 FocusedBorderColor="{StaticResource Primary}"
-                                                 FocusedLabelColor="{StaticResource Primary}"
-                                                 ItemsSource="{Binding Products}"
-                                                 DropDownBackgroundColor="#e0e0e0"
-                                                 PlaceholderText="Select item"
-                                                 DisplayMember="Name"
-                                                 SelectedItem="{Binding SelectedProduct}"
-                                                 ErrorText="{Binding ItemAutoCompleteEditErrorText}"
-                                                 HasError="{Binding HasItemAutoCompleteEditErrors}"
-                                                 SelectionChanged="itemAutoCompleteEdit_SelectionChanged">
-                                <dx:AutoCompleteEdit.ItemTemplate>
-                                    <DataTemplate>
-                                        <VerticalStackLayout>
-                                            <Label Padding="10, 10, 10, 0"
-                                                   Text="{Binding Name}"
-                                                   FontAttributes="Bold"/>
-                                            <Label Padding="10, 0, 10, 0"
-                                                   Grid.Column="1"
-                                                   Text="{Binding ProductType.Name}"/>
-                                        </VerticalStackLayout>
-                                    </DataTemplate>
-                                </dx:AutoCompleteEdit.ItemTemplate>
-                            </dx:AutoCompleteEdit>
-                            <dx:NumericEdit LabelText="Unit price"
-                                            x:Name="unitPriceTextEdit"
-                                            FocusedBorderColor="{StaticResource Primary}"
-                                            FocusedLabelColor="{StaticResource Primary}"
-                                            IsUpDownIconVisible="True"
-                                            TextHorizontalAlignment="Start"
-                                            StepValue="1"
-                                            Value="{Binding UnitPrice}"
-                                            ErrorText="{Binding UnitPriceTextEditErrorText}"
-                                            HasError="{Binding HasUnitPriceTextEditErrors}"
-                                            MaxDecimalDigitCount="0"
-                                            ValueChanged="unitPriceTextEdit_ValueChanged"/>
-                            <dx:NumericEdit LabelText="Quantity"
-                                            x:Name="quantityTextEdit"
-                                            FocusedBorderColor="{StaticResource Primary}"
-                                            FocusedLabelColor="{StaticResource Primary}"
-                                            IsUpDownIconVisible="True"
-                                            TextHorizontalAlignment="Start"
-                                            StepValue="1"
-                                            Value="{Binding Quantity}"
-                                            ErrorText="{Binding QuantityTextEditErrorText}"
-                                            HasError="{Binding HasQuantityTextEditErrors}"
-                                            MaxDecimalDigitCount="0"
-                                            ValueChanged="quantityTextEdit_ValueChanged"/>
-                        </VerticalStackLayout>
-                        <Grid Margin="10"
-                              ColumnSpacing="15"
-                              RowSpacing="20">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Label Text="Total"
-                                   Grid.Row="0"
-                                   Grid.Column="0"
-                                   FontAttributes="Bold"
-                                   Padding="10, 0, 0, 0"/>
-                            <Label Text="{Binding SubTotal}"
-                                   Grid.Row="0"
-                                   Grid.Column="1"
-                                   FontAttributes="Bold"
-                                   FlowDirection="RightToLeft"
-                                   Padding="0, 0, 10, 0"/>
-                            <dx:DXButton Content="Cancel"
-                                         Grid.Row="1"
-                                         Grid.Column="0"
-                                         ButtonType="Outlined"
-                                         HeightRequest="35"
-                                         Padding="0"
-                                         Clicked="itemCancelButtonClicked"
-                                         TextColor="{StaticResource Primary}"/>
-                            <dx:DXButton x:Name="AddButton"
-                                         Content="Add"
-                                         Grid.Row="1"
-                                         Grid.Column="1"
-                                         HeightRequest="35"
-                                         Padding="0"
-                                         BackgroundColor="{StaticResource Primary}"
-                                         Clicked="addItemButtonClicked"/>
-                        </Grid>
-                    </FlexLayout>
-                </dx:BottomSheet> -->
+                    <controls:EditInvoiceItem
+                        CancelButtonPressed="EditInvoiceItem_CancelButtonPressed"
+                        Products="{Binding Products}"
+                        InvoiceItem="{Binding InvoiceItem}"
+                        InvoiceItemMode="{Binding InvoiceItemMode}"
+                        AddButtonPressed="EditInvoiceItem_AddButtonPressed"/>
+                </dx:BottomSheet>
             </VerticalStackLayout>
             <Frame CornerRadius="0"
                    Padding="10">
@@ -298,23 +211,18 @@
                            Grid.Column="0"
                            Text="Total amount"
                            Margin="10, 5, 5, 5"
+                           FontSize="18"
                            FontAttributes="Bold"/>
                     <Label Grid.Row="0"
                            Grid.Column="1"
                            Text="{Binding Total}"
                            Margin="5, 5, 10, 5"
+                           FontSize="18"
                            FontAttributes="Bold"
                            HorizontalTextAlignment="End"/>
                     <dx:DXButton Grid.Row="1"
                                  Grid.Column="0"
-                                 Content="Cancel"
-                                 Margin="5"
-                                 ButtonType="Outlined"
-                                 TextColor="{StaticResource Primary}"
-                                 HeightRequest="35"
-                                 Padding="0"/>
-                    <dx:DXButton Grid.Row="1"
-                                 Grid.Column="1"
+                                 Grid.ColumnSpan="2"
                                  Content="Save"
                                  Margin="5"
                                  BackgroundColor="{StaticResource Primary}"

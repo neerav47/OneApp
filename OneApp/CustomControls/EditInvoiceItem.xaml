@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<FlexLayout xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="OneApp.CustomControls.EditInvoiceItem"
+            xmlns:dx="http://schemas.devexpress.com/maui"
+            x:Name="this"
+            Direction="Column"
+            JustifyContent="SpaceBetween">
+    <Label x:Name="TitleLabel"
+           HorizontalTextAlignment="Center"
+           FontAttributes="Bold"
+           FontSize="18"/>
+    <VerticalStackLayout Margin="10, 0, 10, 10"
+                         Spacing="10">
+        <dx:ComboBoxEdit LabelText="Items"
+                         x:Name="itemAutoCompleteEdit"
+                         FocusedBorderColor="{StaticResource Primary}"
+                         FocusedLabelColor="{StaticResource Primary}"
+                         ItemsSource="{Binding Source={x:Reference this}, Path=Products}"
+                         DropDownBackgroundColor="#e0e0e0"
+                         PlaceholderText="Select item"
+                         DisplayMember="Name"
+                         SelectedItem="{Binding Source={x:Reference this}, Path=InvoiceItem.Product, Mode=TwoWay}"
+                         ErrorText="{Binding Source={x:Reference this}, Path=ItemAutoCompleteEditErrorText, Mode=TwoWay}"
+                         HasError="{Binding Source={x:Reference this}, Path=HasItemAutoCompleteEditErrors, Mode=TwoWay}"
+                         SelectionChanged="ItemAutoCompleteEdit_SelectionChanged">
+            <dx:ComboBoxEdit.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout>
+                        <Label Padding="10, 10, 10, 0"
+                               Text="{Binding Name}"
+                               FontAttributes="Bold"/>
+                        <Label Padding="10, 0, 10, 0"
+                               Grid.Column="1"
+                               Text="{Binding ProductType.Name}"/>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </dx:ComboBoxEdit.ItemTemplate>
+        </dx:ComboBoxEdit>
+        <dx:NumericEdit LabelText="Unit price"
+                        x:Name="unitPriceTextEdit"
+                        FocusedBorderColor="{StaticResource Primary}"
+                        FocusedLabelColor="{StaticResource Primary}"
+                        IsUpDownIconVisible="True"
+                        TextHorizontalAlignment="Start"
+                        StepValue="1"
+                        Value="{Binding Source={x:Reference this}, Path=InvoiceItem.UnitPrice}"
+                        ErrorText="{Binding Source={x:Reference this}, Path=UnitPriceTextEditErrorText}"
+                        HasError="{Binding Source={x:Reference this}, Path=HasUnitPriceTextEditErrors}"
+                        MaxDecimalDigitCount="0"
+                        ValueChanged="UnitPriceTextEdit_ValueChanged"/>
+        <dx:NumericEdit LabelText="Quantity"
+                        x:Name="quantityTextEdit"
+                        FocusedBorderColor="{StaticResource Primary}"
+                        FocusedLabelColor="{StaticResource Primary}"
+                        IsUpDownIconVisible="True"
+                        TextHorizontalAlignment="Start"
+                        StepValue="1"
+                        Value="{Binding Source={x:Reference this}, Path=InvoiceItem.Quantity}"
+                        ErrorText="{Binding Source={x:Reference this}, Path=QuantityTextEditErrorText, Mode=TwoWay}"
+                        HasError="{Binding Source={x:Reference this}, Path=HasQuantityTextEditErrors, Mode=TwoWay}"
+                        MaxDecimalDigitCount="0"
+                        ValueChanged="QuantityTextEdit_ValueChanged"/>
+    </VerticalStackLayout>
+    <Grid Margin="10"
+          ColumnSpacing="15"
+          RowSpacing="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label Text="Total"
+               Grid.Row="0"
+               Grid.Column="0"
+               FontSize="18"
+               FontAttributes="Bold"
+               Padding="10, 0, 0, 0"/>
+        <Label Text="{Binding Source={x:Reference this}, Path=SubTotal, StringFormat='{}{0:C}'}"
+               Grid.Row="0"
+               Grid.Column="1"
+               FontSize="18"
+               FontAttributes="Bold"
+               FlowDirection="RightToLeft"
+               Padding="0, 0, 10, 0"/>
+        <dx:DXButton Content="Cancel"
+                     Grid.Row="1"
+                     Grid.Column="0"
+                     ButtonType="Outlined"
+                     HeightRequest="35"
+                     Padding="0"
+                     Clicked="ItemCancelButtonClicked"
+                     TextColor="{StaticResource Primary}"/>
+        <dx:DXButton x:Name="AddButton"
+                     Content="Add"
+                     Grid.Row="1"
+                     Grid.Column="1"
+                     HeightRequest="35"
+                     Padding="0"
+                     BackgroundColor="{StaticResource Primary}"
+                     Clicked="AddItemButtonClicked"/>
+    </Grid>
+</FlexLayout>

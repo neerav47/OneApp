@@ -13,5 +13,11 @@ public interface ITransactionService
     Task<bool> CreateInvoice(CreateInvoiceRequest request);
 
     Task<bool> DeleteInvoiceById(string id);
+
+    Task<Guid> AddInvoiceItem(string invoiceId, AddInvoiceItemRequest request);
+
+    Task<bool> EditInvoiceItem(string invoiceId, string itemId, EditInvoiceItemRequest request);
+
+    Task<bool> DeleteInvoiceItem(Guid invoiceId, Guid invoiceItemId);
 }
 
