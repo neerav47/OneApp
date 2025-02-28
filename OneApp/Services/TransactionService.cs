@@ -101,5 +101,68 @@ public class TransactionService : ITransactionService
 
         return response?.IsSuccessStatusCode == true;
     }
+
+    public async Task<Guid> AddInvoiceItem(string invoiceId, AddInvoiceItemRequest request)
+    {
+        _logger.LogInformation($"{nameof(TransactionService)}-{nameof(AddInvoiceItem)} started");
+        var userContext = await _authenticationService.GetUserContext();
+
+        var requestMessage = _httpClient.CreateHttpRequestMessage(
+            new Uri($"{_httpClient.GetBaseAddress()}/api/Transactional/v1/invoice/{invoiceId}/invoiceItem"),
+            HttpMethod.Post,
+            userContext.AccessToken);
+
+        var requestBody = JsonConvert.SerializeObject(request);
+        var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
+        requestMessage.Content = content;
+
+        var response = await _httpClient.InvokeRequest(requestMessage);
+
+        if (response?.IsSuccessStatusCode == true)
+        {
+            var result = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Guid>(result);
+        }
+        _logger.LogInformation($"{nameof(TransactionService)}-{nameof(AddInvoiceItem)} completed.");
+
+        return default;
+    }
+
+    public async Task<bool> EditInvoiceItem(string invoiceId, string itemId, EditInvoiceItemRequest request)
+    {
+        _logger.LogInformation($"{nameof(TransactionService)}-{nameof(EditInvoiceItem)} started");
+        var userContext = await _authenticationService.GetUserContext();
+
+        var requestMessage = _httpClient.CreateHttpRequestMessage(
+            new Uri($"{_httpClient.GetBaseAddress()}/api/Transactional/v1/invoice/{invoiceId}/invoiceItem/{itemId}"),
+            HttpMethod.Put,
+            userContext.AccessToken);
+
+        var requestBody = JsonConvert.SerializeObject(request);
+        var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
+        requestMessage.Content = content;
+
+        var response = await _httpClient.InvokeRequest(requestMessage);
+
+        _logger.LogInformation($"{nameof(TransactionService)}-{nameof(EditInvoiceItem)} completed.");
+
+        return response?.IsSuccessStatusCode == true;
+    }
+
+    public async Task<bool> DeleteInvoiceItem(Guid invoiceId, Guid itemId)
+    {
+        _logger.LogInformation($"{nameof(TransactionService)}-{nameof(DeleteInvoiceItem)} started");
+        var userContext = await _authenticationService.GetUserContext();
+        var request = _httpClient.CreateHttpRequestMessage(
+            new Uri($"{_httpClient.GetBaseAddress()}/api/Transactional/v1/invoice/{invoiceId}/invoiceItem/{itemId}"),
+            HttpMethod.Delete,
+            userContext.AccessToken);
+
+        var response = await _httpClient.InvokeRequest(request);
+
+        _logger.LogInformation($"{nameof(TransactionService)}-{nameof(DeleteInvoiceItem)} completed.");
+
+        return response?.IsSuccessStatusCode == true;
+    }
 }
 

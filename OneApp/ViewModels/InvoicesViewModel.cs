@@ -1,5 +1,4 @@
-﻿using System;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using OneApp.Contracts.v1.Enums;
@@ -26,9 +25,9 @@ public partial class InvoicesViewModel : ObservableObject
     public IList<string> _chips = new List<string>()
     {
         "All",
-        Contracts.v1.Enums.Status.Created.ToString(),
-        Contracts.v1.Enums.Status.Completed.ToString(),
-        Contracts.v1.Enums.Status.Deleted.ToString(),
+        Status.Created.ToString(),
+        Status.Completed.ToString(),
+        Status.Deleted.ToString(),
     };
 
     [ObservableProperty]
