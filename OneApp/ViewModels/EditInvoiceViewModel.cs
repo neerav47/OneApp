@@ -9,90 +9,66 @@ using static OneApp.Constants.Enums;
 namespace OneApp.ViewModels;
 
 [QueryProperty("InvoiceId", "InvoiceId")]
-public partial class EditInvoiceViewModel : ObservableObject
+public partial class EditInvoiceViewModel(
+    ITransactionService transactionService,
+    ICustomerService customerService,
+    IProductService productService,
+    ILogger<EditInvoiceViewModel> logger)
+    : ObservableObject
 {
-    private readonly ITransactionService _transactionService;
-    private readonly ICustomerService _customerService;
-    private readonly IProductService _productService;
-    private readonly ILogger<EditInvoiceViewModel> _logger;
+    [ObservableProperty] private string invoiceId;
 
-    public EditInvoiceViewModel(
-        ITransactionService transactionService,
-        ICustomerService customerService,
-        IProductService productService,
-        ILogger<EditInvoiceViewModel> logger)
-    {
-        this._transactionService = transactionService;
-        this._customerService = customerService;
-        this._productService = productService;
-        this._logger = logger;
-    }
+    [ObservableProperty] private IEnumerable<Customer> _customers = [];
 
-    [ObservableProperty]
-    string invoiceId;
+    [ObservableProperty] private IEnumerable<Product> _products = [];
 
-    [ObservableProperty]
-    IEnumerable<Customer> _customers = [];
+    [ObservableProperty] private Invoice _invoice;
 
-    [ObservableProperty]
-    IEnumerable<Product> _products = [];
+    [ObservableProperty] private InvoiceItem _invoiceItem;
 
-    [ObservableProperty]
-    Invoice _invoice;
+    [ObservableProperty] private bool _isLoading;
 
-    [ObservableProperty]
-    InvoiceItem _invoiceItem;
+    [ObservableProperty] private DateTime _invoiceDate = DateTime.Now.Date;
 
-    [ObservableProperty]
-    bool _isLoading;
+    [ObservableProperty] private Customer _selectedCustomer = null;
 
-    [ObservableProperty]
-    DateTime _invoiceDate = DateTime.Now.Date;
+    [ObservableProperty] private string _customersAutoCompleteEditErrorText = string.Empty;
 
-    [ObservableProperty]
-    Customer _selectedCustomer = null;
+    [ObservableProperty] private bool _hasCustomersAutoCompleteEditErrors = false;
 
-    [ObservableProperty]
-    string _customersAutoCompleteEditErrorText = string.Empty;
+    [ObservableProperty] private decimal _total = 0;
 
-    [ObservableProperty]
-    bool _hasCustomersAutoCompleteEditErrors = false;
-
-    [ObservableProperty]
-    decimal _total = 0;
-
-    [ObservableProperty]
-    InvoiceItemMode _invoiceItemMode;
+    [ObservableProperty] private InvoiceItemMode _invoiceItemMode;
 
     [RelayCommand]
     public async Task Init()
     {
-        _logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(Init)} started.");
+        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(Init)} started.");
         IsLoading = true;
-        var invoicesTask = _transactionService.GetInvoiceById(Guid.Parse(InvoiceId));
-        var customersTask = _customerService.GetCustomers();
-        var productsTask = _productService.GetProducts();
+        var invoicesTask = transactionService.GetInvoiceById(Guid.Parse(InvoiceId));
+        var customersTask = customerService.GetCustomers();
+        var productsTask = productService.GetProducts();
         await Task.WhenAll(invoicesTask, customersTask, productsTask);
         Invoice = invoicesTask.Result;
         Customers = customersTask.Result;
         Products = productsTask.Result;
         BindProperties();
         IsLoading = false;
-        _logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(Init)} completed.");
+        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(Init)} completed.");
     }
 
     [RelayCommand]
     public async Task DeleteInvoiceItem(InvoiceItem item)
     {
-        _logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(DeleteInvoiceItem)} started.");
-        var response = await _transactionService.DeleteInvoiceItem(item.ReceiptId, item.Id);
+        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(DeleteInvoiceItem)} started.");
+        var response = await transactionService.DeleteInvoiceItem(item.ReceiptId, item.Id);
         if (!response)
         {
-            _logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(DeleteInvoiceItem)} completed with errors.");
+            logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(DeleteInvoiceItem)} completed with errors.");
             return;
         }
         await RefreshInvoice();
-        _logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(DeleteInvoiceItem)} completed.");
+        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(DeleteInvoiceItem)} completed.");
     }
 
     private void BindProperties()
@@ -106,14 +82,14 @@ public partial class EditInvoiceViewModel : ObservableObject
     {
         if (Products.Any())
             return;
-        _logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(LoadProducts)} started.");
-        Products = await _productService.GetProducts();
-        _logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(LoadProducts)} completed.");
+        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(LoadProducts)} started.");
+        Products = await productService.GetProducts();
+        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(LoadProducts)} completed.");
     }
 
     public async Task AddOrEditItem()
     {
-        _logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(AddOrEditItem)} started.");
+        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(AddOrEditItem)} started.");
         if (InvoiceItemMode == InvoiceItemMode.New)
         {
             var request = new AddInvoiceItemRequest
@@ -123,10 +99,10 @@ public partial class EditInvoiceViewModel : ObservableObject
                 Quantity = InvoiceItem.Quantity,
                 UnitPrice = InvoiceItem.UnitPrice
             };
-            var response = await _transactionService.AddInvoiceItem(InvoiceId, request);
+            var response = await transactionService.AddInvoiceItem(InvoiceId, request);
             if (response == default)
             {
-                _logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(AddOrEditItem)} completed with errors.");
+                logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(AddOrEditItem)} completed with errors.");
                 return;
             }
             await RefreshInvoice();
@@ -138,25 +114,25 @@ public partial class EditInvoiceViewModel : ObservableObject
                 Quantity = InvoiceItem.Quantity,
                 UnitPrice = InvoiceItem.UnitPrice
             };
-            var response = await _transactionService.EditInvoiceItem(InvoiceId, InvoiceItem.Id.ToString(), request);
+            var response = await transactionService.EditInvoiceItem(InvoiceId, InvoiceItem.Id.ToString(), request);
             if (!response)
             {
-                _logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(AddOrEditItem)} completed with errors.");
+                logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(AddOrEditItem)} completed with errors.");
                 return;
             }
             await RefreshInvoice();
         }
-        _logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(AddOrEditItem)} completed.");
+        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(AddOrEditItem)} completed.");
     }
 
     private async Task RefreshInvoice()
     {
-        _logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(RefreshInvoice)} started.");
+        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(RefreshInvoice)} started.");
         IsLoading = true;
-        var invoice = await _transactionService.GetInvoiceById(Guid.Parse(InvoiceId));
+        var invoice = await transactionService.GetInvoiceById(Guid.Parse(InvoiceId));
         Invoice = invoice;
         BindProperties();
         IsLoading = false;
-        _logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(RefreshInvoice)} completed.");
+        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(RefreshInvoice)} completed.");
     }
 }

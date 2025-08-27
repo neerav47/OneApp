@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using OneApp.Contracts.v1.Enums;
 using OneApp.Contracts.v1.Response;
+using OneApp.Messages;
 using OneApp.Services.Interfaces;
 using OneApp.Views;
 
@@ -19,6 +21,13 @@ public partial class InvoicesViewModel : ObservableObject
     {
         this._transactionService = transactionService;
         this._logger = logger;
+        WeakReferenceMessenger.Default.Register<RefreshInvoiceMessage>(this, async (_, m) =>
+        {
+            if (m.Value)
+            {
+                await Load();
+            }
+        });
     }
 
     [ObservableProperty]
@@ -35,6 +44,9 @@ public partial class InvoicesViewModel : ObservableObject
 
     [ObservableProperty]
     bool _isLoading;
+
+    [ObservableProperty]
+    bool _isRefreshing;
 
     [RelayCommand]
     public async Task InvoiceSelected(Invoice invoice)
@@ -54,13 +66,9 @@ public partial class InvoicesViewModel : ObservableObject
     public async Task Load()
     {
         _logger.LogInformation($"{nameof(InvoicesViewModel)}-{nameof(Load)} started.");
-
         IsLoading = true;
-
         Invoices = await _transactionService.GetInvoices();
-
         IsLoading = false;
-
         _logger.LogInformation($"{nameof(InvoicesViewModel)}-{nameof(Load)} completed.");
     }
 

@@ -14,5 +14,5 @@ public interface IAuthenticationService
 
     Task<UserContext> GetUserContext();
 
-    Task RefreshUserContext();
+    Task<UserContext> RefreshUserContext();
 }

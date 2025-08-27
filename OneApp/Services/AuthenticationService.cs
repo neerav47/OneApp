@@ -60,19 +60,19 @@ internal class AuthenticationService(
         return !string.IsNullOrWhiteSpace(value) ? JsonConvert.DeserializeObject<UserContext>(value) : null;
     }
 
-    public async Task RefreshUserContext()
+    public async Task<UserContext> RefreshUserContext()
     {
         _logger.LogInformation($"{nameof(AuthenticationService)}-{nameof(RefreshUserContext)} started.");
         // User context is not available, return
         var userContext = await GetUserContext();
-        if (userContext == null)
+        if (userContext is null)
         {
-            return;
+            return null;
         }
-        // Access token expired or expiring in 1 minutes
-        if (userContext.AccessTokenExpiration > DateTime.UtcNow.AddMinutes(1))
+        // Refresh token expired or expiring in 1 minutes
+        if (userContext.RefreshTokenExpiration < DateTime.UtcNow.AddMinutes(1))
         {
-            return;
+            return null;
         }
         // Http message
         var requestMessage = _httpClient.CreateHttpRequestMessage(new Uri($"{_httpClient.GetBaseAddress()}/api/Auth/refresh"), HttpMethod.Post);
@@ -97,9 +97,12 @@ internal class AuthenticationService(
 
             userContext.AccessToken = tokenResponse.AccessToken;
             userContext.RefreshToken = tokenResponse.RefreshToken;
+            userContext.AccessTokenExpiration = tokenResponse.AccessTokenExpiration;
+            userContext.RefreshTokenExpiration = tokenResponse.RefreshTokenExpiration;
 
             await SetUserContext(userContext);
         }
         _logger.LogInformation($"{nameof(AuthenticationService)}-{nameof(RefreshUserContext)} completed.");
+        return userContext;
     }
 }

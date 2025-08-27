@@ -8,37 +8,38 @@ namespace OneApp.Views.Invoice;
 
 public partial class EditInvoice : ContentPage
 {
-	private readonly EditInvoiceViewModel _editInvoiceVM;
+	private readonly EditInvoiceViewModel _editInvoiceVm;
 	private readonly ILogger<EditInvoice> _logger;
 	public EditInvoice(EditInvoiceViewModel editInvoiceViewModel, ILogger<EditInvoice> logger)
 	{
 		InitializeComponent();
-		this._editInvoiceVM = editInvoiceViewModel;
+		this._editInvoiceVm = editInvoiceViewModel;
 		this._logger = logger;
-		BindingContext = this._editInvoiceVM;
+		BindingContext = this._editInvoiceVm;
 	}
 
 	private void customersAutoCompleteEdit_SelectionChanged(object sender, EventArgs e)
 	{
-		if (this._editInvoiceVM.SelectedCustomer is not null)
+		// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+		if (this._editInvoiceVm.SelectedCustomer is not null)
 		{
-			this._editInvoiceVM.CustomersAutoCompleteEditErrorText = string.Empty;
-			this._editInvoiceVM.HasCustomersAutoCompleteEditErrors = false;
+			this._editInvoiceVm.CustomersAutoCompleteEditErrorText = string.Empty;
+			this._editInvoiceVm.HasCustomersAutoCompleteEditErrors = false;
 		}
 	}
 
-	void OpenAddOrEditInvoiceItemBottomSheet(object sender, EventArgs e)
+	private void OpenAddOrEditInvoiceItemBottomSheet(object sender, EventArgs e)
 	{
 		_logger.LogInformation($"{nameof(EditInvoice)}-{nameof(OpenAddOrEditInvoiceItemBottomSheet)} started.");
 		if (sender.GetType() == typeof(ImageButton))
 		{
-			this._editInvoiceVM.InvoiceItem = new InvoiceItem();
-			this._editInvoiceVM.InvoiceItemMode = InvoiceItemMode.New;
+			this._editInvoiceVm.InvoiceItem = new InvoiceItem();
+			this._editInvoiceVm.InvoiceItemMode = InvoiceItemMode.New;
 		}
 		else
 		{
 			var item = (InvoiceItem)((SwipeItemView)sender).CommandParameter;
-			this._editInvoiceVM.InvoiceItem = new InvoiceItem
+			this._editInvoiceVm.InvoiceItem = new InvoiceItem
 			{
 				Id = item.Id,
 				ProductId = item.ProductId,
@@ -46,25 +47,25 @@ public partial class EditInvoice : ContentPage
 				UnitPrice = item.UnitPrice,
 				Product = item.Product
 			};
-			this._editInvoiceVM.InvoiceItemMode = InvoiceItemMode.Edit;
+			this._editInvoiceVm.InvoiceItemMode = InvoiceItemMode.Edit;
 		}
-		this._editInvoiceVM.LoadProducts().GetAwaiter().GetResult();
+		this._editInvoiceVm.LoadProducts().GetAwaiter().GetResult();
 		addItemsBottomSheet.State = BottomSheetState.HalfExpanded;
 		_logger.LogInformation($"{nameof(EditInvoice)}-{nameof(OpenAddOrEditInvoiceItemBottomSheet)} completed.");
 	}
 
-	void EditInvoiceItem_CancelButtonPressed(object sender, EventArgs e)
+	private void EditInvoiceItem_CancelButtonPressed(object sender, EventArgs e)
 	{
 		addItemsBottomSheet.State = BottomSheetState.Hidden;
 		// Clear Invoice Item fields
-		this._editInvoiceVM.InvoiceItem = null;
-		this._editInvoiceVM.InvoiceItemMode = InvoiceItemMode.New;
+		this._editInvoiceVm.InvoiceItem = null!;
+		this._editInvoiceVm.InvoiceItemMode = InvoiceItemMode.New;
 	}
 
-	void EditInvoiceItem_AddButtonPressed(object sender, EventArgs e)
+	private void EditInvoiceItem_AddButtonPressed(object sender, EventArgs e)
 	{
 		_logger.LogInformation($"{nameof(EditInvoice)}-{nameof(EditInvoiceItem_AddButtonPressed)} started.");
-		this._editInvoiceVM.AddOrEditItem();
+		this._editInvoiceVm.AddOrEditItem().GetAwaiter().GetResult();
 		addItemsBottomSheet.State = BottomSheetState.Hidden;
 		_logger.LogInformation($"{nameof(EditInvoice)}-{nameof(EditInvoiceItem_AddButtonPressed)} completed.");
 	}

@@ -7,6 +7,9 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              BackgroundColor="#e0e0e0"
              Shell.TabBarIsVisible="False">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior Command="{Binding BackCommand}"/>
+    </Shell.BackButtonBehavior>
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding InitCommand}"
                                         EventName="Loaded"/>

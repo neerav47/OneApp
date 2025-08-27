@@ -1,8 +1,10 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using OneApp.Contracts.v1.Response;
+using OneApp.Messages;
 using OneApp.Services.Interfaces;
 
 namespace OneApp.ViewModels;
@@ -45,6 +47,15 @@ public partial class InvoiceDetailsViewModel : ObservableObject
 		_logger.LogInformation($"{nameof(InvoiceDetailsViewModel)}-{nameof(EditInvoice)} started.");
 		await Shell.Current.GoToAsync($"{nameof(EditInvoice)}?InvoiceId={Invoice.Id.ToString()}");
 		_logger.LogInformation($"{nameof(InvoiceDetailsViewModel)}-{nameof(EditInvoice)} completed.");
+	}
+
+	[RelayCommand]
+	public async Task Back()
+	{
+		_logger.LogInformation($"{nameof(InvoiceDetailsViewModel)}-{nameof(Back)} started.");
+		await Shell.Current.GoToAsync("..");
+		WeakReferenceMessenger.Default.Send(new RefreshInvoiceMessage(true));
+		_logger.LogInformation($"{nameof(InvoiceDetailsViewModel)}-{nameof(Back)} completed.");
 	}
 }
 
