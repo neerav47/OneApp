@@ -11,6 +11,7 @@ public class DataContext: IdentityDbContext<User>
     private readonly ITenantService _tenantService;
     private readonly Guid? _tenantId;
 
+    // ReSharper disable once ConvertToPrimaryConstructor
     public DataContext(DbContextOptions<DataContext> options, ITenantService tenantService) :base(options)
     {
         this._tenantService = tenantService;
