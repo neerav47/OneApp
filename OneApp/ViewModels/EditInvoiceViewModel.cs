@@ -52,23 +52,10 @@ public partial class EditInvoiceViewModel(
         Invoice = invoicesTask.Result;
         Customers = customersTask.Result;
         Products = productsTask.Result;
+        Products = productsTask.Result;
         BindProperties();
         IsLoading = false;
         logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(Init)} completed.");
-    }
-
-    [RelayCommand]
-    public async Task DeleteInvoiceItem(InvoiceItem item)
-    {
-        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(DeleteInvoiceItem)} started.");
-        var response = await transactionService.DeleteInvoiceItem(item.ReceiptId, item.Id);
-        if (!response)
-        {
-            logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(DeleteInvoiceItem)} completed with errors.");
-            return;
-        }
-        await RefreshInvoice();
-        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(DeleteInvoiceItem)} completed.");
     }
 
     private void BindProperties()
@@ -123,6 +110,20 @@ public partial class EditInvoiceViewModel(
             await RefreshInvoice();
         }
         logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(AddOrEditItem)} completed.");
+    }
+
+    [RelayCommand]
+    public async Task DeleteInvoiceItem(InvoiceItem item)
+    {
+        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(DeleteInvoiceItem)} started.");
+        var response = await transactionService.DeleteInvoiceItem(item.ReceiptId, item.Id);
+        if (!response)
+        {
+            logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(DeleteInvoiceItem)} completed with errors.");
+            return;
+        }
+        await RefreshInvoice();
+        logger.LogInformation($"{nameof(EditInvoiceViewModel)}-{nameof(DeleteInvoiceItem)} completed.");
     }
 
     private async Task RefreshInvoice()
