@@ -4,6 +4,7 @@ env:
   AZURE_WEBAPP_NAME: oneapp-test
   AZURE_WEBAPP_PACKAGE_PATH: '/OneApp.API'
   DOTNET_VERSION: '8'
+  BUILD_CONFIGURATION: 'release'
 
 on:
   push:
@@ -33,13 +34,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      - name: Build 🔨
+        run: dotnet build OneApp.API/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore -v normal
 
-      - name: dotnet publish
+      - name: Publish 🚀
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/OneApp.API.csproj
 
-      - name: Upload artifact for deployment job
+      - name: Publish build artifact 📢
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
