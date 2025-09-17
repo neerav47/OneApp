@@ -2,9 +2,10 @@ name: Build and deploy Web app
 
 env:
   AZURE_WEBAPP_NAME: oneapp-test
-  AZURE_WEBAPP_PACKAGE_PATH: './publish'
-  DOTNET_VERSION: '8'
-  BUILD_CONFIGURATION: 'release'
+  AZURE_WEBAPP_PACKAGE_PATH: OneApp.API\publish
+  DOTNET_VERSION: 8.0.x
+  BUILD_CONFIGURATION: Release
+  WORKING_DIRECTORY: OneApp.API
 
 on:
   push:
@@ -16,7 +17,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -27,13 +28,16 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
-        run: dotnet restore OneApp.API/OneApp.API.csproj
+        run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
 
       - name: Build 🔨
-        run: dotnet build OneApp.API/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore --verbosity normal
-
+        run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
+      
+      - name: Test
+        run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+      
       - name: Publish 🚀
-        run: dotnet publish OneApp.API/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore --no-build --verbosity normal --property:PublishDir=${{ env.AZURE_WEBAPP_PACKAGE_PATH }} 
+        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}" 
 
       - name: Publish build artifact 📢
         uses: actions/upload-artifact@v4
@@ -44,7 +48,7 @@ jobs:
   deploy:
     permissions:
       contents: none
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build
     environment:
       name: 'Development'
