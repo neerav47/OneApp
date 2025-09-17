@@ -2,10 +2,9 @@ name: Build and deploy Web app
 
 env:
   AZURE_WEBAPP_NAME: oneapp-test
-  AZURE_WEBAPP_PACKAGE_PATH: './OneApp.API/publish'
+  AZURE_WEBAPP_PACKAGE_PATH: './publish'
   DOTNET_VERSION: '8'
   BUILD_CONFIGURATION: 'release'
-  PUBLISH_DIR: './published'
 
 on:
   push:
@@ -34,7 +33,7 @@ jobs:
         run: dotnet build OneApp.API/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore --verbosity normal
 
       - name: Publish 🚀
-        run: dotnet publish OneApp.API/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore --no-build --verbosity normal --property:PublishDir=${{ env.PUBLISH_DIR }} 
+        run: dotnet publish OneApp.API/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore --no-build --verbosity normal --property:PublishDir=${{ env.AZURE_WEBAPP_PACKAGE_PATH }} 
 
       - name: Publish build artifact 📢
         uses: actions/upload-artifact@v4
