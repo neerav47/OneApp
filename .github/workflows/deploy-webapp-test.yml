@@ -26,13 +26,8 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Set up dependency caching for faster builds
-        uses: actions/cache@v3
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
+      - name: Restore dependencies
+        run: dotnet restore OneApp.API/OneApp.API.csproj
 
       - name: Build 🔨
         run: dotnet build OneApp.API/OneApp.API.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore -v normal
