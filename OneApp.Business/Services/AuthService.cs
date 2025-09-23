@@ -31,7 +31,7 @@ public class AuthService(
     {
         _logger.LogInformation($"{nameof(LogIn)} started.");
 
-        var user = await _context.Users.SingleOrDefaultAsync(u => u.Email!.Equals(request.UserName, StringComparison.OrdinalIgnoreCase));
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Email!.ToLower().Equals(request.UserName.ToLower()));
 
         if (user == null)
         {
@@ -55,7 +55,7 @@ public class AuthService(
         // Validate and extract userId
         var userId = ValidateJwt(request.AccessToken!);
 
-        var user = await _context.Users.SingleOrDefaultAsync(u => u.Id.Equals(userId, StringComparison.OrdinalIgnoreCase));
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Id.ToLower().Equals(userId.ToLower()));
 
         if (user == null ||
             user.RefreshToken == null ||
@@ -74,10 +74,11 @@ public class AuthService(
     public async Task<IEnumerable<UserDto>> GetUser(string userName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(userName, nameof(userName));
-        var result = await _context.Users.Where(u => userName.Equals(u.UserName, StringComparison.OrdinalIgnoreCase))
-                                         .Include(u => u.Tenant)
-                                         .AsSplitQuery()
-                                         .ToListAsync();
+        var result = await _context.Users
+                           .Where(u => userName.ToLower().Equals(u.UserName!.ToLower()))
+                           .Include(u => u.Tenant)
+                           .AsSplitQuery()
+                           .ToListAsync();
         return _mapper.Map<List<UserDto>>(result);
     }
 

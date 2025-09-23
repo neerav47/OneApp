@@ -66,13 +66,14 @@ public class UserService(
 
     public async Task<UserDto?> GetUserById(string id)
     {
-        var user = await _context.Users.Where(u => u.Id.Equals(id, StringComparison.OrdinalIgnoreCase)).SingleOrDefaultAsync();
+        var user = await _context.Users
+                         .SingleOrDefaultAsync(u => u.Id.ToLower().Equals(id.ToLower()));
         return _mapper.Map<UserDto?>(user);
     }
 
     public async Task<bool> IsEmailUnique(string email)
     {
-        return !await _context.Users.AnyAsync(u => u.Email!.Equals(email, StringComparison.OrdinalIgnoreCase));
+        return !await _context.Users.AnyAsync(u => u.Email!.ToLower().Equals(email.ToLower()));
     }
 
     public async Task<bool> UpdateUserRoles(UserRolesRequest request)
@@ -124,7 +125,7 @@ public class UserService(
         }
         var user = await _context.Users
             .Include(u => u.Tenant)
-            .SingleOrDefaultAsync(u => u.Email!.Equals(email, StringComparison.OrdinalIgnoreCase));
+            .SingleOrDefaultAsync(u => u.Email!.ToLower().Equals(email.ToLower()));
 
         if (user != null)
         {
@@ -159,7 +160,9 @@ public class UserService(
         try
         {
             _logger.LogInformation($"{nameof(UpdateUserById)} transaction scope started.");
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
+            var user = await _context
+                             .Users
+                             .SingleOrDefaultAsync(u => u.Id.ToLower().Equals(id.ToLower()));
 
             if (user == null)
             {
