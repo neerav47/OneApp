@@ -18,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Database
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")!);
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 // Auth - JWT
 builder.Services.AddAuthentication(options =>

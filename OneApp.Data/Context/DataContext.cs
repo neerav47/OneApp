@@ -38,6 +38,7 @@ public class DataContext: IdentityDbContext<User>
         builder.Entity<InventoryHistory>().HasQueryFilter(i => i.TenantId == this._tenantId);
         builder.Entity<TReceipt>().HasQueryFilter(tr => tr.TenantId == this._tenantId);
         builder.Entity<TSaleItem>().HasQueryFilter(ts => ts.TenantId == this._tenantId);
+        builder.Entity<TSaleItem>().Property(t => t.Quantity).HasPrecision(18, 2);
 
         builder.Entity<IdentityRole>().HasData(new List<IdentityRole>()
         {

@@ -54,7 +54,7 @@ public class ConfigurationService(
 
     public async Task<bool> IsTenantNameUnique(string name)
     {
-        return !await _context.Tenant.AnyAsync(t => t.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        return !await _context.Tenant.AnyAsync(t => t.Name.ToLower().Equals(name.ToLower()));
     }
 
     #endregion
