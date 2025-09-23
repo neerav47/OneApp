@@ -57,7 +57,7 @@ public class DefaultHttpClient : IDefaultHttpClient
 
     public string GetBaseAddress()
     {
-        return DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5274" : "http://localhost:5274";
+        return DeviceInfo.Platform == DevicePlatform.Android ? "https://oneapp-test.azurewebsites.net" : "http://localhost:5274";
     }
 }
 
