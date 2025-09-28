@@ -4,7 +4,10 @@ using OneApp.Services;
 using OneApp.Services.Interfaces;
 using OneApp.ViewModels;
 using OneApp.Views;
+using OneApp.Views.Category;
 using OneApp.Views.Invoice;
+using OneApp.Views.Unit;
+using OneApp.Views.User;
 using Polly;
 using Polly.Retry;
 
@@ -64,6 +67,12 @@ namespace OneApp.Extentions
 			serviceCollection.AddTransient<InvoiceDetails>();
 			serviceCollection.AddTransient<CreateInvoice>();
 			serviceCollection.AddTransient<EditInvoice>();
+			serviceCollection.AddTransient<Settings>();
+			serviceCollection.AddTransient<Users>();
+			serviceCollection.AddTransient<UserDetails>();
+			serviceCollection.AddTransient<Categories>();
+			serviceCollection.AddTransient<CategoryDetails>();
+			serviceCollection.AddTransient<Units>();
 		}
 
 		public static void AddViewModels(this IServiceCollection serviceCollection)
@@ -75,6 +84,7 @@ namespace OneApp.Extentions
 			serviceCollection.AddTransient<InvoiceDetailsViewModel>();
 			serviceCollection.AddTransient<CreateInvoiceViewModel>();
 			serviceCollection.AddTransient<EditInvoiceViewModel>();
+			serviceCollection.AddTransient<SettingsViewModel>();
 		}
 	}
 }

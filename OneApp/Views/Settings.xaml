@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:dx="http://schemas.devexpress.com/maui"
+             x:Class="OneApp.Views.Settings"
+             Title="Settings"
+             xmlns:viewModels="clr-namespace:OneApp.ViewModels">
+    <ScrollView Padding="15">
+        <VerticalStackLayout Spacing="30">
+            <HorizontalStackLayout Spacing="12">
+                <dx:DXImage Source="userprofile.png"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center" 
+                            WidthRequest="60" 
+                            HeightRequest="60">
+                    <dx:DXImage.Clip>
+                        <EllipseGeometry RadiusX="30" 
+                                         RadiusY="30" 
+                                         Center="30, 30" />
+                    </dx:DXImage.Clip>
+                </dx:DXImage>
+                <VerticalStackLayout VerticalOptions="Center">
+                    <Label Text="Username"
+                           FontSize="16"
+                           FontAttributes="Bold"></Label>
+                    <Label Text="Account"/>
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+            <CollectionView ItemsSource="{Binding Items}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="0"
+                               BorderColor="White">
+                            <HorizontalStackLayout Spacing="14" Padding="0,10,0,10">
+                                <dx:DXImage Source="{Binding IconName}"
+                                            VerticalOptions="Center"
+                                            HorizontalOptions="Center" 
+                                            WidthRequest="28" 
+                                            HeightRequest="28">
+                                    <dx:DXImage.Clip>
+                                        <EllipseGeometry RadiusX="20" 
+                                                         RadiusY="20" 
+                                                         Center="16, 16" />
+                                    </dx:DXImage.Clip>
+                                </dx:DXImage>
+                                <VerticalStackLayout VerticalOptions="Center" Spacing="5">
+                                    <Label Text="{Binding Name}"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:SettingsViewModel}}, Path=SettingItemSelectedCommand}"
+                                                      CommandParameter="{Binding .}"
+                                                      NumberOfTapsRequired="1"/>
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

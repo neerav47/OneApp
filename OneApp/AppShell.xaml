@@ -24,9 +24,9 @@
             Icon="settings.png"/>
 
         <ShellContent 
-            Title="Account"
-            ContentTemplate="{DataTemplate view:Products}"
-            Icon="profile.png"/>
+            Title="Settings"
+            ContentTemplate="{DataTemplate view:Settings}"
+            Icon="settings.png"/>
 
     </TabBar>
 
