@@ -46,12 +46,11 @@
 		<MauiIcon Include="ResourcesNet\AppIcon\appicon.svg" ForegroundFile="ResourcesNet\AppIcon\appiconfg.svg" Color="#512BD4" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="ResourcesNet\Splash\logo.svg" Color="#3b4ba5" BaseSize="128,128" />
+		<MauiSplashScreen Include="ResourcesNet\Splash\logo.svg" Color="#2B0B98" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="ResourcesNet\Images\*" />
-		<MauiImage Update="ResourcesNet\Images\dotnet_bot.svg" BaseSize="168,208" />
-
+		
 		<!-- Custom Fonts -->
 		<MauiFont Include="ResourcesNet\Fonts\*" />
 
@@ -70,7 +69,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Views\" />
 	  <Folder Include="Views\BottomSheets\" />
 	</ItemGroup>
 	<ItemGroup>
